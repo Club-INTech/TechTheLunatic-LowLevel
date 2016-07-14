@@ -7,8 +7,11 @@ set(CMAKE_SYSTEM_PROCESSOR arm)
 SET(CMAKE_CXX_COMPILER arm-none-eabi-g++)
 SET(CMAKE_C_COMPILER arm-none-eabi-gcc)
 
-SET(CMAKE_C_FLAGS "--specs=nosys.specs -mthumb -fno-builtin -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -Wall -std=gnu99 -ffunction-sections -fdata-sections -fomit-frame-pointer -mabi=aapcs -fno-unroll-loops -ffast-math -ftree-vectorize" CACHE INTERNAL "c compiler flags")
-SET(CMAKE_CXX_FLAGS "--specs=nosys.specs -mthumb -lstdc++ -fno-builtin -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -Wall -std=c++11 -ffunction-sections -fdata-sections -fomit-frame-pointer -mabi=aapcs -fno-unroll-loops -ffast-math -ftree-vectorize" CACHE INTERNAL "cxx compiler flags")
+SET(CMAKE_C_FLAGS "-g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -I." CACHE INTERNAL "c compiler flags")
+SET(CMAKE_CXX_FLAGS "-g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -I." CACHE INTERNAL "c compiler flags")
+
+
+#SET(CMAKE_CXX_FLAGS "--specs=nosys.specs -mthumb -lstdc++ -fno-builtin -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -Wall -std=c++11 -ffunction-sections -fdata-sections -fomit-frame-pointer -mabi=aapcs -fno-unroll-loops -ffast-math -ftree-vectorize" CACHE INTERNAL "cxx compiler flags")
 SET(CMAKE_ASM_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -x assembler-with-cpp" CACHE INTERNAL "asm compiler flags")
 
 SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mabi=aapcs" CACHE INTERNAL "executable linker flags")
