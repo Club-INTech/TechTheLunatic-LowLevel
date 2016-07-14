@@ -1,0 +1,4 @@
+translationPID.setTunings(15, 0, 10);
+	rotationPID.setTunings(16,0,10);
+	leftSpeedPID.setTunings(0.01, 0.00005, 0.01);
+	rightSpeedPID.setTunings(0.01, 0.00005, 0.01);

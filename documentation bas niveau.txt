@@ -1,0 +1,210 @@
+***************************************************************************
+***************************************************************************
+** Liste des commandes et spécification du protocole de la liaison série **
+***************************************************************************
+***************************************************************************
+
+Remarque : la droite et la gauche sont à considérer du point de vue du robot, c'est à dire en regardant dans la même direction que l'avant du robot.
+
+
+
+ **************************************
+ Etat du robot au démarrage de la carte
+ **************************************
+
+x = 0 (mm)
+y = 0 (mm)
+orientation = 0 (radians)
+Asservissement en translation et en rotation ACTIVE
+Position d'asservissement : (0;0;0)
+PWM max en translation = 100
+PWM max en rotation = 100
+Les constantes d'asservissement sont celles les plus adaptées aux PWM max (cf liste des constantes d'asservissement)
+Les AX12 des actionneurs sont tous asservis à la position qu'ils avaient à leur allumage.
+
+
+ *************************************
+ Liste des constantes d'asservissement
+ *************************************
+
+Translation
+[à compléter]
+
+Rotation
+[à compléter]
+
+
+ **********************************
+ Spécifications de la liaison série
+ **********************************
+
+Baudrate		:	115 200 bauds
+Parité			:	aucune
+Bits d'arrêt	:	1 bit
+Bits de données	:	8 bits
+
+Taille du buffer de réception : 64 octets
+
+
+ *************************
+ Protocole de communication
+ ************************* 
+
+Il s'agit d'une architecture client-serveur avec accusé de réception.
+Le haut niveau (raspberry Pi ou PC) est le client, le bas niveau (stm32f4) est le serveur.
+
+1. Commande envoyée par le haut niveau
+	La commande est une chaine de caractères de taille inférieur à 64 caractères (ceci inclu le caractère de fin de chaine) terminée par un retour à la ligne.
+2. Le bas niveau accuse la réception de la commande
+	L'accusé de réception est le caractère '_' suivi d'un retour à la ligne.
+3.
+  a. Si la commande est une demande d'informations
+	Le bas niveau envoie l'information demandée dans un format dépendant de la commande et spécifié dans la liste des commandes ci-dessous.
+  b. Si la commande correspond à un ordre nécessitant l'indication d'une valeur numérique
+	Le bas niveau attend la réception d'une ligne supplémentaire, correspondant à un chiffre dont le format dépend de la commande.
+	Une fois cette seconde ligne reçue, le bas niveau accuse la réception avec un '_'.
+  c. Sinon
+	Le bas niveau ne répond rien de plus.
+	
+
+
+	
+	
+
+	*************************
+	** Liste des commandes **
+	*************************
+
+ ********************************************
+ Obtenir des informations sur l'état du robot
+ ********************************************
+
+requête		traduction de la réponse									typage
+
+?xyo		[ligne1] composante x de la position en mm						float
+			[ligne2] composante y de la position en mm					folat
+			[ligne3] orientation du robot en radians					float
+
+f			[ligne1] le robot est-il en train de se déplacer ?				boolean
+			[ligne2] l'état précédement indiqué est-il normal ?				boolean
+			
+j			le jumper est-il SORTI ?							boolean
+
+
+us_av		[ligne1] distance mesurée par le capteur avant gauche (mm)				integer
+			[ligne2] distance mesurée par le capteur avant droit (mm)			integer
+us_ar		[ligne1] distance mesurée par le capteur arrière gauche(mm)				integer
+			[ligne2] distance mesurée par le capteur arrière droit (mm) 			integer
+
+
+ ***********************
+ Commandes de locomotion
+ ***********************
+
+d		Ordonne une translation. 
+		La ligne suivante doit être un ENTIER correspondant à la distance de déplacement voulue en mm.
+
+t		Ordonne une rotation absolue.
+		La ligne suivante doit être un FLOTANT correspondant à l'orientation ABSOLUE voulue pour le robot, en radians.
+
+tor		Turn Only Right		Rotation absolue. Permet de ne tourner qu'à droite, pour ne pas perdre le sable.
+
+tol		Turn Only Left		Rotation absolue. Permet de ne tourner qu'à gauche, pour ne pas perdre le sable.
+
+
+t3		Ordonne une rotation relative.
+		La ligne suivante doit être un FLOTANT correspondant à l'angle de rotation voulu, en radians.
+
+stop		Ordonne un asservissement sur place.
+
+ct0		Désactive l'asservissement en translation. Effet : pwmTranslation = 0 quelle que soit la consigne en translation.
+ct1		Active l'asservissement en translation.
+cr0		Désactive l'asservissement en rotation. Effet : pwmRotation = 0 quelle que soit la consigne en rotation. 
+cr1		Active l'asservissement en rotation.
+cv0		Désactive l'asserv en vitesse
+cv1		Active l'asserv en vitesse
+
+Commandes de réglage de la position
+Ces commandes n'ont aucun effet sur l'asservissement en position/vitesse.
+Leur seul effet est de modifier les valeurs retournées par '?xyo' (et de les faire coïncider si possible avec les valeurs réelles !)
+La ligne suivante devra être un flotant correspondant à la valeur désirée.
+
+cx		Réglage de x (mm)
+cy		Réglage de y (mm)
+co		Réglage de l'angle (radians)
+
+Commande de réglage de la vitesse en translation/rotation
+
+ctv		changer la vitesse de translation mm/s
+crv		changer la vitesse de rotation rad/s
+
+ *********************************************
+ Protocole d'arrêt du robot durant un mouvement
+ *********************************************
+
+Durant l'exécution d'une commande du type 'd' 't' 't3' si le robot doit être arrêté au plus vite, il est nécessaire d'exécuter l'opération suivante :
+
+1. Désactiver l'asservissement (a pour effet concret de forcer tous les PWM à 0)
+	ct0
+	cr0
+2. Attendre l'arrêt effectif du robot
+	attendre que la commande f réponde que le mouvement est terminé (elle indiquera également un blocage mécanique si la position visée n'est pas atteinte)
+3. Réasservir le robot sur sa position d'arrêt
+	stop (la position courante devient la position d'asservissement)
+	ct1
+	cr1 (réactivation de l'asservissement pour pouvoir repartir ensuite si besoin)
+
+
+
+ *************************
+ Commandes des actionneurs
+ *************************
+Pour les cannes à pêche :
+
+	fpl	fishing position left		Positionne le bras aimanté gauche en position de pêche
+	fpr	fishing position right		Positionne le bras aimanté droit en position de pêche
+
+	mpl	middle position left		Positionne le bras gauche en posision intermédiaire pour passer les accroches du filet
+	mpr	middle position right		Positionne le bras droit en posision intermédiaire pour passer les accroches du filet
+
+Phase de libération des poissons : A EXECUTER DANS CET ORDRE
+
+	rmd	right magnets down		baisse le bras en position de lâcher des poissons
+	rfd	right finger down		baisse le doigt pour désaimanter les poiscailles
+	rmu	right magnets up		remonte le bras magnétique
+	rfu	right finger up			remonte le doigt en position initiale
+	
+
+	lmd	left magnets down
+	lfd	left finger down
+	lmu	left magnets up
+	lfu	left finger up
+
+Pour les portes pour le sable :
+
+	odl	runForwardLeft			deploie le bras gauche pour le sable
+	odr	runForwardRight			deploie le bras droite pour le sable
+	cdl	runBackwardLeft			ramène le bras du sable gauche vers le robot
+	cdr	runBackwardRight		ramène le bras du sable droit vers robot
+	sdr	stopRightDoor			arrête le bras du sable gauche du robot (en cas de problème)
+	sdl	stopLeftDoor			arrête le bras du sable droit du robot (en cas de problème)
+
+Pour les axes rotatifs :
+
+	ral	runAxisLeft			fait tourner l'axe de la porte du sable gauche
+	rar	runAxisRight			fait tourner l'axe de la porte du sable droite
+	sal	stopAxisLeft			arrete l'axe de la porte du sable gauche
+	sar	stopAxisRight			arrete l'axe de la porte du sable droit
+
+
+ **************************************************
+ Protocol d'initialisation des actionneurs du robot
+ **************************************************
+Avant le début du match :
+
+	aif	AX12 initial fishes		Asservir tous les AX12 en position initiale
+
+
+
+
+Que celui qui a remarqué cette ligne vienne me faire signe svp. Rémi.
