@@ -186,7 +186,7 @@ void MotionControlSystem::control()
 	int32_t leftTicks = Counter::getLeftValue();
 
 
-	currentLeftSpeed = (leftTicks - previousLeftTicks)*2000; // (nb-de-tick-pass�s)*(freq_asserv) (ticks/sec)
+	currentLeftSpeed = (leftTicks - previousLeftTicks)*2000; // (nb-de-tick-passés)*(freq_asserv) (ticks/sec)
 	currentRightSpeed = (rightTicks - previousRightTicks)*2000;
 
 	previousLeftTicks = leftTicks;
@@ -195,11 +195,11 @@ void MotionControlSystem::control()
 	averageLeftSpeed.add(currentLeftSpeed);
 	averageRightSpeed.add(currentRightSpeed);
 
-	averageLeftDerivativeError.add(ABS(leftSpeedPID.getDerivativeError()));		// Mise � jour des moyennes de d�riv�es de l'erreur (pour les blocages)
+	averageLeftDerivativeError.add(ABS(leftSpeedPID.getDerivativeError()));		// Mise à jour des moyennes de dérivées de l'erreur (pour les blocages)
 	averageRightDerivativeError.add(ABS(rightSpeedPID.getDerivativeError()));
 
 	currentLeftSpeed = averageLeftSpeed.value(); // On utilise pour l'asserv la valeur moyenne des dernieres current Speed
-	currentRightSpeed = averageRightSpeed.value();
+	currentRightSpeed = averageRightSpeed.value(); // sinon le robot il fait nawak.
 
 
 	currentDistance = (leftTicks + rightTicks) / 2;
@@ -225,8 +225,8 @@ void MotionControlSystem::control()
 	else if(rotationSpeed < -maxSpeedRotation)
 		rotationSpeed = -maxSpeedRotation;
 
-	leftSpeedSetpoint = translationSpeed*leftCurveRatio - rotationSpeed;
-	rightSpeedSetpoint = translationSpeed*rightCurveRatio + rotationSpeed;
+	leftSpeedSetpoint = (int32_t) (translationSpeed * leftCurveRatio - rotationSpeed);
+	rightSpeedSetpoint = (int32_t) (translationSpeed * rightCurveRatio + rotationSpeed);
 
 
 
@@ -242,7 +242,7 @@ void MotionControlSystem::control()
 		rightSpeedSetpoint = -maxSpeed;
 ;
 
-	// Limitation de l'acc�l�ration du moteur gauche
+	// Limitation de l'accélération du moteur gauche (permet de règler la pente du trapèze de vitesse)
 	if(leftSpeedSetpoint - previousLeftSpeedSetpoint > maxAcceleration)
 	{
 		leftSpeedSetpoint = previousLeftSpeedSetpoint + maxAcceleration*leftCurveRatio;
@@ -513,8 +513,8 @@ void MotionControlSystem::orderTranslation(int32_t mmDistance) {
 
 void MotionControlSystem::orderRotation(float angleConsigneRadian, RotationWay rotationWay) {
 
-	static int32_t deuxPiTick = 2*PI / TICK_TO_RADIAN;
-	static int32_t piTick = PI / TICK_TO_RADIAN;
+	static int32_t deuxPiTick = (int32_t) (2 * PI / TICK_TO_RADIAN);
+	static int32_t piTick = (int32_t) (PI / TICK_TO_RADIAN);
 
 	int32_t highLevelOffset = originalAngle / TICK_TO_RADIAN;
 

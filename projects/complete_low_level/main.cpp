@@ -1,10 +1,9 @@
-#include "Uart.hpp"
+#include "library/Uart.hpp"
 #include "MotionControlSystem.h"
-#include "delay.h"
 #include "ActuatorsMgr.hpp"
 #include "SensorMgr.h"
-#include "voltage_controller.hpp"
 #include "BinaryMotorMgr.hpp"
+#include "library/voltage_controller.hpp"
 
 
 int main(void)
@@ -36,7 +35,7 @@ int main(void)
 		if (tailleBuffer && tailleBuffer < RX_BUFFER_SIZE - 1)
 		{
 			serial.read(order);
-			serial.printfln("_");//Acquittement
+			serial.printfln("_");				//Acquittement
 
 			if(!strcmp("?",order))				//Ping
 			{
@@ -44,8 +43,8 @@ int main(void)
 			}
 			else if(!strcmp("f",order))			//Indiquer l'état du mouvement du robot
 			{
-				serial.printfln("%d", motionControlSystem->isMoving());//Robot en mouvement ou pas ?
-				serial.printfln("%d", motionControlSystem->isMoveAbnormal());//Cet état du mouvement est il anormal ?
+				serial.printfln("%d", motionControlSystem->isMoving());			//Robot en mouvement ou pas ?
+				serial.printfln("%d", motionControlSystem->isMoveAbnormal());	//Cet état du mouvement est il anormal ?
 			}
 			else if(!strcmp("?xyo",order))		//Indiquer la position du robot (en mm et radians)
 			{
@@ -68,30 +67,15 @@ int main(void)
 				motionControlSystem->orderRotation(angle, MotionControlSystem::FREE);
 			}
 
-			else if(!strcmp("tor", order))  // Ordre de rotation seulement à DROITE (pour ne pas perdre le sable)
-			{
-				float angle = motionControlSystem->getAngleRadian();
-				serial.read(angle);
-				serial.printfln("_");//Acquittement
-				motionControlSystem->orderRotation(angle, MotionControlSystem::ANTITRIGO);
-			}
-
-			else if(!strcmp("tol", order))  // Ordre de rotation seulement à GAUCHE (pour ne pas perdre le sable)
-			{
-				float angle = motionControlSystem->getAngleRadian();
-				serial.read(angle);
-				serial.printfln("_");//Acquittement
-				motionControlSystem->orderRotation(angle, MotionControlSystem::TRIGO);
-			}
 
 			else if(!strcmp("dc", order)) //Rotation + translation = trajectoire courbe !
 			{
 				float arcLenght = 0;
 				float curveRadius = 0;
 				serial.read(arcLenght);
-				serial.printfln("_");//Acquittement
+				serial.printfln("_");					//Acquittement
 				serial.read(curveRadius);
-				serial.printfln("_");//Acquittement
+				serial.printfln("_");					//Acquittement
 				motionControlSystem->orderCurveTrajectory(arcLenght, curveRadius);
 			}
 
@@ -128,9 +112,9 @@ int main(void)
 			{
 				serial.printfln("%d", sensorMgr->getSensorDistanceAVG());//en mm
 				serial.printfln("%d", sensorMgr->getSensorDistanceAVD());//en mm
-				serial.printfln("%d", sensorMgr->getSensorDistanceARG());//en mm // qui représente AVD en fait
-				serial.printfln("%d", sensorMgr->getSensorDistanceARD());//en mm // qui représente l'arrière.
-				//serial.printfln("0"); // Pour que le haut niveau gueule pas en disant "OMG IL Y A QUE 3 REPONSES SUR 4 !" #Mongol
+				serial.printfln("%d", sensorMgr->getSensorDistanceARG());//en mm
+				serial.printfln("%d", sensorMgr->getSensorDistanceARD());//en mm
+
 			}
 			else if(!strcmp("j",order))			//Indiquer l'état du jumper (0='en place'; 1='dehors')
 			{
@@ -197,15 +181,6 @@ int main(void)
 				motionControlSystem->setRotationSpeed(speedRotation);
 			}
 
-			else if(!strcmp("ssa", order))
-			{
-				motionControlSystem->setSmoothAcceleration();
-			}
-
-			else if(!strcmp("sva", order))
-			{
-				motionControlSystem->setViolentAcceleration();
-			}
 
 			// POUR MONTLHERY
 
@@ -535,138 +510,6 @@ int main(void)
 				actuatorsMgr->setAllID();
 			}
 
-			else if(!strcmp("fprh",order)) // Descente du bras droit aimanté (poissons)
-			{
-				actuatorsMgr->fishingRightUp();
-			}
-
-			else if(!strcmp("fprm",order)) // Descente du bras droit aimanté (poissons)
-			{
-				actuatorsMgr->fishingRightMid();
-			}
-
-			else if(!strcmp("fprl",order)) // Descente du bras droit aimanté (poissons)
-			{
-				actuatorsMgr->fishingRightDown();
-			}
-
-			else if(!strcmp("mpr",order))
-			{
-				actuatorsMgr->midPositionRight();
-			}
-
-
-			else if(!strcmp("rmd",order)) // rightMagnetsDown
-			{
-				actuatorsMgr->rightMagnetsDown();
-
-			}
-			else if(!strcmp("rfd",order))	// rightFingerDown
-			{
-				actuatorsMgr->rightFingerDown();
-
-			}
-			else if(!strcmp("rmu",order))	//rightMagnetsUp
-			{
-				actuatorsMgr->rightMagnetsUp();
-
-			}
-			else if(!strcmp("rfu",order))	//rightFingerUp
-			{
-				actuatorsMgr->rightFingerUp();
-
-			}
-
-			else if(!strcmp("fplm",order)) // Descente du bras gauche aimanté (poissons)
-			{
-				actuatorsMgr->fishingLeftMid();
-			}
-			else if(!strcmp("fplh",order)) // Descente du bras gauche aimanté (poissons)
-			{
-				actuatorsMgr->fishingLeftUp();
-			}
-			else if(!strcmp("fpll",order)) // Descente du bras gauche aimanté (poissons)
-			{
-				actuatorsMgr->fishingLeftDown();
-			}
-
-			else if(!strcmp("mpl",order))
-			{
-				actuatorsMgr->midPositionLeft();
-			}
-
-			else if(!strcmp("lmd",order)) // leftMagnetsDown
-			{
-				actuatorsMgr->leftMagnetsDown();
-
-			}
-			else if(!strcmp("lfd",order))	// leftFingerDown
-			{
-				actuatorsMgr->leftFingerDown();
-
-			}
-			else if(!strcmp("lmu",order))	//leftMagnetsUp
-			{
-				actuatorsMgr->leftMagnetsUp();
-
-			}
-			else if(!strcmp("lfu",order))	//leftFingerUp
-			{
-				actuatorsMgr->leftFingerUp();
-
-			}
-
-			else if(!strcmp("emr", order)) // permet de tester manuellement les positions des AX12
-			{
-				int position = 150;
-				serial.printfln("Entrez angle");
-				serial.read(position);
-				serial.printfln("angle = %d", position);
-				if(position >= 0 && position <= 300)
-					actuatorsMgr->setAXposMagnetsRight(position);
-				serial.printfln("done.");
-
-			}
-
-			else if(!strcmp("efr", order)) // permet de tester manuellement les positions des AX12
-			{
-				int position = 150;
-				serial.printfln("Entrez angle");
-				serial.read(position);
-				serial.printfln("angle = %d", position);
-				if(position >= 0 && position <= 300)
-					actuatorsMgr->setAXposFreeRightFishes(position);
-				serial.printfln("done.");
-
-			}
-
-			else if(!strcmp("eml", order)) // permet de tester manuellement les positions des AX12
-			{
-				int position = 150;
-				serial.printfln("Entrez angle");
-				serial.read(position);
-				serial.printfln("angle = %d", position);
-				if(position >= 0 && position <= 300)
-					actuatorsMgr->setAXposMagnetsLeft(position);
-				serial.printfln("done.");
-
-			}
-
-			else if(!strcmp("efl", order)) // permet de tester manuellement les positions des AX12
-			{
-				int position = 150;
-				serial.printfln("Entrez angle");
-				serial.read(position);
-				serial.printfln("angle = %d", position);
-				if(position >= 0 && position <= 300)
-					actuatorsMgr->setAXposFreeLeftFishes(position);
-				serial.printfln("done.");
-
-			}
-
-			else if(!strcmp("aif", order)) {
-				actuatorsMgr->initialPositionFish();
-			}
 
 			else if(!strcmp("caxs", order)) { //commande de debug
 				int speed = 100;
@@ -676,98 +519,6 @@ int main(void)
 				serial.printfln("Done");
 			}
 
-
-			/* --- Portes sable ---*/
-
-			else if(!strcmp("odl", order)) {
-				bool value = sensorMgr->isLeftDoorOpen();
-				if(!value){ // Si la porte n'est pas en fin de course ouverte
-					binaryMotorMgr->setLeftDoorOpening(true);
-					binaryMotorMgr->runForwardLeft(); //ouvrir
-
-				}
-			}
-
-			else if(!strcmp("odr", order)) {
-				bool value = sensorMgr->isRightDoorOpen();
-				if(!value) {
-					binaryMotorMgr->setRightDoorOpening(true);
-					binaryMotorMgr->runForwardRight();
-				}
-			}
-
-			else if(!strcmp("cdl", order)) {
-				bool value = sensorMgr->isLeftDoorClosed();
-					if(!value) {
-						binaryMotorMgr->setLeftDoorClosing(true);
-						binaryMotorMgr->runBackwardLeft();
-					}
-			}
-
-			else if(!strcmp("cdr", order)) {
-				bool value = sensorMgr->isRightDoorClosed();
-					if(!value) {
-						binaryMotorMgr->setRightDoorClosing(true);
-						binaryMotorMgr->runBackwardRight();
-					}
-			}
-
-			else if(!strcmp("sdr", order)) {
-				binaryMotorMgr->stopRightDoor();
-			}
-
-			else if(!strcmp("sdl", order)) {
-				binaryMotorMgr->stopLeftDoor();
-			}
-
-
-			/* Axes rotatifs */
-
-			else if(!strcmp("ral", order)) {
-				binaryMotorMgr->runAxisLeft();
-			}
-
-			else if(!strcmp("rar", order)) {
-				binaryMotorMgr->runAxisRight();
-			}
-
-			else if(!strcmp("sal", order)) {
-				binaryMotorMgr->stopAxisLeft();
-			}
-
-			else if(!strcmp("sar", order)) {
-				binaryMotorMgr->stopAxisRight();
-			}
-
-			else if(!strcmp("irdo", order)) { // is Right Door Open
-				bool door = sensorMgr->isRightDoorOpen();
-				serial.printfln("%d", door);
-			}
-
-			else if(!strcmp("ildo", order)) {
-				bool door = sensorMgr->isLeftDoorOpen();
-				serial.printfln("%d", door);
-			}
-
-			else if(!strcmp("irdc", order)) {
-				bool door = sensorMgr->isRightDoorClosed();
-				serial.printfln("%d", door);
-			}
-
-			else if(!strcmp("ildc", order)) {
-				bool door = sensorMgr->isLeftDoorClosed();
-				serial.printfln("%d", door);
-			}
-
-			else if(!strcmp("irdb", order)){
-				bool blocked = binaryMotorMgr->isRightDoorBlocked();
-				serial.printfln("%d", blocked);
-			}
-
-			else if(!strcmp("ildb", order)){
-				bool blocked = binaryMotorMgr->isLeftDoorBlocked();
-				serial.printfln("%d", blocked);
-			}
 
 
 /*			 __________________
@@ -855,151 +606,8 @@ void EXTI9_5_IRQHandler(void)
     }
 */
 
-    if (EXTI_GetITStatus(EXTI_Line7) != RESET) {
-    	sensorMgr->AVGInterrupt();
-        //serial.printfln("7");
-
-
-        /* Clear interrupt flag */
-        EXTI_ClearITPendingBit(EXTI_Line7);
-    }
-    if (EXTI_GetITStatus(EXTI_Line6) != RESET) {
-           sensorMgr->ARDInterrupt();
-           //serial.printfln("6");
-
-           /* Clear interrupt flag */
-           EXTI_ClearITPendingBit(EXTI_Line6);
-       }
-
-    if (EXTI_GetITStatus(EXTI_Line5) != RESET) {
-    	sensorMgr->AVDInterrupt();
-        //serial.printfln("5");
-
-
-    	/* Clear interrupt flag */
-    	EXTI_ClearITPendingBit(EXTI_Line5);
-    }
-
-    if (EXTI_GetITStatus(EXTI_Line8) != RESET) {
-    	while(42){
-    		}
-			   EXTI_ClearITPendingBit(EXTI_Line8);
-		   }
-
-    if (EXTI_GetITStatus(EXTI_Line9) != RESET) {
-    	while(42){
-    		}
-    		EXTI_ClearITPendingBit(EXTI_Line9);
-           }
 
 }
-
-void EXTI0_IRQHandler(void) // Capteur fin de course Droite ouverte
-{
-
-	static BinaryMotorMgr* binaryMotorMgr = &BinaryMotorMgr::Instance();
-
-	if(!binaryMotorMgr->isRightDoorClosing()){ // Sécurité : N'arrete pas le moteur il est en train d'ouvrir (problème de front montant du capteur)
-		binaryMotorMgr->stopRightDoor(); // stopper sur front montant
-		binaryMotorMgr->setRightDoorOpening(false);
-	}
-	EXTI_ClearITPendingBit(EXTI_Line0);
-
-}
-
-void EXTI15_10_IRQHandler(void)
-{
-	static BinaryMotorMgr* binaryMotorMgr = &BinaryMotorMgr::Instance();
-
-	if(EXTI_GetITStatus(EXTI_Line13) != RESET) { // Droite fermée
-		if(!binaryMotorMgr->isRightDoorOpening()){
-
-			binaryMotorMgr->stopRightDoor();
-			binaryMotorMgr->setRightDoorClosing(false);
-		}
-		EXTI_ClearITPendingBit(EXTI_Line13);
-	}
-	else if(EXTI_GetITStatus(EXTI_Line15) != RESET) { // Gauche ouverte
-		if(!binaryMotorMgr->isLeftDoorClosing()){
-
-			binaryMotorMgr->stopLeftDoor();
-			binaryMotorMgr->setLeftDoorOpening(false);
-		}
-		EXTI_ClearITPendingBit(EXTI_Line15);
-	}
-
-	if (EXTI_GetITStatus(EXTI_Line10) != RESET) {
-		while(42){
-			}
-		EXTI_ClearITPendingBit(EXTI_Line10);
-	           }
-	if (EXTI_GetITStatus(EXTI_Line11) != RESET) {
-		while(42){
-			}
-		EXTI_ClearITPendingBit(EXTI_Line11);
-	           }
-	if (EXTI_GetITStatus(EXTI_Line12) != RESET) {
-		while(42){
-			}
-		EXTI_ClearITPendingBit(EXTI_Line12);
-	           }
-	if (EXTI_GetITStatus(EXTI_Line14) != RESET) {
-		while(42){
-			}
-		EXTI_ClearITPendingBit(EXTI_Line14);
-	           }
-
-
-}
-
-
-void EXTI1_IRQHandler(void) // Gauche fermée
-{
-
-	static BinaryMotorMgr* binaryMotorMgr = &BinaryMotorMgr::Instance();
-
-	if(!binaryMotorMgr->isLeftDoorOpening())
-	{
-		binaryMotorMgr->stopLeftDoor();
-		binaryMotorMgr->setLeftDoorClosing(false);
-	}
-	EXTI_ClearITPendingBit(EXTI_Line1);
-
-}
-
-
-
-
-void EXTI4_IRQHandler(void) // Capteur AVD (celui qui a foutu la merde, et qui est sensé être en PA5)
-{
-	static SensorMgr* sensorMgr = &SensorMgr::Instance();
-
-	if (EXTI_GetITStatus(EXTI_Line4) != RESET) {
-	        sensorMgr->ARGInterrupt();
-	          // serial.printfln("4");
-	       // serial.printfln("interrupt 4");
-	        // Clear interrupt flag
-	        EXTI_ClearITPendingBit(EXTI_Line4);
-	    }
-}
-
-void EXTI2_IRQHandler(void)
-{
-
-}
-
-void EXTI3_IRQHandler(void)
-{
-	while(42){
-		}
-	EXTI_ClearITPendingBit(EXTI_Line3);
-}
-
-void HardFault_Handler(void)
-{
-	while(1);
-}
-
 
 
 /*

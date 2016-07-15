@@ -2,6 +2,7 @@
 #define CAPTEUR_SRF05_HPP
 
 #include <stdint.h>
+#include <stm32f4xx_exti.h>
 #include "delay.h"
 #include "ring_buffer.hpp"
 #include "Uart.hpp"

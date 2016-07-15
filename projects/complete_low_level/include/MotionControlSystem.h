@@ -47,7 +47,7 @@ class MotionControlSystem : public Singleton<MotionControlSystem>
 {
 public:
 
-	/* D�finit le sens dans lequel on doit tourner pour r�pondre � une consigne de rotation */
+	/* Définit le sens dans lequel on doit tourner pour répondre à une consigne de rotation */
 	enum RotationWay
 	{
 		FREE,		// On doit tourner dans le sens correspondant au chemin le plus court
@@ -64,15 +64,15 @@ private:
 	Motor rightMotor;
 
 /*
- * 		D�finition des variables d'�tat du syst�me (position, vitesse, consigne, ...)
+ * 		Définition des variables d'état du système (position, vitesse, consigne, ...)
  *
- * 		Les unit�s sont :
+ * 		Les unités sont :
  * 			Pour les distances		: ticks
  * 			Pour les vitesses		: ticks/seconde
- * 			Pour les acc�l�rations	: ticks/seconde^2
- * 			Ces unit�s seront vraies pour une fr�quence d'asservissement de 2kHz,
- * 			si l'on souhaite changer la fr�quence d'asservissement il faut adapter le calcul de la vitesse
- * 			autrement les unit�es ci-dessus ne seront plus valables.
+ * 			Pour les accélérations	: ticks/seconde^2
+ * 			Ces unités seront vraies pour une fréquence d'asservissement de 2kHz,
+ * 			si l'on souhaite changer la fréquence d'asservissement il faut adapter le calcul de la vitesse
+ * 			autrement les unités ci-dessus ne seront plus valables.
  */
 
 
