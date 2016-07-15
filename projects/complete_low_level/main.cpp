@@ -110,9 +110,6 @@ int main(void)
 			}
 			else if(!strcmp("us",order))		//Indiquer la distance mesurée par les capteurs à ultrason
 			{
-				serial.printfln("%d", sensorMgr->getSensorDistanceAVG());//en mm
-				serial.printfln("%d", sensorMgr->getSensorDistanceAVD());//en mm
-				serial.printfln("%d", sensorMgr->getSensorDistanceARG());//en mm
 				serial.printfln("%d", sensorMgr->getSensorDistanceARD());//en mm
 
 			}
@@ -575,8 +572,8 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 
 		if(j >= 5){ //2.5ms
 			motionControlSystem->track();
-			motionControlSystem->manageStop();
-			binaryMotorMgr->manageBlockedDoor();
+			
+
 			j=0;
 		}
 
