@@ -572,7 +572,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 
 		if(j >= 5){ //2.5ms
 			motionControlSystem->track();
-			
+
 
 			j=0;
 		}

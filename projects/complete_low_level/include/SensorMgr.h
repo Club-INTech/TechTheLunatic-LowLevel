@@ -21,15 +21,8 @@ class SensorMgr : public Singleton<SensorMgr>
 public:
 	SensorMgr();
 
-	int getSensorDistanceAVG();
-	int getSensorDistanceAVD();
-	int getSensorDistanceARG();
-	int getSensorDistanceARD();
 
-	bool isRightDoorOpen();
-	bool isLeftDoorOpen();
-	bool isRightDoorClosed();
-	bool isLeftDoorClosed();
+	int getSensorDistanceARD();
 
 	bool isJumperOut() const;
 
@@ -37,16 +30,13 @@ public:
 
 	void sensorInterrupt(int);
 
-	void AVDInterrupt();
-	void AVGInterrupt();
+
 	void ARDInterrupt();
-	void ARGInterrupt();
+
 
 
 private:
-	CapteurSRF ultrasonAVD;
-	CapteurSRF ultrasonAVG;
-	CapteurSRF ultrasonARG;
+	
 	CapteurSRF ultrasonARD;
 
 	unsigned int refreshDelay;
