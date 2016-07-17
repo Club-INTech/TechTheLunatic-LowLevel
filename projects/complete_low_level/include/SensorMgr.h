@@ -36,7 +36,7 @@ public:
 
 
 private:
-	
+
 	CapteurSRF ultrasonARD;
 
 	unsigned int refreshDelay;

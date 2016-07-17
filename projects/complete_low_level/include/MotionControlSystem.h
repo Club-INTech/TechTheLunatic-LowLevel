@@ -111,7 +111,6 @@ private:
 	//Les ratios de vitesse pour commander un d�placement courbe
 	volatile float leftCurveRatio;
 	volatile float rightCurveRatio;
-	float previousCurveRadius;
 
 
 
@@ -177,7 +176,6 @@ private:
 	int toleranceDifferentielle;
 
 	int delayToEstablish; // Temps � attendre avant de consid�rer la vitesse stable
-	int maxTimeNotEstablished;
 
 	float toleranceCurveRatio; // Tol�rance en trajectoire courbe avant de bloquer si le rayon est mauvais
 	/*
@@ -234,8 +232,6 @@ public:
 	void enableForcedMovement();
 	void disableForcedMovement();
 
-	void setSmoothAcceleration();
-	void setViolentAcceleration();
 
 	void track();//Stock les valeurs de d�bug
 	void printTrackingAll();//Affiche l'int�gralit� du tableau de tracking
@@ -243,12 +239,6 @@ public:
 	void printPosition();
 	void resetTracking();// Reset le tableau de tracking
 
-	int getPWMTranslation() const;
-	int getPWMRotation() const;
-	int getTranslationGoal() const;
-	int getRotationGoal() const;
-	int getLeftEncoder() const;
-	int getRightEncoder() const;
 
 	void enable(bool);
 	void enableTranslationControl(bool);
@@ -260,7 +250,6 @@ public:
 	void orderRawPwm(Side,int16_t);
 	void orderCurveTrajectory(float,float);
 	void stop();
-	static int32_t optimumAngle(int32_t,int32_t);
 
 	void setTranslationTunings(float, float, float);
 	void setRotationTunings(float, float, float);

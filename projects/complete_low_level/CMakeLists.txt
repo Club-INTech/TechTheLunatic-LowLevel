@@ -75,12 +75,10 @@ set(SOURCE_FILES
         library/utils.c
         library/voltage_controller.hpp
     include/ActuatorsMgr.hpp
-    include/BinaryMotorMgr.hpp
     include/Counter.h
     include/MotionControlSystem.h
     include/Motor.h
     include/SensorMgr.h
-    src/BinaryMotorMgr.cpp
     src/Counter.cpp
     src/MotionControlSystem.cpp
     src/Motor.cpp

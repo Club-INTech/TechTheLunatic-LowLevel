@@ -28,7 +28,6 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
 
 	leftCurveRatio = 1.0;
 	rightCurveRatio = 1.0;
-	previousCurveRadius = 300;
 
 	leftSpeedPID.setOutputLimits(-255,255);
 	rightSpeedPID.setOutputLimits(-255,255);
@@ -47,7 +46,7 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
 	toleranceSpeed = 50;
 	toleranceSpeedEstablished = 50; // Doit �tre la plus petite possible, sans bloquer les trajectoires courbes 50
 	delayToEstablish = 1000;
-	maxTimeNotEstablished = 1000;
+
 
 	toleranceCurveRatio = 0.9;
 	toleranceDifferentielle = 500; // Pour les trajectoires "normales", v�rifie que les roues ne font pas nawak chacunes de leur cot�.
@@ -262,33 +261,9 @@ void MotionControlSystem::control()
 		rightSpeedSetpoint = previousRightSpeedSetpoint - maxAcceleration*rightCurveRatio;
 	}
 
-	/*
 
-	//Limitation du jerk moteur gauche
-	if((leftSpeedSetpoint - previousLeftSpeedSetpoint) - previousLeftAcceleration > maxjerk)
-	{
-		leftSpeedSetpoint = maxjerk + previousLeftAcceleration + previousLeftSpeedSetpoint;
-	}
-	else if((leftSpeedSetpoint - previousLeftSpeedSetpoint) - previousLeftAcceleration < -maxjerk)
-	{
-		leftSpeedSetpoint = previousLeftAcceleration + previousLeftSpeedSetpoint - maxjerk;
-	}
 
-	//Limitation du jerk moteur droit
-	if((rightSpeedSetpoint - previousRightSpeedSetpoint) - previousRightAcceleration > maxjerk)
-	{
-		rightSpeedSetpoint = maxjerk + previousRightAcceleration + previousRightSpeedSetpoint;
-	}
-	else if((rightSpeedSetpoint - previousRightSpeedSetpoint) - previousRightAcceleration < -maxjerk)
-	{
-		rightSpeedSetpoint = previousRightAcceleration + previousRightSpeedSetpoint - maxjerk;
-	}
-
-	previousLeftAcceleration = leftSpeedSetpoint - previousLeftSpeedSetpoint;
-	previousRightAcceleration = rightSpeedSetpoint - previousLeftSpeedSetpoint;
-	*/
-
-	previousLeftSpeedSetpoint = leftSpeedSetpoint;
+	previousLeftSpeedSetpoint = leftSpeedSetpoint;			// Mise à jour des consignes de vitesse
 	previousRightSpeedSetpoint = rightSpeedSetpoint;
 
 
@@ -329,13 +304,6 @@ void MotionControlSystem::disableForcedMovement(){
 	forcedMovement=false;
 }
 
-void MotionControlSystem::setSmoothAcceleration(){
-	maxAcceleration = 5;
-}
-
-void MotionControlSystem::setViolentAcceleration(){
-	maxAcceleration = 15;
-}
 
 void MotionControlSystem::manageStop()
 {
@@ -565,7 +533,7 @@ void MotionControlSystem::orderRotation(float angleConsigneRadian, RotationWay r
 
 void MotionControlSystem::orderCurveTrajectory(float arcLength, float curveRadius)
 {
-	previousCurveRadius = curveRadius;
+
 	float finalAngle = (arcLength / ABS(curveRadius)) + getAngleRadian();
 	float signe = 1.0;
 

@@ -2,7 +2,6 @@
 #include "MotionControlSystem.h"
 #include "ActuatorsMgr.hpp"
 #include "SensorMgr.h"
-#include "BinaryMotorMgr.hpp"
 #include "library/voltage_controller.hpp"
 
 
@@ -19,7 +18,6 @@ int main(void)
 	motionControlSystem->init();
 	ActuatorsMgr* actuatorsMgr = &ActuatorsMgr::Instance();
 	SensorMgr* sensorMgr = &SensorMgr::Instance();
-	BinaryMotorMgr* binaryMotorMgr = &BinaryMotorMgr::Instance();
 	Voltage_controller* voltage = &Voltage_controller::Instance();
 
 	char order[64];//Permet le stockage du message reçu par la liaison série
@@ -558,7 +556,6 @@ extern "C" {
 void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 	volatile static uint32_t i = 0, j = 0, k = 0;
 	static MotionControlSystem* motionControlSystem = &MotionControlSystem::Instance();
-	static BinaryMotorMgr* binaryMotorMgr = &BinaryMotorMgr::Instance();
 	static Voltage_controller* voltage = &Voltage_controller::Instance();
 
 	if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
