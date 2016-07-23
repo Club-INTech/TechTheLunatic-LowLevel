@@ -1,14 +1,24 @@
+# CMakeList du bas niveau INTech
+# compilation pour STM32F407VG
+#
+#
+# Le fichier stm32_flash.ld doit être placé dans le même dossier que le Makefile généré :
+# ~/.CLion2016.2/system/cmake/generated/complete_low_level-3d133f2f/3d133f2f/Debug
+#
+
 cmake_minimum_required(VERSION 3.5)
 project(arm)
 
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR arm)
 
+
 SET(CMAKE_CXX_COMPILER arm-none-eabi-g++)
 SET(CMAKE_C_COMPILER arm-none-eabi-gcc)
 
 SET(CMAKE_C_FLAGS "-g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -I." CACHE INTERNAL "c compiler flags")
 SET(CMAKE_CXX_FLAGS "-g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -I." CACHE INTERNAL "c compiler flags")
+
 
 
 #SET(CMAKE_CXX_FLAGS "--specs=nosys.specs -mthumb -lstdc++ -fno-builtin -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -Wall -std=c++11 -ffunction-sections -fdata-sections -fomit-frame-pointer -mabi=aapcs -fno-unroll-loops -ffast-math -ftree-vectorize" CACHE INTERNAL "cxx compiler flags")
