@@ -11867,9 +11867,9 @@ ultra fast</description>
 <wire x1="-2.54" y1="3.1242" x2="-2.54" y2="1.905" width="0.127" layer="21"/>
 <wire x1="-2.54" y1="1.905" x2="2.54" y2="1.905" width="0.127" layer="21"/>
 <wire x1="2.54" y1="1.905" x2="2.54" y2="3.1242" width="0.127" layer="21"/>
-<text x="5.08" y="0" size="0.8128" layer="21">GND</text>
+<text x="1.778" y="-5.08" size="0.8128" layer="21">GND</text>
 <text x="-1.27" y="-5.08" size="0.8128" layer="21">VDD</text>
-<text x="-7.62" y="0" size="0.8128" layer="21">Data</text>
+<text x="-4.318" y="-5.08" size="0.8128" layer="21">Data</text>
 <text x="-3.81" y="5.08" size="1.27" layer="25">&gt;NAME</text>
 <text x="-3.81" y="3.81" size="0.508" layer="25">Pinhead-3pins@INTech</text>
 </package>
@@ -11913,10 +11913,10 @@ ultra fast</description>
 <wire x1="-0.635" y1="-1.27" x2="-1.905" y2="-1.27" width="0.127" layer="21"/>
 <wire x1="-1.905" y1="-1.27" x2="-2.54" y2="-0.635" width="0.127" layer="21"/>
 <wire x1="-2.54" y1="-0.635" x2="-2.54" y2="0.635" width="0.127" layer="21"/>
-<text x="-7.62" y="0" size="1.016" layer="21">B</text>
-<text x="-2.54" y="-5.08" size="1.016" layer="21">GND</text>
-<text x="1.27" y="-5.08" size="1.016" layer="21">A</text>
-<text x="6.35" y="0" size="1.016" layer="21">VDD</text>
+<text x="-4.572" y="-5.08" size="0.8128" layer="21">B</text>
+<text x="-2.794" y="-5.08" size="0.8128" layer="21">GND</text>
+<text x="0.762" y="-5.08" size="0.8128" layer="21">A</text>
+<text x="2.54" y="-5.08" size="0.8128" layer="21">VDD</text>
 <text x="-5.08" y="5.08" size="1.27" layer="25">&gt;NAME</text>
 <text x="-5.08" y="3.81" size="0.6096" layer="25">Pinhead-4pins@INTech</text>
 <wire x1="-3.81" y1="3.556" x2="-3.81" y2="2.54" width="0.127" layer="21"/>
@@ -12355,6 +12355,17 @@ Based on  the following source:
 <wire x1="1.7" y1="-8.89" x2="1.7" y2="-7.84" width="1" layer="21"/>
 <wire x1="5.1" y1="-8.89" x2="5.1" y2="-7.84" width="1" layer="21"/>
 <wire x1="8.5" y1="-8.89" x2="8.5" y2="-7.84" width="1" layer="21"/>
+<text x="-9.144" y="-11.43" size="0.8128" layer="21">B1</text>
+<text x="-6.096" y="-11.43" size="0.8128" layer="21">DIR</text>
+<text x="-3.302" y="-11.43" size="0.8128" layer="21">PWM</text>
+<text x="0.508" y="-11.43" size="0.8128" layer="21">GND</text>
+<text x="3.81" y="-11.43" size="0.8128" layer="21">Therm</text>
+<text x="7.874" y="-11.43" size="0.8128" layer="21">B2</text>
+<text x="-7.62" y="-6.35" size="0.8128" layer="21">O1</text>
+<text x="-4.318" y="-6.35" size="0.8128" layer="21">Brk</text>
+<text x="-0.762" y="-6.35" size="0.8128" layer="21">VS</text>
+<text x="2.54" y="-6.35" size="0.8128" layer="21">Cur</text>
+<text x="6.096" y="-6.35" size="0.8128" layer="21">O2</text>
 </package>
 </packages>
 <symbols>
