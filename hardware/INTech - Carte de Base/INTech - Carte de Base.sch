@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -12148,19 +12148,20 @@ nominal inductance</description>
 <description>&lt;b&gt;DC-DC Converters&lt;/b&gt;&lt;p&gt;
 &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
 <packages>
-<package name="SIP3">
-<description>&lt;b&gt;INNOLINE DC/DC-Converter&lt;/b&gt; 1.0 AMP SIP3 Single Output&lt;p&gt;
-Source: &lt;a href="http://www.mikrocontroller.net/attachment/150645/157764-da-01-en-DC_DC_WANDLER_R_78C5_0_1_0.pdf"&gt; Data sheet &lt;/a&gt;</description>
-<pad name="1" x="-2.54" y="0" drill="1" diameter="1.6764"/>
-<pad name="2" x="0" y="0" drill="1" diameter="1.6764"/>
-<pad name="3" x="2.54" y="0" drill="1" diameter="1.6764"/>
-<wire x1="-5.6968" y1="-1.9" x2="5.6968" y2="-1.9" width="0.2032" layer="21"/>
-<wire x1="5.6968" y1="-1.9" x2="5.6968" y2="6.44" width="0.2032" layer="21"/>
-<wire x1="5.6968" y1="6.44" x2="-5.6968" y2="6.44" width="0.2032" layer="21"/>
+<package name="SIP3_INTECH">
 <wire x1="-5.6968" y1="6.44" x2="-5.6968" y2="-1.9" width="0.2032" layer="21"/>
-<text x="-5.715" y="-3.81" size="1.27" layer="25">&gt;NAME</text>
-<text x="-5.08" y="2.54" size="1.27" layer="27">&gt;VALUE</text>
+<wire x1="5.6968" y1="6.44" x2="-5.6968" y2="6.44" width="0.2032" layer="21"/>
+<wire x1="5.6968" y1="-1.9" x2="5.6968" y2="6.44" width="0.2032" layer="21"/>
+<wire x1="-5.6968" y1="-1.9" x2="5.6968" y2="-1.9" width="0.2032" layer="21"/>
 <circle x="-5.08" y="-1.27" radius="0.406109375" width="0" layer="21"/>
+<pad name="VIN" x="-2.54" y="0" drill="1" diameter="1.6764"/>
+<pad name="GND" x="0" y="0" drill="1" diameter="1.6764"/>
+<pad name="VOUT" x="2.54" y="0" drill="1" diameter="1.6764"/>
+<text x="-5.08" y="2.54" size="1.27" layer="21">&gt;VALUE</text>
+<text x="-5.08" y="7.62" size="1.27" layer="21">&gt;NAME</text>
+<text x="-5.08" y="-3.81" size="1.016" layer="21">Vin</text>
+<text x="-1.778" y="-3.81" size="1.016" layer="21">GND</text>
+<text x="2.54" y="-3.81" size="1.016" layer="21">Vout</text>
 </package>
 </packages>
 <symbols>
@@ -12179,26 +12180,19 @@ Source: &lt;a href="http://www.mikrocontroller.net/attachment/150645/157764-da-0
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="R-78C*-1.0" prefix="DC">
-<description>&lt;b&gt;INNOLINE DC/DC-Converter&lt;/b&gt; 1.0 AMP SIP3 Single Output&lt;p&gt;
-Source: &lt;a href="http://www.mikrocontroller.net/attachment/150645/157764-da-01-en-DC_DC_WANDLER_R_78C5_0_1_0.pdf"&gt; Data sheet &lt;/a&gt;</description>
+<deviceset name="R-78C*-1.0_INTECH">
 <gates>
 <gate name="G$1" symbol="DCDC-3PIN" x="0" y="0"/>
 </gates>
 <devices>
-<device name="" package="SIP3">
+<device name="" package="SIP3_INTECH">
 <connects>
-<connect gate="G$1" pin="GND" pad="2"/>
-<connect gate="G$1" pin="VIN" pad="1"/>
-<connect gate="G$1" pin="VOUT" pad="3"/>
+<connect gate="G$1" pin="GND" pad="GND"/>
+<connect gate="G$1" pin="VIN" pad="VIN"/>
+<connect gate="G$1" pin="VOUT" pad="VOUT"/>
 </connects>
 <technologies>
-<technology name="1.8"/>
-<technology name="12"/>
-<technology name="15"/>
-<technology name="3.3"/>
-<technology name="5.0"/>
-<technology name="9.0"/>
+<technology name=""/>
 </technologies>
 </device>
 </devices>
@@ -12503,7 +12497,7 @@ Based on  the following source:
 <part name="C11" library="resistor" deviceset="CPOL-EU" device="E2.5-6" value="10µF"/>
 <part name="C12" library="resistor" deviceset="CPOL-EU" device="E2.5-6" value="22µF"/>
 <part name="L1" library="inductor-neosid" deviceset="SD12" device="K100" value="68µH"/>
-<part name="DC1" library="dc-dc-converter" deviceset="R-78C*-1.0" device="" technology="5.0"/>
+<part name="DC1" library="dc-dc-converter" deviceset="R-78C*-1.0_INTECH" device=""/>
 <part name="DEL_RASP" library="con-ptr500" deviceset="AK300/2" device=""/>
 <part name="USB_RASP" library="con-berg" deviceset="PN87520" device=""/>
 </parts>
