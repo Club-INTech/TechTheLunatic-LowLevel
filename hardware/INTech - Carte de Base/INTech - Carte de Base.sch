@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -519,9 +519,9 @@
 <pad name="GND" x="2.54" y="0" drill="1.016" shape="long" rot="R90"/>
 <pad name="DATA" x="-2.54" y="0" drill="1.016" shape="long" rot="R90"/>
 <text x="6.35" y="2.54" size="1.4224" layer="25">&gt;NAME</text>
-<text x="6.35" y="0" size="1.27" layer="21">GND</text>
-<text x="-1.27" y="3.81" size="1.27" layer="21">VDD</text>
-<text x="-8.89" y="0" size="1.27" layer="21">Data</text>
+<text x="3.048" y="2.794" size="1.27" layer="21" rot="R90">GND</text>
+<text x="0.635" y="2.794" size="1.27" layer="21" rot="R90">VDD</text>
+<text x="-1.905" y="2.794" size="1.27" layer="21" rot="R90">Data</text>
 </package>
 </packages>
 <symbols>
@@ -538,9 +538,9 @@
 <text x="7.62" y="0" size="1.6764" layer="95">&gt;NAME</text>
 <wire x1="5.08" y1="-1.905" x2="-1.27" y2="-1.905" width="0.254" layer="94"/>
 <wire x1="5.08" y1="-1.905" x2="6.35" y2="-0.508" width="0.254" layer="94"/>
-<text x="-7.62" y="-2.54" size="1.27" layer="94">Data</text>
-<text x="0" y="2.54" size="1.27" layer="94">VDD</text>
-<text x="7.62" y="-2.54" size="1.27" layer="94">GND</text>
+<text x="0.508" y="1.778" size="1.27" layer="94" rot="R90">Data</text>
+<text x="3.048" y="1.778" size="1.27" layer="94" rot="R90">VDD</text>
+<text x="5.588" y="1.778" size="1.27" layer="94" rot="R90">GND</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -12199,124 +12199,6 @@ nominal inductance</description>
 </deviceset>
 </devicesets>
 </library>
-<library name="con-berg">
-<description>&lt;b&gt;Berg Connectors&lt;/b&gt;&lt;p&gt;
-Based on  the following source:
-&lt;ul&gt;
-&lt;li&gt;http://catalog.fciconnect.com
-&lt;/ul&gt;
-&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
-<packages>
-<package name="PN87520">
-<description>&lt;b&gt;USB connector&lt;/b&gt;</description>
-<wire x1="-7.4" y1="-10.19" x2="7.4" y2="-10.19" width="0.254" layer="21"/>
-<wire x1="7.4" y1="-10.19" x2="7.4" y2="4.11" width="0.254" layer="21"/>
-<wire x1="7.4" y1="4.11" x2="-7.4" y2="4.11" width="0.254" layer="21"/>
-<wire x1="-7.4" y1="4.11" x2="-7.4" y2="-10.19" width="0.254" layer="21"/>
-<wire x1="-5.08" y1="-2.87" x2="-3.81" y2="-8.72" width="0.1524" layer="21"/>
-<wire x1="-3.81" y1="-8.72" x2="-2.54" y2="-8.72" width="0.1524" layer="21"/>
-<wire x1="-2.54" y1="-8.72" x2="-1.27" y2="-2.87" width="0.1524" layer="21"/>
-<wire x1="1.27" y1="-2.87" x2="2.54" y2="-8.72" width="0.1524" layer="21"/>
-<wire x1="2.54" y1="-8.72" x2="3.81" y2="-8.72" width="0.1524" layer="21"/>
-<wire x1="3.81" y1="-8.72" x2="5.08" y2="-2.87" width="0.1524" layer="21"/>
-<wire x1="-2.46" y1="-0.1" x2="-2.46" y2="0.9" width="0.0508" layer="21" curve="180"/>
-<wire x1="-2.46" y1="-1.1" x2="-2.46" y2="-0.1" width="0.0508" layer="21" curve="180"/>
-<wire x1="3.665" y1="0.4" x2="3.665" y2="-0.6" width="0.0508" layer="21" curve="180"/>
-<wire x1="3.415" y1="0.9" x2="3.415" y2="-1.1" width="0.0508" layer="21" curve="180"/>
-<wire x1="3.665" y1="0.4" x2="4.165" y2="0.4" width="0.0508" layer="21" curve="-15.189287"/>
-<wire x1="3.415" y1="0.9" x2="4.175" y2="0.845" width="0.0508" layer="21" curve="-12.05913"/>
-<wire x1="3.415" y1="-1.1" x2="4.165" y2="-0.975" width="0.0508" layer="21" curve="18.422836"/>
-<wire x1="1.665" y1="-0.35" x2="1.665" y2="0.9" width="0.0508" layer="21" curve="180"/>
-<wire x1="1.29" y1="0.025" x2="1.29" y2="0.4" width="0.0508" layer="21" curve="180"/>
-<wire x1="-3.835" y1="0.9" x2="-3.835" y2="-1.1" width="0.0508" layer="21"/>
-<wire x1="-3.835" y1="-1.1" x2="-3.21" y2="-1.1" width="0.0508" layer="21"/>
-<wire x1="-3.21" y1="-1.1" x2="-3.21" y2="-0.1" width="0.0508" layer="21"/>
-<wire x1="-3.21" y1="-0.1" x2="-3.21" y2="0.9" width="0.0508" layer="21"/>
-<wire x1="-3.21" y1="0.9" x2="-3.835" y2="0.9" width="0.0508" layer="21"/>
-<wire x1="-3.21" y1="0.9" x2="-2.46" y2="0.4" width="0.0508" layer="21"/>
-<wire x1="-2.46" y1="0.4" x2="-3.21" y2="-0.1" width="0.0508" layer="21"/>
-<wire x1="-3.21" y1="-0.1" x2="-2.46" y2="-0.6" width="0.0508" layer="21"/>
-<wire x1="-2.46" y1="-0.6" x2="-3.21" y2="-1.1" width="0.0508" layer="21"/>
-<wire x1="-2.46" y1="-1.1" x2="-3.21" y2="-1.1" width="0.0508" layer="21"/>
-<wire x1="-2.46" y1="0.9" x2="-3.21" y2="0.9" width="0.0508" layer="21"/>
-<wire x1="-1.71" y1="0.9" x2="-1.71" y2="-1.1" width="0.0508" layer="21"/>
-<wire x1="-1.71" y1="-1.1" x2="0.04" y2="-1.1" width="0.0508" layer="21"/>
-<wire x1="0.04" y1="-1.1" x2="0.04" y2="-0.6" width="0.0508" layer="21"/>
-<wire x1="0.04" y1="-0.6" x2="-1.085" y2="-0.6" width="0.0508" layer="21"/>
-<wire x1="-1.085" y1="-0.6" x2="-1.085" y2="-0.35" width="0.0508" layer="21"/>
-<wire x1="-1.085" y1="-0.35" x2="0.04" y2="-0.35" width="0.0508" layer="21"/>
-<wire x1="0.04" y1="-0.35" x2="0.04" y2="0.15" width="0.0508" layer="21"/>
-<wire x1="0.04" y1="0.15" x2="-1.085" y2="0.15" width="0.0508" layer="21"/>
-<wire x1="-1.085" y1="0.15" x2="-1.085" y2="0.4" width="0.0508" layer="21"/>
-<wire x1="-1.085" y1="0.4" x2="0.04" y2="0.4" width="0.0508" layer="21"/>
-<wire x1="0.04" y1="0.4" x2="0.04" y2="0.9" width="0.0508" layer="21"/>
-<wire x1="0.04" y1="0.9" x2="-1.71" y2="0.9" width="0.0508" layer="21"/>
-<wire x1="0.29" y1="0.9" x2="0.29" y2="-1.1" width="0.0508" layer="21"/>
-<wire x1="0.29" y1="-1.1" x2="0.915" y2="-1.1" width="0.0508" layer="21"/>
-<wire x1="0.915" y1="-1.1" x2="0.915" y2="-0.35" width="0.0508" layer="21"/>
-<wire x1="0.915" y1="-0.35" x2="1.415" y2="-1.1" width="0.0508" layer="21"/>
-<wire x1="1.415" y1="-1.1" x2="2.165" y2="-1.1" width="0.0508" layer="21"/>
-<wire x1="2.165" y1="-1.1" x2="1.665" y2="-0.35" width="0.0508" layer="21"/>
-<wire x1="0.915" y1="0.4" x2="0.915" y2="0.025" width="0.0508" layer="21"/>
-<wire x1="0.29" y1="0.9" x2="1.665" y2="0.9" width="0.0508" layer="21"/>
-<wire x1="0.915" y1="0.4" x2="1.29" y2="0.4" width="0.0508" layer="21"/>
-<wire x1="0.915" y1="0.025" x2="1.29" y2="0.025" width="0.0508" layer="21"/>
-<wire x1="3.665" y1="-0.1" x2="4.165" y2="-0.1" width="0.0508" layer="21"/>
-<wire x1="3.665" y1="-0.1" x2="3.665" y2="-0.6" width="0.0508" layer="21"/>
-<wire x1="4.16" y1="0.4" x2="4.16" y2="0.845" width="0.0508" layer="21"/>
-<wire x1="4.165" y1="-0.1" x2="4.165" y2="-0.975" width="0.0508" layer="21"/>
-<pad name="2" x="-1" y="2.71" drill="0.95" shape="long" rot="R90"/>
-<pad name="3" x="1" y="2.71" drill="0.95" shape="long" rot="R90"/>
-<pad name="1" x="-3.5" y="2.71" drill="0.95" shape="long" rot="R90"/>
-<pad name="4" x="3.5" y="2.71" drill="0.95" shape="long" rot="R90"/>
-<text x="-7.62" y="5.08" size="1.27" layer="25">&gt;NAME</text>
-<text x="9.144" y="-10.16" size="1.27" layer="27" rot="R90">&gt;VALUE</text>
-<text x="-3.81" y="-2.04" size="0.4064" layer="21">E L E C T R O N I C S</text>
-<hole x="-6.57" y="0" drill="2.3"/>
-<hole x="6.57" y="0" drill="2.3"/>
-</package>
-</packages>
-<symbols>
-<symbol name="J11">
-<wire x1="0" y1="7.62" x2="0" y2="-5.08" width="0.254" layer="94"/>
-<wire x1="0" y1="-5.08" x2="5.08" y2="-5.08" width="0.254" layer="94"/>
-<wire x1="0" y1="7.62" x2="5.08" y2="7.62" width="0.254" layer="94"/>
-<text x="0" y="8.89" size="1.778" layer="95">&gt;NAME</text>
-<text x="0" y="-7.62" size="1.778" layer="96">&gt;VALUE</text>
-<text x="5.08" y="-2.54" size="2.54" layer="94" rot="R90">USB</text>
-<pin name="1" x="-2.54" y="5.08" visible="pad" length="short" direction="pas"/>
-<pin name="2" x="-2.54" y="2.54" visible="pad" length="short" direction="pas"/>
-<pin name="3" x="-2.54" y="0" visible="pad" length="short" direction="pas"/>
-<pin name="4" x="-2.54" y="-2.54" visible="pad" length="short" direction="pas"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="PN87520" prefix="X" uservalue="yes">
-<description>&lt;b&gt;BERG&lt;/b&gt; USB connector</description>
-<gates>
-<gate name="G$1" symbol="J11" x="-2.54" y="0"/>
-</gates>
-<devices>
-<device name="" package="PN87520">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="2"/>
-<connect gate="G$1" pin="3" pad="3"/>
-<connect gate="G$1" pin="4" pad="4"/>
-</connects>
-<technologies>
-<technology name="">
-<attribute name="MF" value="" constant="no"/>
-<attribute name="MPN" value="" constant="no"/>
-<attribute name="OC_FARNELL" value="unknown" constant="no"/>
-<attribute name="OC_NEWARK" value="unknown" constant="no"/>
-</technology>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="LM18200T_CF_INTech">
 <packages>
 <package name="LM18200T_CF_INTECH">
@@ -12403,6 +12285,65 @@ Based on  the following source:
 <connect gate="G$1" pin="SENSE" pad="8"/>
 <connect gate="G$1" pin="THERMAL" pad="9"/>
 <connect gate="G$1" pin="VS" pad="6"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
+<library name="USB_CF_INTech">
+<packages>
+<package name="USB">
+<wire x1="-7.4" y1="3.94" x2="-7.4" y2="-10.19" width="0.254" layer="21"/>
+<wire x1="-7.4" y1="-10.19" x2="7.4" y2="-10.19" width="0.254" layer="21"/>
+<wire x1="7.4" y1="-10.19" x2="7.4" y2="3.94" width="0.254" layer="21"/>
+<wire x1="7.4" y1="3.94" x2="-7.4" y2="3.94" width="0.254" layer="21"/>
+<wire x1="-5.08" y1="-2.87" x2="-3.81" y2="-8.72" width="0.1524" layer="21"/>
+<wire x1="-3.81" y1="-8.72" x2="-2.54" y2="-8.72" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="-8.72" x2="-1.27" y2="-2.87" width="0.1524" layer="21"/>
+<wire x1="1.27" y1="-2.87" x2="2.54" y2="-8.72" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="-8.72" x2="3.81" y2="-8.72" width="0.1524" layer="21"/>
+<wire x1="3.81" y1="-8.72" x2="5.08" y2="-2.87" width="0.1524" layer="21"/>
+<pad name="VIN" x="-3.5" y="2.54" drill="0.95" shape="long" rot="R90"/>
+<pad name="2" x="-1" y="2.54" drill="0.95" shape="long" rot="R90"/>
+<pad name="3" x="1" y="2.54" drill="0.95" shape="long" rot="R90"/>
+<pad name="GND" x="3.5" y="2.54" drill="0.95" shape="long" rot="R90"/>
+<text x="10.16" y="-10.16" size="1.27" layer="21" rot="R90">&gt;NAME</text>
+<hole x="-6.57" y="0" drill="2.3"/>
+<hole x="6.57" y="0" drill="2.3"/>
+<text x="-3.556" y="4.572" size="1.27" layer="21" rot="R90">Vin</text>
+<text x="3.556" y="4.572" size="1.016" layer="21" rot="R90">GND</text>
+</package>
+</packages>
+<symbols>
+<symbol name="ALIM_USB">
+<wire x1="0" y1="7.62" x2="5.08" y2="7.62" width="0.254" layer="94"/>
+<wire x1="0" y1="7.62" x2="0" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="0" y1="-5.08" x2="5.08" y2="-5.08" width="0.254" layer="94"/>
+<pin name="VIN" x="-2.54" y="5.08" visible="pad" length="short" direction="pas"/>
+<pin name="2" x="-2.54" y="2.54" visible="pad" length="short" direction="pas"/>
+<pin name="3" x="-2.54" y="0" visible="pad" length="short" direction="pas"/>
+<pin name="GND" x="-2.54" y="-2.54" visible="pad" length="short" direction="pas"/>
+<text x="5.08" y="-2.54" size="2.54" layer="94" rot="R90">USB</text>
+<text x="0" y="-7.62" size="1.4224" layer="95">&gt;NAME</text>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="USB_87520">
+<description>Connecteur pour alimentation USB-85720 (Raspberry...)</description>
+<gates>
+<gate name="G$1" symbol="ALIM_USB" x="-2.54" y="2.54"/>
+</gates>
+<devices>
+<device name="" package="USB">
+<connects>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="GND" pad="GND"/>
+<connect gate="G$1" pin="VIN" pad="VIN"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -12499,7 +12440,7 @@ Based on  the following source:
 <part name="L1" library="inductor-neosid" deviceset="SD12" device="K100" value="68µH"/>
 <part name="DC1" library="dc-dc-converter" deviceset="R-78C*-1.0_INTECH" device=""/>
 <part name="DEL_RASP" library="con-ptr500" deviceset="AK300/2" device=""/>
-<part name="USB_RASP" library="con-berg" deviceset="PN87520" device=""/>
+<part name="USB_RASP" library="USB_CF_INTech" deviceset="USB_87520" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -12831,7 +12772,7 @@ Based on  the following source:
 <pinref part="DC1" gate="G$1" pin="GND"/>
 <junction x="-215.9" y="-121.92"/>
 <wire x1="-215.9" y1="-124.46" x2="-215.9" y2="-121.92" width="0.1524" layer="91"/>
-<pinref part="USB_RASP" gate="G$1" pin="4"/>
+<pinref part="USB_RASP" gate="G$1" pin="GND"/>
 <junction x="-185.42" y="-124.46"/>
 <wire x1="-215.9" y1="-124.46" x2="-185.42" y2="-124.46" width="0.1524" layer="91"/>
 </segment>
@@ -13361,7 +13302,7 @@ Based on  the following source:
 </net>
 <net name="+5V_RASP" class="0">
 <segment>
-<pinref part="USB_RASP" gate="G$1" pin="1"/>
+<pinref part="USB_RASP" gate="G$1" pin="VIN"/>
 <junction x="-185.42" y="-116.84"/>
 <wire x1="-185.42" y1="-116.84" x2="-185.42" y2="-114.3" width="0.1524" layer="91"/>
 <pinref part="DC1" gate="G$1" pin="VOUT"/>
