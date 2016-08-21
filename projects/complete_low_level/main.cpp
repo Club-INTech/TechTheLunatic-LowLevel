@@ -14,18 +14,20 @@ int main(void)
 	serial_ax.init(9600);
 	serial_ax.disable_rx();
 
-	MotionControlSystem* motionControlSystem = &MotionControlSystem::Instance(); // motionControlSystem est tout simplement un pointeur vers une référence d'un objet de type MotionControlSystem #TRIVIAL #USELESS
+	MotionControlSystem* motionControlSystem = &MotionControlSystem::Instance(); // motionControlSystem est tout simplement un pointeur vers une rï¿½fï¿½rence d'un objet de type MotionControlSystem #TRIVIAL #USELESS
 	motionControlSystem->init();
 	ActuatorsMgr* actuatorsMgr = &ActuatorsMgr::Instance();
 	SensorMgr* sensorMgr = &SensorMgr::Instance();
 	Voltage_controller* voltage = &Voltage_controller::Instance();
 
-	char order[64];//Permet le stockage du message reçu par la liaison série
+	char order[64];//Permet le stockage du message reï¿½u par la liaison sï¿½rie
 
-	bool translation = true;//permet de basculer entre les réglages de cte d'asserv en translation et en rotation
+	bool translation = true;//permet de basculer entre les rï¿½glages de cte d'asserv en translation et en rotation
 
 	while(1)
 	{
+		serial.printflnDebug("ERREUR 404 : ANUS NOT FOUND");
+
 		sensorMgr->refresh(motionControlSystem->getMovingDirection());
 
 		uint8_t tailleBuffer = serial.available();
@@ -39,10 +41,10 @@ int main(void)
 			{
 				serial.printfln("0");
 			}
-			else if(!strcmp("f",order))			//Indiquer l'état du mouvement du robot
+			else if(!strcmp("f",order))			//Indiquer l'ï¿½tat du mouvement du robot
 			{
 				serial.printfln("%d", motionControlSystem->isMoving());			//Robot en mouvement ou pas ?
-				serial.printfln("%d", motionControlSystem->isMoveAbnormal());	//Cet état du mouvement est il anormal ?
+				serial.printfln("%d", motionControlSystem->isMoveAbnormal());	//Cet ï¿½tat du mouvement est il anormal ?
 			}
 			else if(!strcmp("?xyo",order))		//Indiquer la position du robot (en mm et radians)
 			{
@@ -50,7 +52,7 @@ int main(void)
 				serial.printfln("%f", motionControlSystem->getY());
 				serial.printfln("%f", motionControlSystem->getAngleRadian());
 			}
-			else if(!strcmp("d", order))		//Ordre de déplacement rectiligne (en mm)
+			else if(!strcmp("d", order))		//Ordre de dï¿½placement rectiligne (en mm)
 			{
 				int deplacement = 0;
 				serial.read(deplacement);
@@ -77,12 +79,12 @@ int main(void)
 				motionControlSystem->orderCurveTrajectory(arcLenght, curveRadius);
 			}
 
-			else if(!strcmp("efm", order)) // Activer les mouvements forcés (sans blocage)
+			else if(!strcmp("efm", order)) // Activer les mouvements forcï¿½s (sans blocage)
 			{
 				motionControlSystem->enableForcedMovement();
 			}
 
-			else if(!strcmp("dfm", order)) // désactive le forçage
+			else if(!strcmp("dfm", order)) // dï¿½sactive le forï¿½age
 			{
 				motionControlSystem->disableForcedMovement();
 			}
@@ -95,27 +97,27 @@ int main(void)
 				serial.printfln("_");
 				motionControlSystem->orderRotation(angle_actuel + delta_angle, MotionControlSystem::FREE);
 			}
-			else if(!strcmp("r", order))		//Ordre de rotation via un angle relatif (en degrés)
+			else if(!strcmp("r", order))		//Ordre de rotation via un angle relatif (en degrï¿½s)
 			{
 				float angle_actuel = motionControlSystem->getAngleRadian()*180/PI, delta_angle = 0;
 				serial.read(delta_angle);
 				serial.printfln("_");
 				motionControlSystem->orderRotation((angle_actuel + delta_angle)*PI/180, MotionControlSystem::FREE);
 			}
-			else if(!strcmp("stop",order))		//Ordre d'arrêt (asservissement à la position actuelle)
+			else if(!strcmp("stop",order))		//Ordre d'arrï¿½t (asservissement ï¿½ la position actuelle)
 			{
 				motionControlSystem->stop();
 			}
-			else if(!strcmp("us",order))		//Indiquer la distance mesurée par les capteurs à ultrason
+			else if(!strcmp("us",order))		//Indiquer la distance mesurï¿½e par les capteurs ï¿½ ultrason
 			{
 				serial.printfln("%d", sensorMgr->getSensorDistanceARD());//en mm
 
 			}
-			else if(!strcmp("j",order))			//Indiquer l'état du jumper (0='en place'; 1='dehors')
+			else if(!strcmp("j",order))			//Indiquer l'ï¿½tat du jumper (0='en place'; 1='dehors')
 			{
 				serial.printfln("%d", sensorMgr->isJumperOut());
 			}
-			else if(!strcmp("ct0",order))		//Désactiver l'asservissement en translation
+			else if(!strcmp("ct0",order))		//Dï¿½sactiver l'asservissement en translation
 			{
 				motionControlSystem->enableTranslationControl(false);
 			}
@@ -123,7 +125,7 @@ int main(void)
 			{
 				motionControlSystem->enableTranslationControl(true);
 			}
-			else if(!strcmp("cr0",order))		//Désactiver l'asservissement en rotation
+			else if(!strcmp("cr0",order))		//Dï¿½sactiver l'asservissement en rotation
 			{
 				motionControlSystem->enableRotationControl(false);
 			}
@@ -140,35 +142,35 @@ int main(void)
 				motionControlSystem->enableSpeedControl(true);
 			}
 
-			else if(!strcmp("cx",order))		//Régler la composante x de la position (en mm)
+			else if(!strcmp("cx",order))		//Rï¿½gler la composante x de la position (en mm)
 			{
 				float x;
 				serial.read(x);
 				serial.printfln("_");//Acquittement
 				motionControlSystem->setX(x);
 			}
-			else if(!strcmp("cy",order))		//Régler la composante y de la position (en mm)
+			else if(!strcmp("cy",order))		//Rï¿½gler la composante y de la position (en mm)
 			{
 				float y;
 				serial.read(y);
 				serial.printfln("_");//Acquittement
 				motionControlSystem->setY(y);
 			}
-			else if(!strcmp("co",order))		//Régler l'orientation du robot (en radians)
+			else if(!strcmp("co",order))		//Rï¿½gler l'orientation du robot (en radians)
 			{
 				float o;
 				serial.read(o);
 				serial.printfln("_");//Acquittement
 				motionControlSystem->setOriginalAngle(o);
 			}
-			else if(!strcmp("ctv",order))   //Régler la vitesse de translation
+			else if(!strcmp("ctv",order))   //Rï¿½gler la vitesse de translation
 			{
-				float speed = 0; // unité de speed : mm/s
+				float speed = 0; // unitï¿½ de speed : mm/s
 				serial.read(speed);
 				serial.printfln("_");
 				motionControlSystem->setTranslationSpeed(speed);
 			}
-			else if(!strcmp("crv",order))  //Régler la vitesse de rotation
+			else if(!strcmp("crv",order))  //Rï¿½gler la vitesse de rotation
 			{
 				float speedRotation = 0; // rad/s
 				serial.read(speedRotation);
@@ -229,7 +231,7 @@ int main(void)
 			{
 				static bool asservTranslation = false;
 				motionControlSystem->enableTranslationControl(asservTranslation);
-				serial.printfln("l'asserv en translation est désormais");
+				serial.printfln("l'asserv en translation est dï¿½sormais");
 				if (asservTranslation)
 				{
 					serial.printfln("asservi en translation");
@@ -244,7 +246,7 @@ int main(void)
 			{
 				static bool asservRotation = false;
 				motionControlSystem->enableRotationControl(asservRotation);
-				serial.printfln("l'asserv en rotation est désormais");
+				serial.printfln("l'asserv en rotation est dï¿½sormais");
 				if (asservRotation)
 				{
 					serial.printfln("asservi en rotation");
@@ -296,10 +298,10 @@ int main(void)
 				serial.printf("L'asserv en vitesse est ");
 				if(!asservVitesse)
 				{
-					serial.printfln("desactivée");
+					serial.printfln("desactivï¿½e");
 				}
 				else {
-					serial.printfln("activée");
+					serial.printfln("activï¿½e");
 				}
 			}
 
@@ -312,7 +314,7 @@ int main(void)
  */
 
 
-			else if(!strcmp("toggle",order))//Bascule entre le réglage d'asserv en translation et en rotation
+			else if(!strcmp("toggle",order))//Bascule entre le rï¿½glage d'asserv en translation et en rotation
 			{
 				translation = !translation;
 				if(translation)
@@ -478,7 +480,7 @@ int main(void)
 
 
 	/**
-	 * 		Commandes de tracking des variables du système (débug)
+	 * 		Commandes de tracking des variables du systï¿½me (dï¿½bug)
 	 */
 			else if(!strcmp("trackAll",order))
 			{
@@ -558,11 +560,12 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 	static MotionControlSystem* motionControlSystem = &MotionControlSystem::Instance();
 	static Voltage_controller* voltage = &Voltage_controller::Instance();
 
+
 	if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
-		//Remise à 0 manuelle du flag d'interruption nécessaire
+		//Remise ï¿½ 0 manuelle du flag d'interruption nï¿½cessaire
 		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 
-		//Asservissement et mise à jour de la position
+		//Asservissement et mise ï¿½ jour de la position
 		motionControlSystem->control();
 		motionControlSystem->updatePosition();
 
@@ -574,9 +577,11 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 			j=0;
 		}
 
-		if(k >= 200)
+		if(k >= 2000)
 		{
+
 			voltage->measure();
+
 			k=0;
 		}
 
