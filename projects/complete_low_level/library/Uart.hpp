@@ -20,6 +20,8 @@
  *
  */
 
+
+
 #ifndef UART_HPP
 #define UART_HPP
 
@@ -39,6 +41,15 @@
 //#include "ltoa.h"
 
 #define RX_BUFFER_SIZE 64
+
+/*
+ * En tÃªtes des diffÃ©rents canaux du protocole sÃ©rie
+ */
+
+#define DEBUG_HEADER    {0x02, 0x20}
+#define EVENT_HEADER    {0x13, 0x37}
+#define US_HEADER       {0x01, 0x10}
+
 
 template<uint8_t USART_ID>
 class Uart {
@@ -249,9 +260,9 @@ public:
 
 		//UART setting
 		USART_InitStruct.USART_BaudRate = baudrate;
-		USART_InitStruct.USART_WordLength = USART_WordLength_8b; // octet comme taille élémentaore (standard)
+		USART_InitStruct.USART_WordLength = USART_WordLength_8b; // octet comme taille ï¿½lï¿½mentaore (standard)
 		USART_InitStruct.USART_StopBits = USART_StopBits_1; // bit de stop = 1 (standard)
-		USART_InitStruct.USART_Parity = USART_Parity_No; // pas de bit de parité (standard)
+		USART_InitStruct.USART_Parity = USART_Parity_No; // pas de bit de paritï¿½ (standard)
 		USART_InitStruct.USART_HardwareFlowControl =
 				USART_HardwareFlowControl_None; // pas de controle de flux (standard)
 		USART_InitStruct.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
@@ -426,6 +437,43 @@ public:
 		send_ln();
         va_end(args);
     }
+
+	static inline void printflnDebug(const char *format, ...)
+	{
+		va_list args;
+		va_start(args, format);
+		char message[62];
+		vsnprintf(message, 62, format, args);
+		char header[2] = DEBUG_HEADER;
+		write(strcat(header, message));
+		send_ln();
+		va_end(args);
+	}
+
+	static inline void printflnEvent(const char *format, ...)
+	{
+		va_list args;
+		va_start(args, format);
+		char message[62];
+		vsnprintf(message, 62, format, args);
+        char header[2] = EVENT_HEADER;
+		write(strcat(header, message));
+		send_ln();
+		va_end(args);
+	}
+
+    static inline void printflnUS(const char *format, ...)
+    {
+        va_list args;
+        va_start(args, format);
+        char message[62];
+        vsnprintf(message, 62, format, args);
+        char header[2] = US_HEADER;
+        write(strcat(header, message));
+        send_ln();
+        va_end(args);
+    }
+
 
 	template<class T>
 	static inline uint8_t read(T &val, uint16_t timeout = 0) {
