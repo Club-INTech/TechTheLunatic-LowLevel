@@ -10,7 +10,7 @@ else
 	echo "-------------------------------------------"
 	echo >2& "arm-none-eabi-gcc n'est pas installé."
 	echo  "Installation..."
-	apt-get install --yes --force-yes gcc-arm-none-eabi
+	apt install --yes --force-yes gcc-arm-none-eabi
 	echo "arm-none-eabi-gcc a été installé"
 	echo "-------------------------------------------"
 fi
@@ -18,7 +18,7 @@ fi
 # Installation de libusb
 # (je voulais mettre un test mais comme c'est pas une commande,
 # flemme. Au pire, ça réinstalle. YOLO.)
-apt-get install --yes --force-yes libusb-1.0-0-dev
+apt install --yes --force-yes libusb-1.0-0-dev
 
 
 #Installation de git
@@ -31,7 +31,7 @@ else
 	echo "-------------------------------------------"
 	echo >2& "git n'est pas installé."
 	echo  "Installation..."
-	apt-get install --yes --force-yes git
+	apt install --yes --force-yes git
 	echo "git a été installé"
 	echo "-------------------------------------------"
 fi
@@ -46,7 +46,7 @@ else
 	echo "-------------------------------------------"
 	echo >2& "cmake n'est pas installé."
 	echo  "Installation..."
-	apt-get install --yes --force-yes cmake
+	apt install --yes --force-yes cmake
 	echo "cmake a été installé"
 	echo "-------------------------------------------"
 fi

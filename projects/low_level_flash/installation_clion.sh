@@ -10,10 +10,11 @@ else
 	echo >2& "CLion n'est pas installé." 
 	echo  "Installation..." 
 	cd /opt 
-	wget https://download.jetbrains.com/cpp/CLion-2016.2.1.tar.gz 
-	tar xzvf CLion* 
+	sudo wget https://download.jetbrains.com/cpp/CLion-2016.2.1.tar.gz 
+	sudo tar xzvf CLion* 
+	sudo chmod 755 clion*
 	cd clion*/bin 
-	rm /opt/Clion*.tar.gz 
+	sudo rm /opt/CLion*.tar.gz 
 	sh clion.sh 
 	echo "CLion a été installé" 
 	echo "-------------------------------------------" 
