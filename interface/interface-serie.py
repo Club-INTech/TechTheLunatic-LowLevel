@@ -3,6 +3,16 @@ from Tkinter import *
 from threadEcoute import *
 
 
+try:
+    serie = Serial(port="/dev/ttyUSB0", baudrate=115200, timeout=0)
+    print ("serie OK")
+except SerialException:
+    print "impossible d'ouvrir le port serie ttyUSB0"
+    raw_input()
+    exit()
+
+
+
 fenetre = Tk()
 
 label = Label(fenetre, text="INTerface")
@@ -14,12 +24,28 @@ gauche.pack(side=LEFT, expand="yes", fill=BOTH, pady=2, padx=2)
 droite = PanedWindow(fenetre, orient=VERTICAL)
 droite.pack(side=RIGHT, expand="yes", fill=BOTH, pady=2, padx=2)
 
-state = LabelFrame(gauche, text="Etat du robot", padx=20, pady=20)
+state = PanedWindow(gauche, orient=HORIZONTAL)
 state.pack(fill="both", expand="no", side=TOP)
 
-Label(state, text="Position :").pack()
-Label(state, text="Orientation :").pack()
-Label(state, text="Ultra Sons :").pack()
+position = LabelFrame(state, text="Position :")
+position.pack(side=LEFT, expand="yes", fill="both")
+orientation = LabelFrame(state, text="Orientation :")
+orientation.pack(side=LEFT, expand="yes", fill="both")
+us = LabelFrame(state, text="Ultra Sons :")
+us.pack(side=LEFT, expand="yes", fill="both")
+
+
+Label(position, text="x : ").pack()
+Label(position, text="y : ").pack()
+
+Label(orientation, text=" ... rad ").pack()
+
+Label(us, text="Avant gauche : ").pack()
+Label(us, text="Avant droit : ").pack()
+Label(us, text="Arriere gauche : ").pack()
+Label(us, text="Arriere droit : ").pack()
+
+
 
 saisieBlock = PanedWindow(gauche, orient=HORIZONTAL, height=1)
 saisieBlock.pack(fill="both", expand="no", side=BOTTOM)
@@ -27,7 +53,7 @@ saisieBlock.pack(fill="both", expand="no", side=BOTTOM)
 saisie = Entry(saisieBlock)
 saisie.pack(fill="both", expand="yes", side=LEFT)
 
-envoyer = Button(saisieBlock, text="Envoyer")
+envoyer = Button(saisieBlock, text="Envoyer", command=serie.write("?\r\n"))
 envoyer.pack(fill="both", expand="no", side=RIGHT)
 
 generalZone = LabelFrame(gauche, text="Vue Haut Niveau", padx=5, pady=5)
@@ -72,20 +98,16 @@ bouton.pack(side=BOTTOM)
 
 
 
-com=serialCom("/dev/ttyUSB0")
 
 
 
-ecoute = threadEcoute(com)
+
+
+ecoute = threadEcoute(serie, debugLogs, generalLogs)
 
 ecoute.start()
 
 
 
 
-
 fenetre.mainloop()
-
-ecoute.stop()
-
-    

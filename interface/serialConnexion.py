@@ -1,5 +1,10 @@
 from serial import *
 
+
+
+
+
+
 class serialCom:
     def __init__(self, serialPort):
         self.port = serialPort
@@ -26,6 +31,7 @@ class serialCom:
     def parler(self, a_envoyer):
         # raw_input("ecrire ici")
         self.port_serie.write(a_envoyer + "\r\n")
+        print ("Envoye : "+a_envoyer)
         return a_envoyer
 
     def quitter(self):

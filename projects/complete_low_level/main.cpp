@@ -26,8 +26,6 @@ int main(void)
 
 	while(1)
 	{
-		serial.printflnDebug("ERREUR 404 : ANUS NOT FOUND");
-
 		sensorMgr->refresh(motionControlSystem->getMovingDirection());
 
 		uint8_t tailleBuffer = serial.available();
