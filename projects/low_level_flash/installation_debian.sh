@@ -2,17 +2,18 @@
 
 
 #Installation du compilateu arm
- (command -v arm-none-eabi-gcc>/dev/null 2>&1
-  echo "arm-none-eabi-gcc est déja installé sur cette machine"
- ) || ( 
+if test /usr/bin/arm-none-eabi-gcc
+then
+ echo "arm-none-eabi-gcc  est déja installé sur cette machine"
+else
+
 	 echo "-------------------------------------------"
 	 echo >2& "arm-none-eabi-gcc n'est pas installé."
 	 echo  "Installation..."
 	 apt-get install --yes --force-yes gcc-arm-none-eabi
 	 echo "arm-none-eabi-gcc a été installé"
 	 echo "-------------------------------------------"
-      )
-
+ fi
 
 # Installation de libusb
 # (je voulais mettre un test mais comme c'est pas une commande,
@@ -21,22 +22,27 @@
 
 
 #Installation de git
- (command -v git>/dev/null 2>&1
-  echo "git est déja installé sur cette machine"
- ) || ( 
-	 echo "-------------------------------------------"
+if test -d /usr/bin/git
+then
+ echo "Git est déja installé sur cette machine"
+else
+
+
+echo "-------------------------------------------"
 	 echo >2& "git n'est pas installé."
 	 echo  "Installation..."
 	 apt-get install --yes --force-yes git
 	 echo "git a été installé"
 	 echo "-------------------------------------------"
-      )
+ fi
+
+#Installation de stlinki
+if test -d /usr/bin/st-flash
+then
+	 echo "St-link est déja installé sur cette machine"
+ else
 
 
-#Installation de stlink
- (command -v st-flash>/dev/null 2>&1
-  echo "stlink est déja installé sur cette machine";
- ) || (
 	 echo "-------------------------------------------"
 	 echo >2& "stlink n'est pas installé."
 	 echo  "Installation..."
@@ -48,11 +54,10 @@
 	 mkdir build && cd build
 	 cmake -DCMAKE_BUILD_TYPE=Debug ..
 	 make
-	 cp st-* /bin
+	 cp st-* /usr/bin
 	 echo "stlink a été installé"
 	 echo "-------------------------------------------"
-      )
-
+ fi
 
 #Installation de Clion
 
@@ -64,9 +69,11 @@ else
 	 echo "-------------------------------------------"
 	 echo >2& "CLion n'est pas installé."
 	 echo  "Installation..."
+	 cd /opt
 	 wget https://download.jetbrains.com/cpp/CLion-2016.2.1.tar.gz
 	 tar xzvf CLion*
 	 cd clion*/bin
+	 rm /opt/Clion*.tar.gz
 	 sh clion.sh
 	 echo "CLion a été installé"
 	 echo "-------------------------------------------"
