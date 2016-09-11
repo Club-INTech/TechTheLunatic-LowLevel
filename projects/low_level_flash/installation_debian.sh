@@ -2,7 +2,7 @@
 
 
 #Installation du compilateu arm
-if test /usr/bin/arm-none-eabi-gcc
+if test -f /usr/bin/arm-none-eabi-gcc
 then
 	echo "arm-none-eabi-gcc  est déja installé sur cette machine"
 else
@@ -22,7 +22,7 @@ apt install --yes --force-yes libusb-1.0-0-dev
 
 
 #Installation de git
-if test -d /usr/bin/git
+if test -f /usr/bin/git
 then
 	echo "Git est déja installé sur cette machine"
 else
@@ -39,7 +39,7 @@ fi
 
 #Installation de Cmake
 
-if test -d /usr/bin/cmake
+if test -f /usr/bin/cmake
 then 
 	echo "Cmake est déja installé sur cette machine"
 else
@@ -64,7 +64,6 @@ else
 	echo "-------------------------------------------"
 	echo >2& "stlink n'est pas installé."
 	echo  "Installation..."
-	cd /opt
 	wget https://github.com/texane/stlink/archive/master.zip
 	unzip master.zip
 	rm master.zip
@@ -73,6 +72,8 @@ else
 	cmake -DCMAKE_BUILD_TYPE=Debug ..
 	make
 	cp st-* /usr/bin
+	cd ../..
+	sudo rm -r stlink-master
 	echo "stlink a été installé"
 	echo "-------------------------------------------"
 fi
