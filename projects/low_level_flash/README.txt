@@ -1,6 +1,19 @@
 @author : Rémi Dulong
 
 --------------------------------------------------------------------
+
+		Installation (bas niveau)
+
+--------------------------------------------------------------------
+
+1) Lancez le script installation_debian.sh EN TANT QUE ROOT
+
+2) Lancez le script installation_clion.sh EN TANT QU'UTILISATEUR !
+
+3) Enjoy
+
+
+--------------------------------------------------------------------
 			
 		Script de Flash de la STM32
 
