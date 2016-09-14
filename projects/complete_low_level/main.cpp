@@ -38,6 +38,7 @@ int main(void)
 			if(!strcmp("?",order))				//Ping
 			{
 				serial.printfln("0");
+                serial.printflnDebug("PING");
 			}
 			else if(!strcmp("f",order))			//Indiquer l'�tat du mouvement du robot
 			{
