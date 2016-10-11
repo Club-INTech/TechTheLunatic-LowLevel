@@ -2,15 +2,23 @@ from threading import Thread
 from serialConnexion import *
 from Tkinter import *
 
-debugHeader = [0x02, 0x20]
+debugHeaderCode = [0x02, 0x20]
+debugHeader = "".join([chr(c) for c in debugHeaderCode]) # Passage en string
 
+positionXHeaderCode = [0x03, 0x013]
+positionXHeader = "".join([chr(c) for c in positionXHeaderCode])
+
+positionYHeaderCode = [0x03, 0x013]
+positionXHeader = "".join([chr(c) for c in positionXHeaderCode])
 
 class threadEcoute(Thread):
-    def __init__(self, serie, debugLogs, generalLogs):
+    def __init__(self, serie, debugLogs, generalLogs, position, timestamps):
         Thread.__init__(self)
         self.serie = serie
         self.debugLogs = debugLogs
         self.generalLogs = generalLogs
+        self.position=position
+        self.timestamps=timestamps
         print("--------------------------\n\n")
 
     def run(self):
@@ -28,17 +36,21 @@ class threadEcoute(Thread):
                     if a.find("\r\n") != -1:
                         break
 
-            if (a[0:4] == debugHeader):
+            if (a[0:2] == debugHeader):
 
                 self.debugLogs.config(state=NORMAL)
-                self.debugLogs.insert(END, a[4:-2]+"\n")
+                self.debugLogs.insert(END, a[2:-2]+"\n")
                 self.debugLogs.config(state=DISABLED)
                 self.debugLogs.see("end")
 
+            elif (a[0:2] == positionHeader):
+
+                if (time-timestamp.max() > 0.05):
+                    self.position[0] =
+
 
             else:
-                # print a[:len(a)-2]
-                print a[0:4]
+
                 self.generalLogs.config(state=NORMAL)
                 self.generalLogs.insert(END, a[:-2]+"\n")
                 self.generalLogs.config(state=DISABLED)

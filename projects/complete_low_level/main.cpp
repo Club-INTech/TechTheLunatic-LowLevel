@@ -555,7 +555,7 @@ int main(void)
 extern "C" {
 //Interruption overflow TIMER4
 void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
-	volatile static uint32_t i = 0, j = 0, k = 0;
+	volatile static uint32_t i = 0, j = 0, k = 0, l = 0;
 	static MotionControlSystem* motionControlSystem = &MotionControlSystem::Instance();
 	static Voltage_controller* voltage = &Voltage_controller::Instance();
 
@@ -584,9 +584,19 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 			k=0;
 		}
 
+        if(l>=500)
+        {
+
+            serial.printfln("%f", motionControlSystem->getX());
+            serial.printfln("%f", motionControlSystem->getY());
+            serial.printfln("%f", motionControlSystem->getAngleRadian());
+
+        }
+
 		k++;
 		i++;
 		j++;
+        l++;
 	}
 }
 

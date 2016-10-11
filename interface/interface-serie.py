@@ -4,7 +4,7 @@ from threadEcoute import *
 
 
 try:
-    serie = Serial(port="/dev/ttyUSB1", baudrate=115200, timeout=0)
+    serie = Serial(port="/dev/ttyUSB0", baudrate=115200, timeout=0)
     print ("serie OK")
 
 
@@ -108,14 +108,13 @@ try:
     bouton.pack(side=BOTTOM)
 
 
+    position=[0, 0, 0]
+    timestamps=[0, 0, 0]
 
 
 
 
-
-
-
-    ecoute = threadEcoute(serie, debugLogs, generalLogs)
+    ecoute = threadEcoute(serie, debugLogs, generalLogs, position, timestamps)
 
     ecoute.start()
 
