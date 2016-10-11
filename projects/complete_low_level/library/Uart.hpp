@@ -49,6 +49,7 @@
 #define DEBUG_HEADER    {0x02, 0x20}
 #define EVENT_HEADER    {0x13, 0x37}
 #define US_HEADER       {0x01, 0x10}
+#define POSITION_HEADER {0x12, 0x19}
 
 
 template<uint8_t USART_ID>
@@ -469,6 +470,18 @@ public:
         char message[62];
         vsnprintf(message, 62, format, args);
         char header[2] = US_HEADER;
+        write(strcat(header, message));
+        send_ln();
+        va_end(args);
+    }
+
+    static inline void printflnPosition(const char *format, ...)
+    {
+        va_list args;
+        va_start(args, format);
+        char message[62];
+        vsnprintf(message, 62, format, args);
+        char header[2] = POSITION_HEADER;
         write(strcat(header, message));
         send_ln();
         va_end(args);

@@ -571,7 +571,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 
 		if(j >= 5){ //2.5ms
 			motionControlSystem->track();
-
+            motionControlSystem->manageStop();
 
 			j=0;
 		}
@@ -587,9 +587,9 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
         if(l>=500)
         {
 
-            serial.printfln("%f", motionControlSystem->getX());
-            serial.printfln("%f", motionControlSystem->getY());
-            serial.printfln("%f", motionControlSystem->getAngleRadian());
+            serial.printflnPosition("%f", motionControlSystem->getX());
+            serial.printflnPosition("%f", motionControlSystem->getY());
+            serial.printflnPosition("%f", motionControlSystem->getAngleRadian());
 
         }
 
