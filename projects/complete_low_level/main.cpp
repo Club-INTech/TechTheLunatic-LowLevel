@@ -4,6 +4,8 @@
 #include "SensorMgr.h"
 #include "library/voltage_controller.hpp"
 
+bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
+
 
 int main(void)
 {
@@ -177,6 +179,10 @@ int main(void)
 				motionControlSystem->setRotationSpeed(speedRotation);
 			}
 
+            else if(!strcmp("auto", order))
+            {
+                autoUpdatePosition = !autoUpdatePosition;
+            }
 
 			// POUR MONTLHERY
 
@@ -584,13 +590,15 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 			k=0;
 		}
 
-        if(l>=1000)
+        if(l>=2000)
         {
+            if(autoUpdatePosition) {
+                serial.printflnPosition("%f", motionControlSystem->getX());
+                serial.printflnPosition("%f", motionControlSystem->getY());
+                serial.printflnPosition("%f", motionControlSystem->getAngleRadian());
+            }
 
-            serial.printflnPosition("%f", motionControlSystem->getX());
-            serial.printflnPosition("%f", motionControlSystem->getY());
-            serial.printflnPosition("%f", motionControlSystem->getAngleRadian());
-
+            l=0;
         }
 
 		k++;

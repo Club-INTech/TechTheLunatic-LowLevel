@@ -4,7 +4,7 @@ from threadEcoute import *
 
 
 try:
-    serie = Serial(port="/dev/ttyUSB1", baudrate=115200, timeout=0)
+    serie = Serial(port="/dev/ttyUSB2", baudrate=115200, timeout=0)
     print ("serie OK")
 
 
