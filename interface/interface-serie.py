@@ -4,7 +4,7 @@ from threadEcoute import *
 
 
 try:
-    serie = Serial(port="/dev/ttyUSB0", baudrate=115200, timeout=0)
+    serie = Serial(port="/dev/ttyUSB1", baudrate=115200, timeout=0)
     print ("serie OK")
 
 
@@ -32,10 +32,12 @@ try:
     us.pack(side=LEFT, expand="yes", fill="both")
 
 
-    Label(position, text="x : ").pack()
-    Label(position, text="y : ").pack()
+    realPosition = [0, 0, 0]
 
-    Label(orientation, text=" ... rad ").pack()
+    Label(position, text="x : "+str(realPosition[0])).pack()
+    Label(position, text="y : "+str(realPosition[1])).pack()
+
+    Label(orientation, text=str(realPosition[2])+" rad ").pack()
 
     Label(us, text="Avant gauche : ").pack()
     Label(us, text="Avant droit : ").pack()
@@ -108,22 +110,16 @@ try:
     bouton.pack(side=BOTTOM)
 
 
-    position=[0, 0, 0]
-    timestamps=[0, 0, 0]
 
 
 
-
-    ecoute = threadEcoute(serie, debugLogs, generalLogs, position, timestamps)
+    ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition)
 
     ecoute.start()
-
-
-
 
     fenetre.mainloop()
 
 except SerialException:
-    print "impossible d'ouvrir le port serie ttyUSB0"
+    print "impossible d'ouvrir le port serie"
     raw_input()
     exit()

@@ -1,27 +1,30 @@
 from threading import Thread
 from serialConnexion import *
 from Tkinter import *
+from time import *
 
 debugHeaderCode = [0x02, 0x20]
 debugHeader = "".join([chr(c) for c in debugHeaderCode]) # Passage en string
 
-positionXHeaderCode = [0x03, 0x013]
-positionXHeader = "".join([chr(c) for c in positionXHeaderCode])
+positionHeaderCode = [0x12, 0x19]
+positionHeader = "".join([chr(c) for c in positionHeaderCode])
 
-positionYHeaderCode = [0x03, 0x013]
-positionXHeader = "".join([chr(c) for c in positionXHeaderCode])
+
 
 class threadEcoute(Thread):
-    def __init__(self, serie, debugLogs, generalLogs, position, timestamps):
+    def __init__(self, serie, debugLogs, generalLogs, realPosition):
         Thread.__init__(self)
         self.serie = serie
         self.debugLogs = debugLogs
         self.generalLogs = generalLogs
-        self.position=position
-        self.timestamps=timestamps
+
+
         print("--------------------------\n\n")
 
     def run(self):
+
+        position = [0, 0, 0]
+        timestamps = [0, 0, 0]
 
         while (True):
 
@@ -29,7 +32,7 @@ class threadEcoute(Thread):
 
             while (True):
                 if self.serie.in_waiting == 0:
-                    time.sleep(0.1)
+                    sleep(0.1)
                     # print("waiting for message")
                 else:
                     a += self.serie.read()
@@ -45,9 +48,15 @@ class threadEcoute(Thread):
 
             elif (a[0:2] == positionHeader):
 
-                if (time-timestamp.max() > 0.05):
-                    self.position[0] =
+                    position.pop(0)
+                    position.append(a[2:-2])
+                    timestamps.pop(0)
+                    timestamps.append(time())
 
+                    if (max(timestamps)-min(timestamps)<0.05): # Si les messages sont assez rapproches
+
+                        realPosition = position
+                        print "POSITION OK"
 
             else:
 

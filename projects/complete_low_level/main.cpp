@@ -584,7 +584,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 			k=0;
 		}
 
-        if(l>=500)
+        if(l>=1000)
         {
 
             serial.printflnPosition("%f", motionControlSystem->getX());
