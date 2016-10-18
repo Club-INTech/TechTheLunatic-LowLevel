@@ -12,11 +12,15 @@ positionHeader = "".join([chr(c) for c in positionHeaderCode])
 
 
 class threadEcoute(Thread):
-    def __init__(self, serie, debugLogs, generalLogs, realPosition):
+    def __init__(self, serie, debugLogs, generalLogs, realPosition, positionX, positionY, orientationLabel):
         Thread.__init__(self)
         self.serie = serie
         self.debugLogs = debugLogs
         self.generalLogs = generalLogs
+        self.realPosition = realPosition
+        self.positionX = positionX
+        self.positionY = positionY
+        self.orientationLabel = orientationLabel
 
 
         print("--------------------------\n\n")
@@ -49,14 +53,19 @@ class threadEcoute(Thread):
             elif (a[0:2] == positionHeader):
 
                     position.pop(0)
+                    print(a[2:-2])
                     position.append(a[2:-2])
                     timestamps.pop(0)
                     timestamps.append(time())
 
                     if (max(timestamps)-min(timestamps)<0.05): # Si les messages sont assez rapproches
 
-                        realPosition = position
+                        self.realPosition = position
                         print "POSITION OK"
+                        self.orientationLabel.pack()
+                        self.positionX.pack()
+                        self.positionY.pack()
+                        print self.realPosition
 
             else:
 

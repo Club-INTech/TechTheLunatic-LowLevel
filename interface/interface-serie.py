@@ -4,10 +4,8 @@ from threadEcoute import *
 
 
 try:
-    serie = Serial(port="/dev/ttyUSB2", baudrate=115200, timeout=0)
+    serie = Serial(port="/dev/ttyUSB0", baudrate=115200, timeout=0)
     print ("serie OK")
-
-
 
 
     fenetre = Tk()
@@ -31,13 +29,15 @@ try:
     us = LabelFrame(state, text="Ultra Sons :")
     us.pack(side=LEFT, expand="yes", fill="both")
 
-
     realPosition = [0, 0, 0]
 
-    Label(position, text="x : "+str(realPosition[0])).pack()
-    Label(position, text="y : "+str(realPosition[1])).pack()
+    positionX = Label(position, text="x : "+str(realPosition[0]))
+    positionX.pack()
+    positionY = Label(position, text="y : "+str(realPosition[1]))
+    positionY.pack()
 
-    Label(orientation, text=str(realPosition[2])+" rad ").pack()
+    orientationLabel = Label(orientation, text=str(realPosition[2])+" rad ")
+    orientationLabel.pack()
 
     Label(us, text="Avant gauche : ").pack()
     Label(us, text="Avant droit : ").pack()
@@ -113,7 +113,7 @@ try:
 
 
 
-    ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition)
+    ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition, positionX, positionY, orientationLabel)
 
     ecoute.start()
 

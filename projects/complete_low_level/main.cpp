@@ -171,7 +171,7 @@ int main(void)
 				serial.printfln("_");
 				motionControlSystem->setTranslationSpeed(speed);
 			}
-			else if(!strcmp("crv",order))  //R�gler la vitesse de rotation
+			else if(!strcmp("crv", order))  //R�gler la vitesse de rotation
 			{
 				float speedRotation = 0; // rad/s
 				serial.read(speedRotation);
@@ -610,7 +610,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 
 void EXTI9_5_IRQHandler(void)
 {
-	static SensorMgr* sensorMgr = &SensorMgr::Instance(); // Capteurs US
+//	static SensorMgr* sensorMgr = &SensorMgr::Instance(); // Capteurs US
 /*
 	//Interruptions de l'ultrason de test
     if (EXTI_GetITStatus(EXTI_Line5) != RESET) {
