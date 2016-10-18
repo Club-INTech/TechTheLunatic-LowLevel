@@ -443,7 +443,7 @@ public:
 	{
 		va_list args;
 		va_start(args, format);
-		char message[62];
+		char message[64];
 		vsnprintf(message, 62, format, args);
 		char header[2] = DEBUG_HEADER;
 		write(strcat(header, message));
@@ -455,7 +455,7 @@ public:
 	{
 		va_list args;
 		va_start(args, format);
-		char message[62];
+		char message[64];
 		vsnprintf(message, 62, format, args);
         char header[2] = EVENT_HEADER;
 		write(strcat(header, message));
@@ -467,7 +467,7 @@ public:
     {
         va_list args;
         va_start(args, format);
-        char message[62];
+        char message[64];
         vsnprintf(message, 62, format, args);
         char header[2] = US_HEADER;
         write(strcat(header, message));
@@ -479,7 +479,7 @@ public:
     {
         va_list args;
         va_start(args, format);
-        char message[62];
+        char message[64];
         vsnprintf(message, 62, format, args);
         char header[2] = POSITION_HEADER;
         write(strcat(header, message));
