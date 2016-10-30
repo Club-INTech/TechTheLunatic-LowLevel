@@ -590,13 +590,17 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 			k=0;
 		}
 
-        if(l>=2000)
+        if(l>=200)
         {
-            if(autoUpdatePosition) {
-                serial.printflnPosition("%f", motionControlSystem->getX());
-                serial.printflnPosition("%f", motionControlSystem->getY());
+            if(autoUpdatePosition && !serial.available()) {
+                serial.printflnPosition("%d", (int) motionControlSystem->getX());
+                serial.printflnPosition("%d", (int) motionControlSystem->getY());
                 serial.printflnPosition("%f", motionControlSystem->getAngleRadian());
+            }
 
+            else if(autoUpdatePosition){
+                serial.printflnDebug("Serie occupee !!!");
+                serial.printflnDebug("available = %d", serial.available());
             }
 
             l=0;

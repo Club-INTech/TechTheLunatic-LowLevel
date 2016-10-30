@@ -35,6 +35,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <malloc.h>
 /**
  *Include this only if ltoa is not implemented in you standard library implementation
  */
@@ -46,6 +47,7 @@
  * En têtes des différents canaux du protocole série
  */
 
+#define HEADER_LENGTH   2
 #define DEBUG_HEADER    {0x02, 0x20}
 #define EVENT_HEADER    {0x13, 0x37}
 #define US_HEADER       {0x01, 0x10}
@@ -439,50 +441,70 @@ public:
         va_end(args);
     }
 
-	static inline void printflnDebug(const char *format, ...)
+    __attribute__((format(printf, 1, 0)))
+    static inline void printflnDebug(const char *format, ...)
 	{
-		va_list args;
-		va_start(args, format);
-		char message[64];
-		vsnprintf(message, 62, format, args);
-		char header[2] = DEBUG_HEADER;
-		write(strcat(header, message));
-		send_ln();
-		va_end(args);
+        va_list args;
+        va_start(args, format);
+        char message[64];
+        vsnprintf(message, 64, format, args);
+        char header[HEADER_LENGTH] = DEBUG_HEADER;
+        char toSend[64+HEADER_LENGTH];
+        strcpy(toSend, header);
+        char* endHeader = &toSend[2];
+        memcpy( endHeader, &message, 64);
+        write(toSend);
+        send_ln();
+        va_end(args);
 	}
 
-	static inline void printflnEvent(const char *format, ...)
+    __attribute__((format(printf, 1, 0)))
+    static inline void printflnEvent(const char *format, ...)
 	{
-		va_list args;
-		va_start(args, format);
-		char message[64];
-		vsnprintf(message, 62, format, args);
-        char header[2] = EVENT_HEADER;
-		write(strcat(header, message));
-		send_ln();
-		va_end(args);
+        va_list args;
+        va_start(args, format);
+        char message[64];
+        vsnprintf(message, 64, format, args);
+        char header[HEADER_LENGTH] = EVENT_HEADER;
+        char toSend[64+HEADER_LENGTH];
+        strcpy(toSend, header);
+        char* endHeader = &toSend[2];
+        memcpy( endHeader, &message, 64);
+        write(toSend);
+        send_ln();
+        va_end(args);
 	}
 
+    __attribute__((format(printf, 1, 0)))
     static inline void printflnUS(const char *format, ...)
     {
         va_list args;
         va_start(args, format);
         char message[64];
-        vsnprintf(message, 62, format, args);
-        char header[2] = US_HEADER;
-        write(strcat(header, message));
+        vsnprintf(message, 64, format, args);
+        char header[HEADER_LENGTH] = US_HEADER;
+        char toSend[64+HEADER_LENGTH];
+        strcpy(toSend, header);
+        char* endHeader = &toSend[2];
+        memcpy( endHeader, &message, 64);
+        write(toSend);
         send_ln();
         va_end(args);
     }
 
+    __attribute__((format(printf, 1, 0)))
     static inline void printflnPosition(const char *format, ...)
     {
         va_list args;
         va_start(args, format);
         char message[64];
-        vsnprintf(message, 62, format, args);
-        char header[2] = POSITION_HEADER;
-        write(strcat(header, message));
+        vsnprintf(message, 64, format, args);
+        char header[HEADER_LENGTH] = POSITION_HEADER;
+        char toSend[64+HEADER_LENGTH];
+        strcpy(toSend, header);
+        char* endHeader = &toSend[2];
+        memcpy( endHeader, &message, 64);
+        write(toSend);
         send_ln();
         va_end(args);
     }

@@ -113,7 +113,7 @@ try:
 
 
 
-    ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition, positionX, positionY, orientationLabel)
+    ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition, position, positionX, positionY, orientationLabel)
 
     ecoute.start()
 
