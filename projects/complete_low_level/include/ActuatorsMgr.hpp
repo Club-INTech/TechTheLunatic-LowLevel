@@ -17,11 +17,11 @@ extern Uart<1> serial;
 
 // vitesse des AX12
 
-#define slowSpeed 14
+#define slowSpeed 16
 #define fastSpeed 25
 
 
-// on définit les différents angles utilisés pour le coté gauche et le coté droit
+// on dï¿½finit les diffï¿½rents angles utilisï¿½s pour le cotï¿½ gauche et le cotï¿½ droit
 
 #define fishingRightPositionUp 160
 #define fishingRightPositionMid 155
@@ -30,12 +30,12 @@ extern Uart<1> serial;
 #define middleRightPosition 200
 #define fingerRightInitialPosition 150
 #define fingerRightFreePosition 50
-#define passingRightPosition 165        // position du bras au dessus du filet pour libérer les poiscailles
+#define passingRightPosition 165        // position du bras au dessus du filet pour libï¿½rer les poiscailles
 
 
-// Coté gauche
+// Cotï¿½ gauche
 #define fishingLeftPositionDown 150
-#define fishingLeftPositionMid 145 //valeur peu êter un peu élevé
+#define fishingLeftPositionMid 145 //valeur peu ï¿½ter un peu ï¿½levï¿½
 #define fishingLeftPositionUp 140
 #define initialLeftPosition 70
 #define middleLeftPosition 100
@@ -46,11 +46,11 @@ extern Uart<1> serial;
 class ActuatorsMgr : public Singleton<ActuatorsMgr>
 {
 private:
-	typedef Uart<2> serial_ax; // On utilise le port série 2 de la stm32
+	typedef Uart<2> serial_ax; // On utilise le port sï¿½rie 2 de la stm32
 	AX<serial_ax>* ax12MagnetsRight; // Bras pour pecher les poissons
-	AX<serial_ax>* ax12FingerRightFishes; // Doigt pour décrocher les poissons
+	AX<serial_ax>* ax12FingerRightFishes; // Doigt pour dï¿½crocher les poissons
 	AX<serial_ax>* ax12MagnetsLeft; // Bras gauche pour pecher les poissons
-	AX<serial_ax>* ax12FingerLeftFishes; // Doigt gauche pour décrocher les poissons
+	AX<serial_ax>* ax12FingerLeftFishes; // Doigt gauche pour dï¿½crocher les poissons
 
 
 public:
@@ -72,7 +72,7 @@ public:
 		delete(ax12FingerLeftFishes);
 	}
 
-	void setAllID(){ //Permet de regler les différents AX12
+	void setAllID(){ //Permet de regler les diffï¿½rents AX12
 		int i;
 		serial.printfln("Reglage des ID des AX12");
 		serial.printfln("(brancher un AX12 a la fois)");
@@ -183,7 +183,7 @@ public:
 	}
 
 
-	// Voilà.
+	// Voilï¿½.
 
 
 	void initialPositionFish() { //pour remettre AX12 dans leurs positions initiales
@@ -200,16 +200,16 @@ public:
 
 	}
 
-	void setAXposMagnetsRight(int position) { // pour définir manuellement 1 position
+	void setAXposMagnetsRight(int position) { // pour dï¿½finir manuellement 1 position
 		ax12MagnetsRight->goTo(position);
 	}
-	void setAXposMagnetsLeft(int position) { // pour définir manuellement 1 position
+	void setAXposMagnetsLeft(int position) { // pour dï¿½finir manuellement 1 position
 		ax12MagnetsLeft->goTo(position);
 	}
-	void setAXposFreeRightFishes(int position) { // pour définir manuellement 1 position
+	void setAXposFreeRightFishes(int position) { // pour dï¿½finir manuellement 1 position
 		ax12FingerRightFishes->goTo(position);
 	}
-	void setAXposFreeLeftFishes(int position) { // pour définir manuellement 1 position
+	void setAXposFreeLeftFishes(int position) { // pour dï¿½finir manuellement 1 position
 		ax12FingerLeftFishes->goTo(position);
 	}
 
