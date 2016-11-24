@@ -17,7 +17,7 @@ extern Uart<1> serial;
 
 // vitesse des AX12
 
-#define slowSpeed 14
+#define slowSpeed 16
 #define fastSpeed 25
 
 
@@ -114,9 +114,10 @@ public:
 		Delay(800);
 
 	}
-
+    
 	void setAXpos(uint16_t  position) { // pour d�finir manuellement 1 position
 		ax12test->goTo(position);
+
 	}
 
 	void changeAXSpeed(int speed) //fonction inutile faire changeSpeedB(speed)
