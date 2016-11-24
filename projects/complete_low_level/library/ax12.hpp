@@ -6,7 +6,7 @@
 
 #include <utils.h>
 
-#define AX_BROADCAST            0xFE        // Utilise l'ID 0xFE pour envoyer une commande à tous les AX12
+#define AX_BROADCAST            0xFE        // Utilise l'ID 0xFE pour envoyer une commande ï¿½ tous les AX12
 
 /** MEMOIRE DE L'AX12 **/
 
@@ -90,12 +90,12 @@ private:
         READ_TIMEOUT = 0, READ_SUCCESS = 1
     };
 
-    // Méthode permettant d'envoyer un paquet lisible par l'AX12
+    // Mï¿½thode permettant d'envoyer un paquet lisible par l'AX12
     void sendPacket(uint8_t datalength, uint8_t instruction, uint8_t *data)
     {
-    	/* datalength : nombre de paramètres utilisés avec la commande (taille du tableau data)
-    	 * instruction : commande donnée à l'AX12 (cf liste de DEFINE ci-dessus)
-    	 * data : tableau contenant les paramètres allant avec la commande
+    	/* datalength : nombre de paramï¿½tres utilisï¿½s avec la commande (taille du tableau data)
+    	 * instruction : commande donnï¿½e ï¿½ l'AX12 (cf liste de DEFINE ci-dessus)
+    	 * data : tableau contenant les paramï¿½tres allant avec la commande
     	 */
     	Serial_AX12::enable_tx();
         uint8_t checksum = 0;
@@ -115,20 +115,20 @@ private:
 
         Serial_AX12::send_char(~checksum);
         //Serial_AX12::disable_tx();
-//        Serial_AX12::disable_tx();        //désactiver la série sortante
-//        Serial_AX12::enable_rx();            //activer la série entrante
+//        Serial_AX12::disable_tx();        //dï¿½sactiver la sï¿½rie sortante
+//        Serial_AX12::enable_rx();            //activer la sï¿½rie entrante
 //        //Delay(10);
-//        Serial_AX12::disable_rx();        //désactiver la série entrante
-//        Serial_AX12::enable_tx();          //réactiver la série sortante
+//        Serial_AX12::disable_rx();        //dï¿½sactiver la sï¿½rie entrante
+//        Serial_AX12::enable_tx();          //rï¿½activer la sï¿½rie sortante
 
     }
 
-    // Méthode permettant d'envoyer un paquet à tous les AX12 connectés sur la ligne
+    // Mï¿½thode permettant d'envoyer un paquet ï¿½ tous les AX12 connectï¿½s sur la ligne
     void static sendPacketB(uint8_t datalength, uint8_t instruction, uint8_t *data)
     {
-    	/* datalength : nombre de paramètres utilisés avec la commande (taille du tableau data)
-    	 * instruction : commande donnée à l'AX12 (cf liste de DEFINE ci-dessus)
-    	 * data : tableau contenant les paramètres allant avec la commande
+    	/* datalength : nombre de paramï¿½tres utilisï¿½s avec la commande (taille du tableau data)
+    	 * instruction : commande donnï¿½e ï¿½ l'AX12 (cf liste de DEFINE ci-dessus)
+    	 * data : tableau contenant les paramï¿½tres allant avec la commande
     	 */
     	Serial_AX12::enable_tx();
         uint8_t checksum = 0;
@@ -151,43 +151,43 @@ private:
     }
 
     /*Lecture d'un packet en provenance de l'AX12
-     * L'octet renvoyé est le code d'erreur donné par l'AX12 plus le code d'erreur de la fonction :
-     * les bits 0 à 6 sont réservés à l'erreur de l'AX12, le bit 7 est passé à 1 si une erreur supplémentaire intervient
-     * les eurreurs supplémentaires possibles sont : id incorrect, checksum incorrect, taille du message incorrecte, pas de message du tout
+     * L'octet renvoyï¿½ est le code d'erreur donnï¿½ par l'AX12 plus le code d'erreur de la fonction :
+     * les bits 0 ï¿½ 6 sont rï¿½servï¿½s ï¿½ l'erreur de l'AX12, le bit 7 est passï¿½ ï¿½ 1 si une erreur supplï¿½mentaire intervient
+     * les eurreurs supplï¿½mentaires possibles sont : id incorrect, checksum incorrect, taille du message incorrecte, pas de message du tout
     */
     uint8_t readPacket(uint8_t datalength, uint8_t *data)
     {
     	uint8_t error = 0;
-        Serial_AX12::disable_tx();        //désactiver la série sortante
-        Serial_AX12::enable_rx();            //activer la série entrante
+        Serial_AX12::disable_tx();        //dï¿½sactiver la sï¿½rie sortante
+        Serial_AX12::enable_rx();            //activer la sï¿½rie entrante
 //        uint8_t buffer = 0;
 //        while (buffer != 255)
 //        {
-//            Serial_AX12::read_char(buffer, 10); //attente du séparateur de trame 0xFF
+//            Serial_AX12::read_char(buffer, 10); //attente du sï¿½parateur de trame 0xFF
 //        }
 //        while (buffer == 255)
 //        {
-//            Serial_AX12::read_char(buffer, 1); //évacuation du séparateur
+//            Serial_AX12::read_char(buffer, 1); //ï¿½vacuation du sï¿½parateur
 //        }
-//        if(buffer != id_)//Vérification de l'id
+//        if(buffer != id_)//Vï¿½rification de l'id
 //        	error |= 1 << 7;
-//        Serial_AX12::read_char(buffer, 1); //taille des données restantes à lire (nbDonnéesDemandées + 2 : avec toss_error et checksum)
-//        uint8_t length = buffer - 2; //taille des données utiles
-//        if(length != datalength)//Vérification de la taille des données utiles
+//        Serial_AX12::read_char(buffer, 1); //taille des donnï¿½es restantes ï¿½ lire (nbDonnï¿½esDemandï¿½es + 2 : avec toss_error et checksum)
+//        uint8_t length = buffer - 2; //taille des donnï¿½es utiles
+//        if(length != datalength)//Vï¿½rification de la taille des donnï¿½es utiles
 //        	error |= 1 << 7;
 //        Serial_AX12::read_char(buffer, 1);
 //        error |= buffer;
 //        for (uint8_t i = 0; i < length; i++)
 //        {
-//            Serial_AX12::read_char(buffer, 1); //lecture des données
+//            Serial_AX12::read_char(buffer, 1); //lecture des donnï¿½es
 //            if(i<datalength)
 //            	data[i] = buffer;
 //        }
 //        Serial_AX12::read_char(buffer, 1);//Checksum
 //
         Delay(1000);
-        Serial_AX12::disable_rx();        //désactiver la série entrante
-        Serial_AX12::enable_tx();          //réactiver la série sortante
+        Serial_AX12::disable_rx();        //dï¿½sactiver la sï¿½rie entrante
+        Serial_AX12::enable_tx();          //rï¿½activer la sï¿½rie sortante
 
         return error;
     }
@@ -233,27 +233,27 @@ private:
         data[1] = reglength;
         sendPacket(2, AX_READ_DATA, data);
 
-        Serial_AX12::disable_tx();        //désactiver la série sortante
-        Serial_AX12::enable_rx();            //activer la série entrante
+        Serial_AX12::disable_tx();        //dï¿½sactiver la sï¿½rie sortante
+        Serial_AX12::enable_rx();            //activer la sï¿½rie entrante
         unsigned char buffer = 0;
         while (buffer != 255)
         {
-            Serial_AX12::read_char(buffer, 100); //attente du séparateur de trame 0xFF
+            Serial_AX12::read_char(buffer, 100); //attente du sï¿½parateur de trame 0xFF
         }
         while (buffer == 255)
         {
-            Serial_AX12::read_char(buffer, 100); //évacuation du séparateur et de l'id
+            Serial_AX12::read_char(buffer, 100); //ï¿½vacuation du sï¿½parateur et de l'id
         }
-        Serial_AX12::read_char(buffer, 100); //taille des données restantes à lire (nbDonnéesDemandées + 2 : avec toss_error et checksum)
-        uint8_t length = buffer - 2; //taille des données utiles
-        Serial_AX12::read_char(buffer, 100);  //évacuation du toss_error
+        Serial_AX12::read_char(buffer, 100); //taille des donnï¿½es restantes ï¿½ lire (nbDonnï¿½esDemandï¿½es + 2 : avec toss_error et checksum)
+        uint8_t length = buffer - 2; //taille des donnï¿½es utiles
+        Serial_AX12::read_char(buffer, 100);  //ï¿½vacuation du toss_error
         for (uint8_t f = 0; f < length; f++)
         {
-            Serial_AX12::read_char(answer[f], 100); //lecture des données
+            Serial_AX12::read_char(answer[f], 100); //lecture des donnï¿½es
         }
-        Serial_AX12::read_char(buffer, 100);    //évacuation du checksum
-        Serial_AX12::disable_rx();        //désactiver la série entrante
-        Serial_AX12::enable_tx();          //réactiver la série sortante
+        Serial_AX12::read_char(buffer, 100);    //ï¿½vacuation du checksum
+        Serial_AX12::disable_rx();        //dï¿½sactiver la sï¿½rie entrante
+        Serial_AX12::enable_tx();          //rï¿½activer la sï¿½rie sortante
     }
 
 public:
@@ -296,15 +296,15 @@ public:
     }
 
     /*
-     * Tente de réanimer un AX12 mort.
-     * L'argument baud_rate à passer en argument est le baud rate normal
-     * de fonctionnement de la série (9600)
+     * Tente de rï¿½animer un AX12 mort.
+     * L'argument baud_rate ï¿½ passer en argument est le baud rate normal
+     * de fonctionnement de la sï¿½rie (9600)
      */
     void reanimationMode(uint16_t baud_rate)
     {
         uint8_t debug_baudrate = 1;
         // On brute-force le baud rate des AX12, et on leur envoie pour chaque baud rate
-        // d'écoute un signal de reset.
+        // d'ï¿½coute un signal de reset.
         while (debug_baudrate <= 0xFE)
         {
             Serial_AX12::change_baudrate(2000000 / (debug_baudrate + 1));
@@ -312,8 +312,8 @@ public:
             debug_baudrate++;
         }
 
-        // Une fois que le signal de reset a été reçu, l'AX12 écoute à 1.000.000 bps.
-        // Donc à ce baud rate, on reflash le baud rate d'écoute de l'AX12.
+        // Une fois que le signal de reset a ï¿½tï¿½ reï¿½u, l'AX12 ï¿½coute ï¿½ 1.000.000 bps.
+        // Donc ï¿½ ce baud rate, on reflash le baud rate d'ï¿½coute de l'AX12.
         Serial_AX12::change_baudrate(1000000);
 
         for (int i = 0; i <= 10; i++)
@@ -322,7 +322,7 @@ public:
 
         Serial_AX12::change_baudrate(baud_rate);
 
-        // Si l'id est différente du broadcast, alors on la reflash.
+        // Si l'id est diffï¿½rente du broadcast, alors on la reflash.
         uint8_t id_backup = id_;
         id_ = 0;
         initID(id_backup);
@@ -341,7 +341,7 @@ public:
         }
     }
 
-    /// Réinitialisation de l'ID de l'AX12
+    /// Rï¿½initialisation de l'ID de l'AX12
     void initID(uint8_t nouvel_id)
     {
         writeData(AX_ID, 1, nouvel_id);
@@ -408,7 +408,7 @@ public:
         writeDataB(AX_TORQUE_ENABLE, 1, 1);
     }
 
-    /// Désasservissement d'un AX12 branché.
+    /// Dï¿½sasservissement d'un AX12 branchï¿½.
     void unasserv()
     {
         writeData(AX_TORQUE_ENABLE, 1, 0);
@@ -419,7 +419,7 @@ public:
         writeDataB(AX_TORQUE_ENABLE, 1, 0);
     }
 
-    // Changement de la limite de température
+    // Changement de la limite de tempï¿½rature
     void changeT(uint8_t temperature)
     {
         writeData(AX_LIMIT_TEMPERATURE, 1, temperature);
@@ -482,13 +482,13 @@ public:
         return (uint16_t) (((uint16_t) pos[1] << 8) | (uint8_t) (~pos[0]));
     }
 
-    // Lecture de la position courante, en degrés
+    // Lecture de la position courante, en degrï¿½s
     uint16_t getPositionDegres()
     {
         return ((uint32_t) 300 * getPosition_0_1023()) / 1023;
     }
 
-    // Retourne si l'AX-12 est en déplacement vers sa consigne
+    // Retourne si l'AX-12 est en dï¿½placement vers sa consigne
     bool isMoving()
     {
         uint8_t mov[1];

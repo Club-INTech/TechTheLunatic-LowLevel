@@ -522,6 +522,20 @@ int main(void)
 			}
 
 
+            else if (!strcmp("testax12",order)) {
+                uint16_t pos = 0;
+                serial.printfln("Entrez la position");
+                serial.read(pos);
+                actuatorsMgr->setAXpos(pos);
+                serial.printfln("Done");
+
+            }
+            else if (!strcmp("testax12v2",order)) {
+                actuatorsMgr->rightMagnetsDown();
+                serial.printfln("Done");
+
+            }
+
 
 /*			 __________________
  * 		   *|                  |*
