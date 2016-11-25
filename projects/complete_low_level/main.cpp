@@ -512,6 +512,15 @@ int main(void)
 				actuatorsMgr->setAllID();
 			}
 
+            else if (!strcmp("changeangleax12",order))
+            {
+				uint16_t anglemin=0,anglemax=1023;
+				serial.printfln("Entrez l'angle minimal");
+				serial.read(anglemin);
+				serial.printfln("Entrez l'angle max");
+				serial.read(anglemax);
+				actuatorsMgr->changeangle(anglemin,anglemax);
+            }
 
 			else if(!strcmp("caxs", order)) { //commande de debug
 				int speed = 100;
@@ -530,12 +539,31 @@ int main(void)
                 serial.printfln("Done");
 
             }
-            else if (!strcmp("testax12v2",order)) {
-                actuatorsMgr->rightMagnetsDown();
-                serial.printfln("Done");
+            /*else if (!strcmp("testax12cacpos",order)) {
+                uint16_t pos = 0;
+                serial.printfln("Entrez la position actuelle");
+                serial.read(pos);
+                bool resultat=actuatorsMgr->change_actualpos(pos);
+                if (resultat)
+                    serial.printfln("Done");
+                else
+                    serial.printfln("ça n'a pas marché");
+            }*/
 
+            else if (!strcmp("brapelrel",order))//releve le bras de la pelle
+            {
+                actuatorsMgr->brapelreleve();
             }
 
+            else if (!strcmp("brapeldep",order))//abaisse le bras de la pelle
+            {
+                actuatorsMgr->brapeldeplie();
+            }
+
+            else if (!strcmp("reanimation",order))//permet de réanimer certains ax12
+            {
+                actuatorsMgr->reanimation();
+            }
 
 /*			 __________________
  * 		   *|                  |*

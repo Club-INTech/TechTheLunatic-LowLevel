@@ -499,6 +499,17 @@ public:
             return true;
     }
 
+    /*bool change_actpos(uint16_t position)//tentative pour dire à l'ax12 qu'il est à position sans qu'il bouge
+    {
+        writeData(AX_PRESENT_POSITION_L,4,1023*position/300);
+        Serial_AX12::disable_tx();        //d�sactiver la s�rie sortante
+        Serial_AX12::enable_rx();            //activer la s�rie entrante
+        uint16_t ancpos=getPositionDegres();
+        Serial_AX12::disable_rx();        //d�sactiver la s�rie entrante
+        Serial_AX12::enable_tx();            //activer la s�rie sortante
+        return (ancpos==position);
+    }*/
+
     // Pour envoyer un message comme un grand !
     void message(uint8_t adresse, uint8_t n, uint16_t val)
     {
