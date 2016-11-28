@@ -1,5 +1,6 @@
 #include <ax12.h>
 
+unsigned long startTime;
 //Initialisation port ARDUINO
 
 const unsigned int output_IR=0; // Capteur IR en Analog pin 0
@@ -22,9 +23,7 @@ void setup() {
   AX12::init(1000000);  // debit AX12 1Mb/s
   pelle.writeInfo(TORQUE_ENABLE, 1);
   pelle.writeInfo(MAX_TORQUE,500);
-  
 
-  
   //Initialisation moteur fusee
   
   pinMode(commandeFusee, OUTPUT); // pin 9 en sortie
@@ -56,14 +55,21 @@ byte angle(AX12 ax, int a)
 
 void loop() {
 
-  for(int id=0;id <= 253; id++)
+  for(int id=0;id <= 253; id++)  // cherche l'ID du moteur AX12
   {
     pelle.id = id;
     if(pelle.writeInfo(AX_LED,1) == 0)
       break;
   }
+
+  //while() // boucle while pour le jumper
+  //{
+// Penser a ajouter le cas ou le jumper serait retirer de base ce qui n'est pas normal.
+  //}
+
+  startTime=millis();  // permet une remise à 0 du temps apres retrait du jumper
   
-  while( (millis()/1000) < t ) //temps que 90 sec ne s'est pas ecoule.
+  while( ( (millis() - startTime) / 1000) < t ) //temps que 90 sec ne s'est pas ecoule.
   {
     val = analogRead(output_IR);
     
@@ -74,5 +80,8 @@ void loop() {
     delay(1000);
   }
    launch();
-   delay(100000);
+   while(true) // empeche le robot de redémarrer le programme
+   {
+
+   }
 }
