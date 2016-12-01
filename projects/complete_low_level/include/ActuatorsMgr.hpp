@@ -21,9 +21,15 @@ extern Uart<1> serial;
 #define fastSpeed 25
 
 #define brapeldepG 255
+#define brapeldepamoitG 230
 #define brapelrelG 200
 #define brapeldepD 45
+#define brapeldepamoitD 70
 #define brapelrelD 100
+
+#define POS_PEL_INIT 300
+#define POS_PEL_INTE 150
+#define POS_PEL_DELIVR 0
 
 // on d�finit les diff�rents angles utilis�s pour le cot� gauche et le cot� droit
 
@@ -54,6 +60,7 @@ private:
 	AX<serial_ax>* ax12test; // ax12 de test
     AX<serial_ax>* ax12brapelG;//ax12 pour le bras gauche de la pelle
     AX<serial_ax>* ax12brapelD;//ax12 pour le bras droit de la pelle
+	AX<serial_ax>* ax12pel;//ax12 permettant de faire tourner la pelle
 
 public:
 	ActuatorsMgr()
@@ -64,6 +71,8 @@ public:
         ax12brapelG->init();
         ax12brapelD = new AX<serial_ax>(2,(uint16_t)1023*brapeldepD/300,(uint16_t)1023*brapelrelD/300); // (ID, Angle_min, Angle_Max)
         ax12brapelD->init();
+		ax12pel = new AX<serial_ax>(2,(uint16_t)1023*brapeldepD/300,(uint16_t)1023*brapelrelD/300); // (ID, Angle_min, Angle_Max)
+		ax12pel->init();
 	}
 
 	~ActuatorsMgr()
@@ -71,6 +80,7 @@ public:
 		delete(ax12test);
         delete (ax12brapelG);
         delete (ax12brapelD);
+		delete (ax12pel);
 	}
 
 	void setAllID(){ //Permet de regler les diff�rents AX12
@@ -93,6 +103,11 @@ public:
         serial.read(i);
         ax12brapelD->initIDB(2);
         serial.printfln("done");
+
+		serial.printfln("Brancher ax12pel");
+		serial.read(i);
+		ax12pel->initIDB(3);
+		serial.printfln("done");
 
     }
 
@@ -118,6 +133,44 @@ public:
         ax12brapelG->goTo(brapeldepG);
 		ax12brapelD->goTo(brapeldepD);
     }
+
+	void brapeldepamoit() // déplie les bras de la pelle mais pas entièrement
+	{
+		ax12brapelD->changeSpeed(10);
+		ax12brapelG->changeSpeed(10);
+		ax12brapelG->goTo(brapeldepamoitG);
+		ax12brapelD->goTo(brapeldepamoitD);
+	}
+
+	void brapelmovindet(uint16_t angle) // on choisit la position entre 0 et 55
+	{
+		//la position de base est la position quand les bras sont relevés
+		ax12brapelD->changeSpeed(10);
+		ax12brapelG->changeSpeed(10);
+		ax12brapelG->goTo(brapelrelG+angle);
+		ax12brapelD->goTo(brapelrelD-angle);
+	}
+
+
+	void pelpositinit()//postion de départ de la pelle pour prendre les balles
+	{
+		ax12pel->goTo(POS_PEL_INIT);
+	}
+
+	void pelpositinte()//position quand on a pris les balles et qu'on veut les stocker
+	{
+		ax12pel->goTo(POS_PEL_INTE);
+	}
+
+	void pelposdelivre()//on delivre les balles
+	{
+		ax12pel->goTo(POS_PEL_DELIVR);
+	}
+
+	void pelposindet(uint16_t pos)//on choisit la position de la pelle
+	{
+		ax12pel->goTo(pos);
+	}
 
 
 

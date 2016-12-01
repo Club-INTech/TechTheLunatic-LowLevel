@@ -114,12 +114,12 @@ private:
         }
 
         Serial_AX12::send_char(~checksum);
-        //Serial_AX12::disable_tx();
-//        Serial_AX12::disable_tx();        //d�sactiver la s�rie sortante
-//        Serial_AX12::enable_rx();            //activer la s�rie entrante
-//        //Delay(10);
-//        Serial_AX12::disable_rx();        //d�sactiver la s�rie entrante
-//        Serial_AX12::enable_tx();          //r�activer la s�rie sortante
+        Serial_AX12::disable_tx();
+        Serial_AX12::disable_tx();        //d�sactiver la s�rie sortante
+        Serial_AX12::enable_rx();            //activer la s�rie entrante
+        Delay(10);
+        Serial_AX12::disable_rx();        //d�sactiver la s�rie entrante
+        Serial_AX12::enable_tx();          //r�activer la s�rie sortante
 
     }
 
@@ -160,31 +160,31 @@ private:
     	uint8_t error = 0;
         Serial_AX12::disable_tx();        //d�sactiver la s�rie sortante
         Serial_AX12::enable_rx();            //activer la s�rie entrante
-//        uint8_t buffer = 0;
-//        while (buffer != 255)
-//        {
-//            Serial_AX12::read_char(buffer, 10); //attente du s�parateur de trame 0xFF
-//        }
-//        while (buffer == 255)
-//        {
-//            Serial_AX12::read_char(buffer, 1); //�vacuation du s�parateur
-//        }
-//        if(buffer != id_)//V�rification de l'id
-//        	error |= 1 << 7;
-//        Serial_AX12::read_char(buffer, 1); //taille des donn�es restantes � lire (nbDonn�esDemand�es + 2 : avec toss_error et checksum)
-//        uint8_t length = buffer - 2; //taille des donn�es utiles
-//        if(length != datalength)//V�rification de la taille des donn�es utiles
-//        	error |= 1 << 7;
-//        Serial_AX12::read_char(buffer, 1);
-//        error |= buffer;
-//        for (uint8_t i = 0; i < length; i++)
-//        {
-//            Serial_AX12::read_char(buffer, 1); //lecture des donn�es
-//            if(i<datalength)
-//            	data[i] = buffer;
-//        }
-//        Serial_AX12::read_char(buffer, 1);//Checksum
-//
+        uint8_t buffer = 0;
+        while (buffer != 255)
+        {
+            Serial_AX12::read_char(buffer, 10); //attente du s�parateur de trame 0xFF
+        }
+        while (buffer == 255)
+        {
+            Serial_AX12::read_char(buffer, 1); //�vacuation du s�parateur
+        }
+        if(buffer != id_)//V�rification de l'id
+        	error |= 1 << 7;
+        Serial_AX12::read_char(buffer, 1); //taille des donn�es restantes � lire (nbDonn�esDemand�es + 2 : avec toss_error et checksum)
+        uint8_t length = buffer - 2; //taille des donn�es utiles
+        if(length != datalength)//V�rification de la taille des donn�es utiles
+        	error |= 1 << 7;
+        Serial_AX12::read_char(buffer, 1);
+        error |= buffer;
+        for (uint8_t i = 0; i < length; i++)
+        {
+            Serial_AX12::read_char(buffer, 1); //lecture des donn�es
+            if(i<datalength)
+            	data[i] = buffer;
+        }
+        Serial_AX12::read_char(buffer, 1);//Checksum
+
         Delay(1000);
         Serial_AX12::disable_rx();        //d�sactiver la s�rie entrante
         Serial_AX12::enable_tx();          //r�activer la s�rie sortante
