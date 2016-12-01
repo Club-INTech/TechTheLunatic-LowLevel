@@ -507,12 +507,12 @@ int main(void)
 
 			/* --- AX12 ---*/
 
-			else if(!strcmp("setallid",order))
+			else if(!strcmp("setallid",order))//permet de donner les ids définis aux ax12
 			{
 				actuatorsMgr->setAllID();
 			}
 
-            else if (!strcmp("changeangleax12",order))
+            else if (!strcmp("changeangleax12",order))//permet de modifier les angle min et max de l'ax12 de test
             {
 				uint16_t anglemin=0,anglemax=1023;
 				serial.printfln("Entrez l'angle minimal");
@@ -522,7 +522,7 @@ int main(void)
 				actuatorsMgr->changeangle(anglemin,anglemax);
             }
 
-			else if(!strcmp("caxs", order)) { //commande de debug
+			else if(!strcmp("caxs", order)) { //modifie la vitesse de l'ax12 de test
 				int speed = 100;
 				serial.printfln("Entrez vitesse");
 				serial.read(speed);
@@ -531,7 +531,7 @@ int main(void)
 			}
 
 
-            else if (!strcmp("testax12",order)) {
+            else if (!strcmp("testax12",order)) {//permet de faire bouger l'ax12 de test
                 uint16_t pos = 0;
                 serial.printfln("Entrez la position");
                 serial.read(pos);
@@ -539,7 +539,7 @@ int main(void)
                 serial.printfln("Done");
 
             }
-            /*else if (!strcmp("testax12cacpos",order)) {
+            else if (!strcmp("testax12cacpos",order)) {//ne marche pas et fait planter screen
                 uint16_t pos = 0;
                 serial.printfln("Entrez la position actuelle");
                 serial.read(pos);
@@ -548,7 +548,13 @@ int main(void)
                     serial.printfln("Done");
                 else
                     serial.printfln("ça n'a pas marché");
-            }*/
+            }
+
+            else if (!strcmp("getpos",order))//ne marche pas (obtenir la position)
+            {
+                int pos=actuatorsMgr->posdeax12();
+                serial.printfln("%d",pos);
+            }
 
             else if (!strcmp("brapelrel",order))//releve le bras de la pelle
             {

@@ -20,10 +20,10 @@ extern Uart<1> serial;
 #define slowSpeed 16
 #define fastSpeed 25
 
-#define brapeldepG 235
-#define brapelrelG 135
-#define brapeldepD 245
-#define brapelrelD 150
+#define brapeldepG 255
+#define brapelrelG 200
+#define brapeldepD 45
+#define brapelrelD 100
 
 // on d�finit les diff�rents angles utilis�s pour le cot� gauche et le cot� droit
 
@@ -60,9 +60,9 @@ public:
 	{
 		ax12test = new AX<serial_ax>(0,0,1023); // (ID, Angle_min, Angle_Max)
 		ax12test->init();
-        ax12brapelG = new AX<serial_ax>(1,(uint16_t)1023*brapeldepG/300,(uint16_t)1023*brapelrelG/300); // (ID, Angle_min, Angle_Max)
+        ax12brapelG = new AX<serial_ax>(1,(uint16_t)1023*brapelrelG/300,(uint16_t)1023*brapeldepG/300); // (ID, Angle_min, Angle_Max)
         ax12brapelG->init();
-        ax12brapelD = new AX<serial_ax>(2,(uint16_t)1023*brapelrelD/300,(uint16_t)1023*brapeldepD/300); // (ID, Angle_min, Angle_Max)
+        ax12brapelD = new AX<serial_ax>(2,(uint16_t)1023*brapeldepD/300,(uint16_t)1023*brapelrelD/300); // (ID, Angle_min, Angle_Max)
         ax12brapelD->init();
 	}
 
@@ -96,7 +96,7 @@ public:
 
     }
 
-	void changeangle(uint16_t anglemin,uint16_t anglemax)
+	void changeangle(uint16_t anglemin,uint16_t anglemax) //permet de modifier les angles max et min de l'ax12 de test
 	{
 		ax12test->changeAngleMIN((uint16_t )1023*anglemin/300);
 		ax12test->changeAngleMAX((uint16_t)1023*anglemax/300);
@@ -104,13 +104,17 @@ public:
 
 
 
-    void brapelreleve()
+    void brapelreleve() //relève les bras de la pelle
     {
+        ax12brapelD->changeSpeed(10);
+        ax12brapelG->changeSpeed(10);
         ax12brapelG->goTo(brapelrelG);
 		ax12brapelD->goTo(brapelrelD);
     }
-    void brapeldeplie()
+    void brapeldeplie() // déplie les bras de la pelle
     {
+        ax12brapelD->changeSpeed(10);
+        ax12brapelG->changeSpeed(10);
         ax12brapelG->goTo(brapeldepG);
 		ax12brapelD->goTo(brapeldepD);
     }
@@ -140,15 +144,15 @@ public:
 
 	}
 
-    /*bool change_actualpos(uint16_t position)
+    bool change_actualpos(uint16_t position)//ne marche pas (permettrait de changer la position de l'ax12 sans le faire bouger)
     {
         return (ax12test->change_actpos(position));
-    }*/
+    }
     
-    /*uint16_t posdeax12()
+    uint16_t posdeax12()//ne marche pas( permettrait d'obtenir la position des ax12)
     {
-        return getPositionDegres();
-    }*/
+        return ax12test->getPositionDegres();
+    }
 
     void reanimation () //réanime les ax12 en changeant leur baudrates
     {
