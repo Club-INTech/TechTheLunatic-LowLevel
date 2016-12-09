@@ -20,9 +20,9 @@ extern Uart<1> serial;
 #define slowSpeed 16
 #define fastSpeed 25
 
-#define brapeldepG 255
-#define brapeldepamoitG 230
-#define brapelrelG 200
+#define brapeldepG 30
+#define brapeldepamoitG 60
+#define brapelrelG 90
 #define brapeldepD 45
 #define brapeldepamoitD 70
 #define brapelrelD 100
@@ -69,7 +69,7 @@ public:
 		ax12test->init();
         ax12brapelG = new AX<serial_ax>(1,(uint16_t)1023*brapelrelG/300,(uint16_t)1023*brapeldepG/300); // (ID, Angle_min, Angle_Max)
         ax12brapelG->init();
-        ax12brapelD = new AX<serial_ax>(2,(uint16_t)1023*brapeldepD/300,(uint16_t)1023*brapelrelD/300); // (ID, Angle_min, Angle_Max)
+        ax12brapelD = new AX<serial_ax>(1,(uint16_t)1023*brapelrelG/300,(uint16_t)1023*brapeldepG/300); // (ID, Angle_min, Angle_Max)
         ax12brapelD->init();
 		ax12pel = new AX<serial_ax>(2,(uint16_t)1023*brapeldepD/300,(uint16_t)1023*brapelrelD/300); // (ID, Angle_min, Angle_Max)
 		ax12pel->init();
@@ -94,19 +94,20 @@ public:
 		ax12test->initIDB(0);
 		serial.printfln("done");
 
-        serial.printfln("Brancher ax12brapelG");
+        serial.printfln("Brancher ax12brapelG et ax12brapelD");
         serial.read(i);
         ax12brapelG->initIDB(1);
+        ax12brapelD->initIDB(1);
         serial.printfln("done");
-
+/*
         serial.printfln("Brancher ax12brapelD");
         serial.read(i);
         ax12brapelD->initIDB(2);
         serial.printfln("done");
-
+*/
 		serial.printfln("Brancher ax12pel");
 		serial.read(i);
-		ax12pel->initIDB(3);
+		ax12pel->initIDB(2);
 		serial.printfln("done");
 
     }
