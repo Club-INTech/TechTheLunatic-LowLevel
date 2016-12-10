@@ -33,6 +33,7 @@ extern Uart<1> serial;
 #define pospelmoit 150
 #define pospeldeli 0
 
+
 // on d�finit les diff�rents angles utilis�s pour le cot� gauche et le cot� droit
 
 #define fishingRightPositionUp 160
@@ -75,6 +76,7 @@ public:
         ax12brapelD->init();
         ax12pel = new AX<serial_ax>(2,0,1023);
         ax12pel->init();
+
 	}
 
 	~ActuatorsMgr()
@@ -96,15 +98,21 @@ public:
 		ax12test->initIDB(0);
 		serial.printfln("done");
 
-        serial.printfln("Brancher ax12brapelG");
+        serial.printfln("Brancher ax12brapelG et ax12brapelD");
         serial.read(i);
         ax12brapelG->initIDB(1);
+        ax12brapelD->initIDB(1);
         serial.printfln("done");
-
+/*
         serial.printfln("Brancher ax12brapelD");
         serial.read(i);
         ax12brapelD->initIDB(1);
         serial.printfln("done");
+*/
+		serial.printfln("Brancher ax12pel");
+		serial.read(i);
+		ax12pel->initIDB(2);
+		serial.printfln("done");
 
         serial.printfln("Brancher l'ax12pel");
         serial.read(i);
