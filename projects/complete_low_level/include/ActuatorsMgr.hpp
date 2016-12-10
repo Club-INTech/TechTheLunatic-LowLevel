@@ -20,10 +20,18 @@ extern Uart<1> serial;
 #define slowSpeed 16
 #define fastSpeed 25
 
-#define brapeldepG 255
-#define brapelrelG 200
-#define brapeldepD 45
-#define brapelrelD 100
+//Positions des AX12
+
+#define brapeldepG 30
+#define brapelmoitG 60
+#define brapelrelG 90
+#define brapeldepD 30
+#define brapelmoitD 60
+#define brapelrelD 90
+
+#define pospelinit 300
+#define pospelmoit 150
+#define pospeldeli 0
 
 // on d�finit les diff�rents angles utilis�s pour le cot� gauche et le cot� droit
 
@@ -52,26 +60,30 @@ class ActuatorsMgr : public Singleton<ActuatorsMgr>
 private:
 	typedef Uart<2> serial_ax; // On utilise le port s�rie 2 de la stm32
 	AX<serial_ax>* ax12test; // ax12 de test
-    AX<serial_ax>* ax12brapelG;//ax12 pour le bras gauche de la pelle
-    AX<serial_ax>* ax12brapelD;//ax12 pour le bras droit de la pelle
+    AX<serial_ax>* ax12brapelG;//ax12 pour le bras gauche de la pelleteuse
+    AX<serial_ax>* ax12brapelD;//ax12 pour le bras droit de la pelleteuse
+    AX<serial_ax>* ax12pel;//ax12 pour la pelle de la pelleteuse
 
 public:
 	ActuatorsMgr()
 	{
 		ax12test = new AX<serial_ax>(0,0,1023); // (ID, Angle_min, Angle_Max)
 		ax12test->init();
-        ax12brapelG = new AX<serial_ax>(1,(uint16_t)1023*brapelrelG/300,(uint16_t)1023*brapeldepG/300); // (ID, Angle_min, Angle_Max)
+        ax12brapelG = new AX<serial_ax>(1,(uint16_t)1023*brapeldepG/300,(uint16_t)1023*brapelrelG/300); // (ID, Angle_min, Angle_Max)
         ax12brapelG->init();
-        ax12brapelD = new AX<serial_ax>(2,(uint16_t)1023*brapeldepD/300,(uint16_t)1023*brapelrelD/300); // (ID, Angle_min, Angle_Max)
+        ax12brapelD = new AX<serial_ax>(1,(uint16_t)1023*brapeldepD/300,(uint16_t)1023*brapelrelD/300); // (ID, Angle_min, Angle_Max)
         ax12brapelD->init();
+        ax12pel = new AX<serial_ax>(2,0,1023);
+        ax12pel->init();
 	}
 
 	~ActuatorsMgr()
 	{
 		delete(ax12test);
-        delete (ax12brapelG);
-        delete (ax12brapelD);
-	}
+        delete(ax12brapelG);
+        delete(ax12brapelD);
+	    delete(ax12pel);
+    }
 
 	void setAllID(){ //Permet de regler les diff�rents AX12
 		int i;
@@ -91,9 +103,13 @@ public:
 
         serial.printfln("Brancher ax12brapelD");
         serial.read(i);
-        ax12brapelD->initIDB(2);
+        ax12brapelD->initIDB(1);
         serial.printfln("done");
 
+        serial.printfln("Brancher l'ax12pel");
+        serial.read(i);
+        ax12pel->initIDB(2);
+        serial.printfln("done");
     }
 
 	void changeangle(uint16_t anglemin,uint16_t anglemax) //permet de modifier les angles max et min de l'ax12 de test
@@ -106,22 +122,54 @@ public:
 
     void brapelreleve() //relève les bras de la pelle
     {
+        serial.printfln("Leve les bras");
         ax12brapelD->changeSpeed(10);
         ax12brapelG->changeSpeed(10);
         ax12brapelG->goTo(brapelrelG);
 		ax12brapelD->goTo(brapelrelD);
+        serial.printfln("done");
     }
     void brapeldeplie() // déplie les bras de la pelle
     {
+        serial.printfln("Baisse les bras");
         ax12brapelD->changeSpeed(10);
         ax12brapelG->changeSpeed(10);
         ax12brapelG->goTo(brapeldepG);
 		ax12brapelD->goTo(brapeldepD);
+        serial.printfln("done");
     }
+    void brapelmoit()
 
-
-
-	// Voil�.
+    {
+        serial.printfln("Leve les bras mais pas trop");
+        ax12brapelD->changeSpeed(10);
+        ax12brapelG->changeSpeed(10);
+        ax12brapelG->goTo(brapelmoitG);
+        ax12brapelD->goTo(brapelmoitD);
+        serial.printfln("done");
+    }
+    void pelinit()
+    {
+        serial.printfln("Pelle va au début");
+        ax12pel->changeSpeed(20);
+        ax12pel->goTo(pospelinit);
+        serial.printfln("done");
+    }
+    void pelmoit()
+    {
+        serial.printfln("Pelle tient boules");
+        ax12pel->changeSpeed(20);
+        ax12pel->goTo(pospelmoit);
+        serial.printfln("done");
+    }
+    void pellib()
+    {
+        serial.printfln("Pelle jete boules");
+        ax12pel->changeSpeed(10);
+        ax12pel->goTo(pospeldeli);
+        serial.printfln("done");
+    }
+	// Voilà.
 
 
 	void initialPositionFish() { //pour remettre AX12 dans leurs positions initiales

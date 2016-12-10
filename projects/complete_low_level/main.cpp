@@ -566,6 +566,26 @@ int main(void)
                 actuatorsMgr->brapeldeplie();
             }
 
+            else if (!strcmp("brapelmoit", order))
+            {
+                actuatorsMgr->brapelmoit();
+            }
+
+            else if (!strcmp("ppi", order))
+            {
+                actuatorsMgr->pelinit();
+            }
+
+            else if (!strcmp("ppm", order))
+            {
+                actuatorsMgr->pelmoit();
+            }
+
+            else if (!strcmp("ppd", order))
+            {
+                actuatorsMgr->pellib();
+            }
+
             else if (!strcmp("reanimation",order))//permet de réanimer certains ax12
             {
                 actuatorsMgr->reanimation();
