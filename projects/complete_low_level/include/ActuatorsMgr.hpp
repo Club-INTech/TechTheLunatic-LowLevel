@@ -131,8 +131,8 @@ public:
     void brapelreleve() //relève les bras de la pelle
     {
         serial.printfln("Leve les bras");
-        ax12brapelD->changeSpeed(10);
-        ax12brapelG->changeSpeed(10);
+        ax12brapelD->changeSpeed(25);
+        ax12brapelG->changeSpeed(25);
         ax12brapelG->goTo(brapelrelG);
 		ax12brapelD->goTo(brapelrelD);
         serial.printfln("done");
@@ -140,8 +140,8 @@ public:
     void brapeldeplie() // déplie les bras de la pelle
     {
         serial.printfln("Baisse les bras");
-        ax12brapelD->changeSpeed(10);
-        ax12brapelG->changeSpeed(10);
+        ax12brapelD->changeSpeed(25);
+        ax12brapelG->changeSpeed(25);
         ax12brapelG->goTo(brapeldepG);
 		ax12brapelD->goTo(brapeldepD);
         serial.printfln("done");
@@ -150,8 +150,8 @@ public:
 
     {
         serial.printfln("Leve les bras mais pas trop");
-        ax12brapelD->changeSpeed(10);
-        ax12brapelG->changeSpeed(10);
+        ax12brapelD->changeSpeed(15);
+        ax12brapelG->changeSpeed(15);
         ax12brapelG->goTo(brapelmoitG);
         ax12brapelD->goTo(brapelmoitD);
         serial.printfln("done");
@@ -159,21 +159,21 @@ public:
     void pelinit()
     {
         serial.printfln("Pelle va au début");
-        ax12pel->changeSpeed(20);
+        ax12pel->changeSpeed(30);
         ax12pel->goTo(pospelinit);
         serial.printfln("done");
     }
     void pelmoit()
     {
         serial.printfln("Pelle tient boules");
-        ax12pel->changeSpeed(20);
+        ax12pel->changeSpeed(25);
         ax12pel->goTo(pospelmoit);
         serial.printfln("done");
     }
     void pellib()
     {
         serial.printfln("Pelle jete boules");
-        ax12pel->changeSpeed(10);
+        ax12pel->changeSpeed(15);
         ax12pel->goTo(pospeldeli);
         serial.printfln("done");
     }

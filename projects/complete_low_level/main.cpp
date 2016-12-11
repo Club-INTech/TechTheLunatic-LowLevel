@@ -556,32 +556,32 @@ int main(void)
                 serial.printfln("%d",pos);
             }
 
-            else if (!strcmp("brapelrel",order))//releve le bras de la pelle
+            else if (!strcmp("bpr",order))//releve le bras de la pelle
             {
                 actuatorsMgr->brapelreleve();
             }
 
-            else if (!strcmp("brapeldep",order))//abaisse le bras de la pelle
+            else if (!strcmp("bpd",order))//abaisse le bras de la pelle
             {
                 actuatorsMgr->brapeldeplie();
             }
 
-            else if (!strcmp("brapelmoit", order))
+            else if (!strcmp("bpm", order))
             {
                 actuatorsMgr->brapelmoit();
             }
 
-            else if (!strcmp("ppi", order))
+            else if (!strcmp("pd", order))
             {
                 actuatorsMgr->pelinit();
             }
 
-            else if (!strcmp("ppm", order))
+            else if (!strcmp("pm", order))
             {
                 actuatorsMgr->pelmoit();
             }
 
-            else if (!strcmp("ppd", order))
+            else if (!strcmp("pf", order))
             {
                 actuatorsMgr->pellib();
             }
