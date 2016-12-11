@@ -1,2 +1,3 @@
-/.idea
-/projects/complete_low_level/.idea
+.idea
+projects/low_level_flash/build
+*.pyc
