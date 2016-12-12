@@ -114,13 +114,14 @@ private:
         }
 
         Serial_AX12::send_char(~checksum);
+        /* Lignes désactivées pour voir si c'est pas ça qui bloque les ax12
         Serial_AX12::disable_tx();
         Serial_AX12::disable_tx();        //d�sactiver la s�rie sortante
         Serial_AX12::enable_rx();            //activer la s�rie entrante
         Delay(10);
         Serial_AX12::disable_rx();        //d�sactiver la s�rie entrante
         Serial_AX12::enable_tx();          //r�activer la s�rie sortante
-
+        */
     }
 
     // M�thode permettant d'envoyer un paquet � tous les AX12 connect�s sur la ligne
@@ -160,6 +161,8 @@ private:
     	uint8_t error = 0;
         Serial_AX12::disable_tx();        //d�sactiver la s�rie sortante
         Serial_AX12::enable_rx();            //activer la s�rie entrante
+
+        /* de même, lignes désactivées pour le blocage
         uint8_t buffer = 0;
         while (buffer != 255)
         {
@@ -184,6 +187,7 @@ private:
             	data[i] = buffer;
         }
         Serial_AX12::read_char(buffer, 1);//Checksum
+        */
 
         Delay(1000);
         Serial_AX12::disable_rx();        //d�sactiver la s�rie entrante
