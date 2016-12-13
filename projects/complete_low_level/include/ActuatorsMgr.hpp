@@ -12,9 +12,6 @@
 
 extern Uart<1> serial;
 
-#define position1 100
-#define position2 200
-
 // vitesse des AX12
 
 #define slowSpeed 16
@@ -22,72 +19,69 @@ extern Uart<1> serial;
 
 //Positions des AX12
 
+//Pour la Pelleteusatron 3000
+
 #define brapeldepG 30
 #define brapelmoitG 60
 #define brapelrelG 90
-#define brapeldepD 30
-#define brapelmoitD 60
-#define brapelrelD 90
 
 #define pospelinit 300
 #define pospelmoit 150
 #define pospeldeli 0
 
+//Pour l'attrape-module
 
-// on d�finit les diff�rents angles utilis�s pour le cot� gauche et le cot� droit
+//TODO:positions des deux AX12 d'attrappe-module
 
-#define fishingRightPositionUp 160
-#define fishingRightPositionMid 155
-#define fishingRightPositionDown 150
-#define initialRightPosition 230
-#define middleRightPosition 200
-#define fingerRightInitialPosition 150
-#define fingerRightFreePosition 50
-#define passingRightPosition 165        // position du bras au dessus du filet pour lib�rer les poiscailles
-
-
-// Cot� gauche
-#define fishingLeftPositionDown 150
-#define fishingLeftPositionMid 145 //valeur peu �ter un peu �lev�
-#define fishingLeftPositionUp 140
-#define initialLeftPosition 70
-#define middleLeftPosition 100
-#define fingerLeftInitialPosition 50
-#define fingerLeftFreePosition 160
-#define passingLeftPosition 140
+#define AMdebG 0
+#define AMmidG 0
+#define AMfinG 0
+#define AMdebD 0
+#define AMmidD 0
+#define AMfinD 0
 
 class ActuatorsMgr : public Singleton<ActuatorsMgr>
 {
 private:
-	typedef Uart<2> serial_ax; // On utilise le port s�rie 2 de la stm32
-	AX<serial_ax>* ax12test; // ax12 de test
-    AX<serial_ax>* ax12brapelG;//ax12 pour le bras gauche de la pelleteuse
-   // AX<serial_ax>* ax12brapelD;//ax12 pour le bras droit de la pelleteuse
-    AX<serial_ax>* ax12pel;//ax12 pour la pelle de la pelleteuse
+	typedef Uart<2> serial_ax;  // On utilise le port série 2 de la stm32
+	AX<serial_ax>* ax12test;    // ax12 de test
+    AX<serial_ax>* ax12brapel;  //objet gérant les deux AX12 des bras
+  //AX<serial_ax>* ax12brapelD;
+    AX<serial_ax>* ax12pel;     //ax12 pour la pelle de la pelleteuse
+	
+	//AX12 de l'attrape module gauche et droit:
+	AX<serial_ax>* AMG;
+	AX<serial_ax>* AMD;
 
 public:
 	ActuatorsMgr()
 	{
 		ax12test = new AX<serial_ax>(0,0,1023); // (ID, Angle_min, Angle_Max)
 		ax12test->init();
-        ax12brapelG = new AX<serial_ax>(1,(uint16_t)1023*brapeldepG/300,(uint16_t)1023*brapelrelG/300); // (ID, Angle_min, Angle_Max)
-        ax12brapelG->init();
-     //   ax12brapelD = new AX<serial_ax>(1,(uint16_t)1023*brapeldepD/300,(uint16_t)1023*brapelrelD/300); // (ID, Angle_min, Angle_Max)
-      //  ax12brapelD->init();
+        ax12brapel = new AX<serial_ax>(1,(uint16_t)1023*brapeldepG/300,(uint16_t)1023*brapelrelG/300); // (ID, Angle_min, Angle_Max)
+        ax12brapel->init();
+    //  ax12brapelD = new AX<serial_ax>(1,(uint16_t)1023*brapeldepD/300,(uint16_t)1023*brapelrelD/300); // (ID, Angle_min, Angle_Max)
+	//  ax12brapelD->init();
         ax12pel = new AX<serial_ax>(2,0,1023);
         ax12pel->init();
+		AMG = new AX<serial_ax>(3,0,1023);
+		AMG->init();
+		AMD = new AX<serial_ax>(4,0,1023);
+		AMD->init();
 
 	}
 
 	~ActuatorsMgr()
 	{
 		delete(ax12test);
-        delete(ax12brapelG);
-     //   delete(ax12brapelD);
+        delete(ax12brapel);
+     // delete(ax12brapelD);
 	    delete(ax12pel);
+		delete(AMD);
+		delete(AMG);
     }
 
-	void setAllID(){ //Permet de regler les diff�rents AX12
+	void setAllID(){ //Permet de regler les IDs des différents AX12
 		int i;
 		serial.printfln("Reglage des ID des AX12");
 		serial.printfln("(brancher un AX12 a la fois)");
@@ -101,9 +95,9 @@ public:
 
         serial.printfln("Brancher ax12brapelG et ax12brapelD");
         serial.read(i);
-        ax12brapelG->initIDB(1);
-        ax12brapelG->init();
-    //    ax12brapelD->initIDB(1);
+        ax12brapel->initIDB(1);
+        ax12brapel->init();
+    //  ax12brapelD->initIDB(1);
         serial.printfln("done");
 /*
         serial.printfln("Brancher ax12brapelD");
@@ -126,67 +120,90 @@ public:
 	}
 
 
+/*			 ____________________
+ * 		   *|                    |*
+ *		   *|    Pelle T-3000    |*
+ *		   *|____________________|*
+ */
+	
 
-    void brapelreleve() //relève les bras de la pelle
+    void braPelReleve() //relève les bras de la pelle
     {
         serial.printfln("Leve les bras");
-     //   ax12brapelD->changeSpeed(25);
-        ax12brapelG->changeSpeed(30);
-        ax12brapelG->goTo(brapelrelG);
+     // ax12brapelD->changeSpeed(25);
+        ax12brapel->changeSpeed(30);
+        ax12brapel->goTo(brapelrelG);
 	//	ax12brapelD->goTo(brapelrelD);
         serial.printfln("done");
     }
-    void brapeldeplie() // déplie les bras de la pelle
+    void braPelDeplie() // déplie les bras de la pelle
     {
         serial.printfln("Baisse les bras");
-    //    ax12brapelD->changeSpeed(25);
-        ax12brapelG->changeSpeed(20);
-        ax12brapelG->goTo(brapeldepG);
+    //  ax12brapelD->changeSpeed(25);
+        ax12brapel->changeSpeed(20);
+        ax12brapel->goTo(brapeldepG);
 	//	ax12brapelD->goTo(brapeldepD);
         serial.printfln("done");
     }
-    void brapelmoit()
+    void braPelMoit()
 
     {
         serial.printfln("Leve les bras mais pas trop");
-     //   ax12brapelD->changeSpeed(15);
-        ax12brapelG->changeSpeed(25);
-        ax12brapelG->goTo(brapelmoitG);
-      //  ax12brapelD->goTo(brapelmoitD);
+     // ax12brapelD->changeSpeed(15);
+        ax12brapel->changeSpeed(25);
+        ax12brapel->goTo(brapelmoitG);
+      //ax12brapelD->goTo(brapelmoitD);
         serial.printfln("done");
     }
-    void pelinit()
+    void pelleInit()
     {
         serial.printfln("Pelle va au début");
         ax12pel->changeSpeed(40);
         ax12pel->goTo(pospelinit);
         serial.printfln("done");
     }
-    void pelmoit()
+    void pelleMoit()
     {
         serial.printfln("Pelle tient boules");
         ax12pel->changeSpeed(25);
         ax12pel->goTo(pospelmoit);
         serial.printfln("done");
     }
-    void pellib()
+    void pelleLib()
     {
         serial.printfln("Pelle jete boules");
         ax12pel->changeSpeed(20);
         ax12pel->goTo(pospeldeli);
         serial.printfln("done");
     }
+
+/*			 ___________________
+ * 		   *|                   |*
+ *		   *|  Attrappe Module  |*
+ *		   *|___________________|*
+ */
+
+	void moduleDeb()
+	{
+		serial.printfln("Initialisation de l'attrape module ");
+		AMG->goTo(AMdebG);
+		AMD->goTo(AMdebD);
+	}
+	void moduleMoit()
+	{
+		serial.printfln("Initialisation de l'attrape module ");
+		AMG->goTo(AMmidG);
+		AMD->goTo(AMmidD);
+	}
+	void moduleFin()
+	{
+		serial.printfln("Initialisation de l'attrape module ");
+		AMG->goTo(AMfinG);
+		AMD->goTo(AMfinD);
+	}
 	// Voilà.
 
-
-	void initialPositionFish() { //pour remettre AX12 dans leurs positions initiales
-
-
-		ax12test->changeSpeed(fastSpeed);
-		ax12test->goTo(initialRightPosition);
-		Delay(800);
-
-	}
+	
 
 	void setAXpos(uint16_t  position) { // pour d�finir manuellement 1 position
 		ax12test->goTo(position);

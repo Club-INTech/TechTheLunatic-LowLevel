@@ -531,7 +531,7 @@ int main(void)
 			}
 
 
-            else if (!strcmp("testax12",order)) {//permet de faire bouger l'ax12 de test
+            else if (!strcmp("testax12",order)) {       //permet de faire bouger l'ax12 de test
                 uint16_t pos = 0;
                 serial.printfln("Entrez la position");
                 serial.read(pos);
@@ -539,7 +539,8 @@ int main(void)
                 serial.printfln("Done");
 
             }
-            else if (!strcmp("testax12cacpos",order)) {//ne marche pas et fait planter screen
+            else if (!strcmp("testax12cacpos",order))  //ne marche pas et fait planter screen
+			{
                 uint16_t pos = 0;
                 serial.printfln("Entrez la position actuelle");
                 serial.read(pos);
@@ -550,40 +551,10 @@ int main(void)
                     serial.printfln("ça n'a pas marché");
             }
 
-            else if (!strcmp("getpos",order))//ne marche pas (obtenir la position)
+            else if (!strcmp("getpos",order))    //ne marche pas (obtenir la position)
             {
                 int pos=actuatorsMgr->posdeax12();
                 serial.printfln("%d",pos);
-            }
-
-            else if (!strcmp("bpr",order))//releve le bras de la pelle
-            {
-                actuatorsMgr->brapelreleve();
-            }
-
-            else if (!strcmp("bpd",order))//abaisse le bras de la pelle
-            {
-                actuatorsMgr->brapeldeplie();
-            }
-
-            else if (!strcmp("bpm", order))
-            {
-                actuatorsMgr->brapelmoit();
-            }
-
-            else if (!strcmp("pd", order))
-            {
-                actuatorsMgr->pelinit();
-            }
-
-            else if (!strcmp("pm", order))
-            {
-                actuatorsMgr->pelmoit();
-            }
-
-            else if (!strcmp("pf", order))
-            {
-                actuatorsMgr->pellib();
             }
 
             else if (!strcmp("reanimation",order))//permet de réanimer certains ax12
@@ -591,6 +562,62 @@ int main(void)
                 actuatorsMgr->reanimation();
             }
 
+/*			 ____________________
+ * 		   *|                    |*
+ *		   *|    Pelle T-3000    |*
+ *		   *|____________________|*
+ */
+			
+			else if (!strcmp("bpr",order))      //releve le bras de la pelleteuse
+            {
+                actuatorsMgr->braPelReleve();
+            }
+
+            else if (!strcmp("bpd",order))      //abaisse le bras de la pelleteuse
+            {
+                actuatorsMgr->braPelDeplie();
+            }
+
+            else if (!strcmp("bpm", order))     // position intermédiaire des bras de pelleteuse
+            {
+                actuatorsMgr->braPelMoit();
+            }
+
+            else if (!strcmp("pd", order))      //position pré prise de boules de la pelle
+            {
+                actuatorsMgr->pelleInit();
+            }
+
+            else if (!strcmp("pm", order))      //position post prise de boules de la pelle
+            {
+                actuatorsMgr->pelleMoit();
+            }
+
+            else if (!strcmp("pf", order))      //position de livraison de boules de la pelle
+            {
+                actuatorsMgr->pelleLib();
+            }
+				
+/*			 ___________________
+ * 		   *|                   |*
+ *		   *|Attrappe Modue SSV2|*
+ *		   *|___________________|*
+ */
+
+			
+			 
+			 else if (!strcmp("amd", order))
+			{
+				actuatorsMgr->moduleDeb();
+			}
+			else if (!strcmp("amm", order))
+			{
+				actuatorsMgr->moduleMoit();
+			}
+			else if (!strcmp("amf", order))
+			{
+				actuatorsMgr->moduleFin();
+			}
 /*			 __________________
  * 		   *|                  |*
  *		   *|  ERREURS DE COM  |*
