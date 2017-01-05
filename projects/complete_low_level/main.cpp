@@ -604,19 +604,32 @@ int main(void)
  *		   *|___________________|*
  */
 
-			
-			 
-			 else if (!strcmp("amd", order))
+			//0 = droit, 1 = gauche
+			 //Côté droit
+			 else if (!strcmp("amdd", order))
 			{
-				actuatorsMgr->moduleDeb();
+				actuatorsMgr->moduleDeb(0);
 			}
-			else if (!strcmp("amm", order))
+			else if (!strcmp("ammd", order))
 			{
-				actuatorsMgr->moduleMoit();
+				actuatorsMgr->moduleMoit(0);
 			}
-			else if (!strcmp("amf", order))
+			else if (!strcmp("amfd", order))
 			{
-				actuatorsMgr->moduleFin();
+				actuatorsMgr->moduleFin(0);
+			}
+			//Côté gauche
+			else if (!strcmp("amdg", order))
+			{
+				actuatorsMgr->moduleDeb(1);
+			}
+			else if (!strcmp("ammg", order))
+			{
+				actuatorsMgr->moduleMoit(1);
+			}
+			else if (!strcmp("amfg", order))
+			{
+				actuatorsMgr->moduleFin(1);
 			}
 /*			 __________________
  * 		   *|                  |*
