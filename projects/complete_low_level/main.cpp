@@ -507,9 +507,18 @@ int main(void)
 
 			/* --- AX12 ---*/
 
+				//Gestion des ID des AX12
 			else if(!strcmp("setallid",order))//permet de donner les ids définis aux ax12
 			{
 				actuatorsMgr->setAllID();
+			}
+			else if(!strcmp("setpelleid",order))//permet de donner les ids aux ax12 de la pelle
+			{
+				actuatorsMgr->setPelleID();
+			}
+			else if(!strcmp("setmoduleid",order))//permet de donner les ids aux ax12 de l'attrappe module
+			{
+				actuatorsMgr->setModuleID();
 			}
 
             else if (!strcmp("changeangleax12",order))//permet de modifier les angle min et max de l'ax12 de test
@@ -600,23 +609,28 @@ int main(void)
 				
 /*			 ___________________
  * 		   *|                   |*
- *		   *|Attrappe Modue SSV2|*
+ *		   *|Attrappe Module SSV2|*
  *		   *|___________________|*
  */
 
-			
-			 
-			 else if (!strcmp("amd", order))
+			//0 = droit, 1 = gauche
+			 //Côté droit
+			 else if (!strcmp("amdd", order))
 			{
-				actuatorsMgr->moduleDeb();
+				actuatorsMgr->moduleDeb(0);
 			}
-			else if (!strcmp("amm", order))
+			else if (!strcmp("amfd", order))
 			{
-				actuatorsMgr->moduleMoit();
+				actuatorsMgr->moduleFin(0);
 			}
-			else if (!strcmp("amf", order))
+			//Côté gauche
+			else if (!strcmp("amdg", order))
 			{
-				actuatorsMgr->moduleFin();
+				actuatorsMgr->moduleDeb(1);
+			}
+			else if (!strcmp("amfg", order))
+			{
+				actuatorsMgr->moduleFin(1);
 			}
 /*			 __________________
  * 		   *|                  |*
