@@ -12,11 +12,6 @@
 
 extern Uart<1> serial;
 
-// vitesse des AX12
-
-#define slowSpeed 16
-#define fastSpeed 25
-
 //Positions des AX12
 
 //Pour la Pelleteusatron 3000
@@ -81,7 +76,6 @@ public:
 		CM->init();
 		LM = new AX<serial_ax>(6,0,1023);
 		LM->init();
-		
 	}
 	
 	~ActuatorsMgr()
@@ -99,7 +93,6 @@ public:
 		int i;
 		serial.printfln("Reglage de l'ID d'un AX12");
 		serial.printf("\n");
-		
 		serial.printfln("Brancher l'AX12 à régler");
 		serial.read(i);
 		ax12test->initIDB(0);
@@ -153,7 +146,6 @@ public:
 		serial.printfln("done");
 	}
 	
-	
 	void changeangle(uint16_t anglemin,uint16_t anglemax) //permet de modifier les angles max et min de l'ax12 de test
 	{
 		ax12test->changeAngleMIN((uint16_t )1023*anglemin/300);
@@ -171,31 +163,27 @@ public:
 	void braPelReleve() //relève les bras de la pelle
 	{
 		serial.printfln("Leve les bras");
-		// ax12brapelD->changeSpeed(25);
 		ax12brapel->changeSpeed(20);
 		ax12brapel->goTo(brapelrelG);
-		//	ax12brapelD->goTo(brapelrelD);
 		serial.printfln("done");
 	}
+	
 	void braPelDeplie() // déplie les bras de la pelle
 	{
 		serial.printfln("Baisse les bras");
-		//  ax12brapelD->changeSpeed(25);
 		ax12brapel->changeSpeed(10);
 		ax12brapel->goTo(brapeldepG);
-		//	ax12brapelD->goTo(brapeldepD);
 		serial.printfln("done");
 	}
-	void braPelMoit()
 	
+	void braPelMoit()
 	{
 		serial.printfln("Leve les bras mais pas trop");
-		// ax12brapelD->changeSpeed(15);
 		ax12brapel->changeSpeed(15);
 		ax12brapel->goTo(brapelmoitG);
-		//ax12brapelD->goTo(brapelmoitD);
 		serial.printfln("done");
 	}
+	
 	void pelleInit()
 	{
 		serial.printfln("Pelle va au début");
@@ -203,6 +191,7 @@ public:
 		ax12pel->goTo(pospelinit);
 		serial.printfln("done");
 	}
+	
 	void pelleMoit()
 	{
 		serial.printfln("Pelle tient boules");
@@ -210,6 +199,7 @@ public:
 		ax12pel->goTo(pospelmoit);
 		serial.printfln("done");
 	}
+	
 	void pelleLib()
 	{
 		serial.printfln("Pelle jete boules");

@@ -3,7 +3,7 @@
  *
  * Classe de gestion d'un moteur (PWM, direction...)
  *
- * Récapitulatif pins utilisées pour contrôler les deux moteurs :
+ * Rï¿½capitulatif pins utilisï¿½es pour contrï¿½ler les deux moteurs :
  *
  * Gauche :
  * 	-pins de sens : PD14
@@ -26,7 +26,7 @@ Motor::Motor(Side s) :
 	 */
 
 	GPIO_InitTypeDef GPIO_InitStruct;
-	GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
+	GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par dï¿½faut
 	// Active l'horloge du port D
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
 
@@ -52,7 +52,7 @@ void Motor::initPWM(){
 	TIM_OCInitTypeDef TIM_OCInitStructure;
 
 	/**
-	 * Configuration des PWM générés sur les canaux 1 et 2 du TIMER2
+	 * Configuration des PWM gï¿½nï¿½rï¿½s sur les canaux 1 et 2 du TIMER2
 	 */
 	//Active l'horloge du TIMER 2
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
@@ -66,14 +66,14 @@ void Motor::initPWM(){
 	 *
 	 */
 
-	GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
+	GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par dï¿½faut
 	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_10;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_Init(GPIOB, &GPIO_InitStruct);
-	//Connexion des 2 pins PC6 et PC7 à la fonction alternative liée au TIMER 8
+	//Connexion des 2 pins PC6 et PC7 ï¿½ la fonction alternative liï¿½e au TIMER 8
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource10, GPIO_AF_TIM2);
 
 	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_11;
@@ -81,10 +81,10 @@ void Motor::initPWM(){
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource11, GPIO_AF_TIM2);
 
 	/* -----------------------------------------------------------------------
-	 TIM3 Configuration: génère 2 PWM à deux rapports cycliques différents (un timer a 4 canaux,
-	 il est donc possible de générer jusqu'à 4 PWM avec un même timer)
-	 J'ai laissé et modifié légèrement ci-dessous l'explication de ST sur la configuration du TIMER pour comprendre
-	 comment éventuellement modifier la fréquence du PWM (que j'ai fixé ici à 1kHz, une bonne valeur moyenne)
+	 TIM3 Configuration: gï¿½nï¿½re 2 PWM ï¿½ deux rapports cycliques diffï¿½rents (un timer a 4 canaux,
+	 il est donc possible de gï¿½nï¿½rer jusqu'ï¿½ 4 PWM avec un mï¿½me timer)
+	 J'ai laissï¿½ et modifiï¿½ lï¿½gï¿½rement ci-dessous l'explication de ST sur la configuration du TIMER pour comprendre
+	 comment ï¿½ventuellement modifier la frï¿½quence du PWM (que j'ai fixï¿½ ici ï¿½ 1kHz, une bonne valeur moyenne)
 
 
 	 In this example TIM3 input clock (TIM3CLK) is set to 2 * APB1 clock (PCLK1),
@@ -111,9 +111,9 @@ void Motor::initPWM(){
 	 based on this variable will be incorrect.
 	 ----------------------------------------------------------------------- */
 
-	//Le prescaler peut être n'importe quel entier entre 1 et 65535 (uint16_t)
-	//Cette valeur sert à diviser la frequence processeur. Le timer compte jusqu'au prescaler avant de s'incrémenter de 1
-	uint16_t prescaler = (uint16_t)((SystemCoreClock / 2) / 256000) - 1; //le deuxième /2 est dû au changement pour un timer de clock doublée
+	//Le prescaler peut ï¿½tre n'importe quel entier entre 1 et 65535 (uint16_t)
+	//Cette valeur sert ï¿½ diviser la frequence processeur. Le timer compte jusqu'au prescaler avant de s'incrï¿½menter de 1
+	uint16_t prescaler = (uint16_t)((SystemCoreClock / 2) / 256000) - 1; //le deuxiï¿½me /2 est dï¿½ au changement pour un timer de clock doublï¿½e
 
 	//Configuration du TIMER 4
 	TIM_TimeBaseStructure.TIM_Period = 10;//ancienne valeur = 255
