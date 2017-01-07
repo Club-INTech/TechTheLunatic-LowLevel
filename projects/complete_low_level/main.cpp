@@ -633,11 +633,17 @@ int main(void)
 				actuatorsMgr->moduleFin(1);
 			}
 			//Cale Modules
-			else if (!strcmp("cmd",order)){
-				actuatorsMgr->caleHaut();
+			else if (!strcmp("cmdd",order)){
+				actuatorsMgr->caleHautD();
 			}
-			else if(!strcmp("cmf",order)){
-				actuatorsMgr->caleBas();
+			else if(!strcmp("cmfd",order)){
+				actuatorsMgr->caleBasD();
+			}
+			else if (!strcmp("cmdg",order)){
+				actuatorsMgr->caleHautG();
+			}
+			else if(!strcmp("cmfg",order)){
+				actuatorsMgr->caleBasG();
 			}
 			//Largue Modules
 			else if(!strcmp("lmd",order)){

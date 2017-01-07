@@ -39,14 +39,16 @@ extern Uart<1> serial;
 
 //TODO:positions des deux AX12 d'attrappe-module
 
-#define AMdebG 0
-#define AMfinG 0
+#define AMdebG 230
+#define AMfinG 60 // 60
 #define AMdebD 0
 #define AMfinD 0
 
 //Les calle-modules
-#define CaleHaut 0
-#define CaleBas 0
+#define CaleHautG 96 //gauche 96 droite 183
+#define CaleBasG 280 //gauche 280 droite 3
+#define CaleHautD 183
+#define CaleBasD 3
 
 //Largue modules
 #define LargueRepos 0
@@ -65,7 +67,8 @@ private:
 	AX<serial_ax>* AMD;
 	
 	//AX12 pour les calle modules:
-	AX<serial_ax>* CM;
+	AX<serial_ax>* CMD;//droit
+	AX<serial_ax>* CMG;//gauche
 	
 	//AX12 pour le largueur
 	AX<serial_ax>* LM;
@@ -83,9 +86,11 @@ public:
 		AMG->init();
 		AMD = new AX<serial_ax>(4,0,1023);
 		AMD->init();
-		CM = new AX<serial_ax>(5,0,1023);
-		CM->init();
-		LM = new AX<serial_ax>(6,0,1023);
+		CMD = new AX<serial_ax>(5,0,1023);
+		CMD->init();
+		CMG = new AX<serial_ax>(6,0,1023);
+		CMG->init();
+		LM = new AX<serial_ax>(7,0,1023);
 		LM->init();
 	}
 	
@@ -96,7 +101,8 @@ public:
 		delete(ax12pel);
 		delete(AMD);
 		delete(AMG);
-		delete(CM);
+		delete(CMD);
+		delete(CMG);
 		delete(LM);
 	}
 	
@@ -144,15 +150,21 @@ public:
 		AMG->init();
 		serial.printfln("done");
 				
-		serial.printfln("Brancher les AX12 des calleurs");
+		serial.printfln("Brancher les AX12 droit des calleurs");
 		serial.read(i);
-		CM->initIDB(5);
-		CM->init();
+		CMD->initIDB(5);
+		CMD->init();
 		serial.printfln("done");
-				
+		
+		serial.printfln("Brancher les AX12 gauche des calleurs");
+		serial.read(i);
+		CMG->initIDB(6);
+		CMG->init();
+		serial.printfln("done");
+		
 		serial.printfln("Brancher l'AX12 du largueur");
 		serial.read(i);
-		LM->initIDB(6);
+		LM->initIDB(7);
 		LM->init();
 		serial.printfln("done");
 	}
@@ -174,7 +186,7 @@ public:
 	void braPelReleve() //relève les bras de la pelle
 	{
 		serial.printflnDebug("Leve les bras");
-		ax12brapel->changeSpeed(20);
+		ax12brapel->changeSpeed(16);
 		ax12brapel->goTo(brapelrelG);
 		serial.printflnDebug("done");
 	}
@@ -190,7 +202,7 @@ public:
 	void braPelMoit()
 	{
 		serial.printflnDebug("Leve les bras mais pas trop");
-		ax12brapel->changeSpeed(15);
+		ax12brapel->changeSpeed(12);
 		ax12brapel->goTo(brapelmoitG);
 		serial.printflnDebug("done");
 	}
@@ -198,7 +210,7 @@ public:
 	void pelleInit()
 	{
 		serial.printflnDebug("Pelle va au début");
-		ax12pel->changeSpeed(25);
+		ax12pel->changeSpeed(20);
 		ax12pel->goTo(pospelinit);
 		serial.printflnDebug("done");
 	}
@@ -206,7 +218,7 @@ public:
 	void pelleMoit()
 	{
 		serial.printflnDebug("Pelle tient boules");
-		ax12pel->changeSpeed(20);
+		ax12pel->changeSpeed(15);
 		ax12pel->goTo(pospelmoit);
 		serial.printflnDebug("done");
 	}
@@ -227,7 +239,9 @@ public:
 	
 	void moduleDeb(int cote)
 	{
-		//serial.printfln("Initialisation de l'attrape module");
+		AMG->changeSpeed(100);
+		AMD->changeSpeed(100);
+		serial.printflnDebug("Initialisation de l'attrape module");
 		if (cote)
 		{
 			AMG->goTo(AMdebG); //Si le coté est gauche (cote = 1)
@@ -236,12 +250,14 @@ public:
 		{
 			AMD->goTo(AMdebD);  //Si le côté est droit (cote = 0)
 		}
-		//serial.printfln("done");
+		serial.printflnDebug("done");
 	}
 	
 	void moduleFin(int cote)
 	{
-		//serial.printflnDebug("Prise de modules"); TODO:Debug
+		AMG->changeSpeed(100);
+		AMD->changeSpeed(100);
+		serial.printflnDebug("Prise de modules");
 		if (cote)
 		{
 			AMG->goTo(AMfinG); //Si le coté est gauche (cote = 1)
@@ -250,7 +266,7 @@ public:
 		{
 			AMD->goTo(AMfinD);  //Si le côté est droit (cote = 0)
 		}
-		//serial.printflnDebug("done");
+		serial.printflnDebug("done");
 	}
 
 /*			 ___________________
@@ -259,13 +275,23 @@ public:
  *		   *|___________________|*
  */
 
-	void caleHaut(){
-		CM->goTo(CaleHaut);
+	void caleHautD(){
+		CMD->changeSpeed(50);
+		CMD->goTo(CaleHautD);
 	}
-	void caleBas(){
-		CM->goTo(CaleBas);
+	void caleBasD(){
+		CMD->changeSpeed(40);
+		CMD->goTo(CaleBasD);
 	}
-
+	
+	void caleHautG(){
+		CMG->changeSpeed(50);
+		CMG->goTo(CaleHautG);
+	}
+	void caleBasG(){
+		CMG->changeSpeed(40);
+		CMG->goTo(CaleBasG);
+	}
 /*			 ___________________
  * 		   *|                   |*
  *		   *|   Largue-Module   |*
