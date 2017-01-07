@@ -632,6 +632,22 @@ int main(void)
 			{
 				actuatorsMgr->moduleFin(1);
 			}
+			//Cale Modules
+			else if (!strcmp("cmd",order)){
+				actuatorsMgr->caleHaut();
+			}
+			else if(!strcmp("cmf",order)){
+				actuatorsMgr->caleBas();
+			}
+			//Largue Modules
+			else if(!strcmp("lmd",order)){
+				actuatorsMgr->largueRepos();
+			}
+			else if(!strcmp("lmf",order)){
+				actuatorsMgr->larguePousse();
+			}
+				
+				//TODO:Ascenseur
 /*			 __________________
  * 		   *|                  |*
  *		   *|  ERREURS DE COM  |*

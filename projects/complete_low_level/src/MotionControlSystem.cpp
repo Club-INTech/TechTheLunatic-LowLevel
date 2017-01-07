@@ -314,7 +314,7 @@ void MotionControlSystem::manageStop()
 	static uint32_t timeNotEstablished = 0;
 	static bool isSpeedEstablished = false;
 
-	if (moving &&
+	if (moving&&
 			averageLeftDerivativeError.value()<toleranceSpeedEstablished &&
 			averageRightDerivativeError.value()<toleranceSpeedEstablished &&
 
@@ -350,11 +350,11 @@ void MotionControlSystem::manageStop()
 		}
 */
 
+	
 //-----------//
 
 	if (isPhysicallyStopped() && moving && !curveMovement && !forcedMovement) // Pour un blocage classique
 	{
-
 		if (time == 0)
 		{ //D�but du timer
 			time = Millis();

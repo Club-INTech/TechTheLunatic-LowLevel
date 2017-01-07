@@ -12,12 +12,23 @@
 
 extern Uart<1> serial;
 
+//Vitesses AX12
+//Pelle
+#define vPelleDeb 25
+#define vPelleMid 20
+#define vPelleFin 45
+//Bras Pelle
+#define vBraPelRel 20
+#define vBraPelMed 15
+#define vBraPelDep 10
+
+
 //Positions des AX12
 
 //Pour la Pelleteusatron 3000
 
 #define brapeldepG 30
-#define brapelmoitG 60
+#define brapelmoitG 75
 #define brapelrelG 90
 
 #define pospelinit 300
@@ -38,7 +49,7 @@ extern Uart<1> serial;
 #define CaleBas 0
 
 //Largue modules
-#define LargueRepos 0	//AX<serial_ax>* ax12brapelD;
+#define LargueRepos 0
 #define LarguePousse 0
 
 class ActuatorsMgr : public Singleton<ActuatorsMgr>
@@ -162,50 +173,50 @@ public:
 	
 	void braPelReleve() //relève les bras de la pelle
 	{
-		serial.printfln("Leve les bras");
+		serial.printflnDebug("Leve les bras");
 		ax12brapel->changeSpeed(20);
 		ax12brapel->goTo(brapelrelG);
-		serial.printfln("done");
+		serial.printflnDebug("done");
 	}
 	
 	void braPelDeplie() // déplie les bras de la pelle
 	{
-		serial.printfln("Baisse les bras");
+		serial.printflnDebug("Baisse les bras");
 		ax12brapel->changeSpeed(10);
 		ax12brapel->goTo(brapeldepG);
-		serial.printfln("done");
+		serial.printflnDebug("done");
 	}
 	
 	void braPelMoit()
 	{
-		serial.printfln("Leve les bras mais pas trop");
+		serial.printflnDebug("Leve les bras mais pas trop");
 		ax12brapel->changeSpeed(15);
 		ax12brapel->goTo(brapelmoitG);
-		serial.printfln("done");
+		serial.printflnDebug("done");
 	}
 	
 	void pelleInit()
 	{
-		serial.printfln("Pelle va au début");
+		serial.printflnDebug("Pelle va au début");
 		ax12pel->changeSpeed(25);
 		ax12pel->goTo(pospelinit);
-		serial.printfln("done");
+		serial.printflnDebug("done");
 	}
 	
 	void pelleMoit()
 	{
-		serial.printfln("Pelle tient boules");
+		serial.printflnDebug("Pelle tient boules");
 		ax12pel->changeSpeed(20);
 		ax12pel->goTo(pospelmoit);
-		serial.printfln("done");
+		serial.printflnDebug("done");
 	}
 	
 	void pelleLib()
 	{
-		serial.printfln("Pelle jete boules");
+		serial.printflnDebug("Pelle jete boules");
 		ax12pel->changeSpeed(45);
 		ax12pel->goTo(pospeldeli);
-		serial.printfln("done");
+		serial.printflnDebug("done");
 	}
 
 /*			 ___________________
@@ -216,7 +227,7 @@ public:
 	
 	void moduleDeb(int cote)
 	{
-		serial.printfln("Initialisation de l'attrape module");
+		//serial.printfln("Initialisation de l'attrape module");
 		if (cote)
 		{
 			AMG->goTo(AMdebG); //Si le coté est gauche (cote = 1)
@@ -225,12 +236,12 @@ public:
 		{
 			AMD->goTo(AMdebD);  //Si le côté est droit (cote = 0)
 		}
-		serial.printfln("done");
+		//serial.printfln("done");
 	}
 	
 	void moduleFin(int cote)
 	{
-		serial.printfln("Prise de modules");
+		//serial.printflnDebug("Prise de modules"); TODO:Debug
 		if (cote)
 		{
 			AMG->goTo(AMfinG); //Si le coté est gauche (cote = 1)
@@ -239,7 +250,7 @@ public:
 		{
 			AMD->goTo(AMfinD);  //Si le côté est droit (cote = 0)
 		}
-		serial.printfln("done");
+		//serial.printflnDebug("done");
 	}
 
 /*			 ___________________
@@ -248,6 +259,25 @@ public:
  *		   *|___________________|*
  */
 
+	void caleHaut(){
+		CM->goTo(CaleHaut);
+	}
+	void caleBas(){
+		CM->goTo(CaleBas);
+	}
+
+/*			 ___________________
+ * 		   *|                   |*
+ *		   *|   Largue-Module   |*
+ *		   *|___________________|*
+ */
+	void largueRepos(){
+		LM->goTo(LargueRepos);
+	}
+	void larguePousse(){
+		LM->goTo(LarguePousse);
+	}
+	
 	// Voilà.
 	
 	
