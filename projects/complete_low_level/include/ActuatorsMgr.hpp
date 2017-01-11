@@ -32,6 +32,7 @@ extern Uart<1> serial;
 #define brapelrelG 90
 
 #define pospelinit 300
+#define pospeltient 95
 #define pospelmoit 150
 #define pospeldeli 0
 
@@ -40,8 +41,10 @@ extern Uart<1> serial;
 //TODO:positions des deux AX12 d'attrappe-module
 
 #define AMdebG 230
+#define AMmidG 230
 #define AMfinG 60 // 60
 #define AMdebD 0
+#define AMmidD 0
 #define AMfinD 0
 
 //Les calle-modules
@@ -186,7 +189,7 @@ public:
 	void braPelReleve() //relève les bras de la pelle
 	{
 		serial.printflnDebug("Leve les bras");
-		ax12brapel->changeSpeed(16);
+		ax12brapel->changeSpeed(10);
 		ax12brapel->goTo(brapelrelG);
 		serial.printflnDebug("done");
 	}
@@ -202,7 +205,7 @@ public:
 	void braPelMoit()
 	{
 		serial.printflnDebug("Leve les bras mais pas trop");
-		ax12brapel->changeSpeed(12);
+		ax12brapel->changeSpeed(10);
 		ax12brapel->goTo(brapelmoitG);
 		serial.printflnDebug("done");
 	}
@@ -220,6 +223,13 @@ public:
 		serial.printflnDebug("Pelle tient boules");
 		ax12pel->changeSpeed(15);
 		ax12pel->goTo(pospelmoit);
+		serial.printflnDebug("done");
+	}
+	
+	void pelleTient(){
+		serial.printflnDebug("pos de maintient des boules");
+		ax12pel->changeSpeed(30);
+		ax12pel->goTo(pospeltient);
 		serial.printflnDebug("done");
 	}
 	
@@ -249,6 +259,22 @@ public:
 		else
 		{
 			AMD->goTo(AMdebD);  //Si le côté est droit (cote = 0)
+		}
+		serial.printflnDebug("done");
+	}
+	
+	void moduleMid(int cote)
+	{
+		AMG->changeSpeed(100);
+		AMD->changeSpeed(100);
+		serial.printflnDebug("Medium de l'attrape module");
+		if (cote)
+		{
+			AMG->goTo(AMmidG); //Si le coté est gauche (cote = 1)
+		}
+		else
+		{
+			AMD->goTo(AMmidD);  //Si le côté est droit (cote = 0)
 		}
 		serial.printflnDebug("done");
 	}

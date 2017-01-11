@@ -94,6 +94,6 @@ set(SOURCE_FILES
     src/Motor.cpp
     src/SensorMgr.cpp
     syscalls/syscalls.c
-    main.cpp)
+    main.cpp src/Elevator.cpp src/Elevator.h)
 
 add_executable(complete_low_level ${SOURCE_FILES})

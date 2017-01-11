@@ -601,6 +601,11 @@ int main(void)
             {
                 actuatorsMgr->pelleMoit();
             }
+				
+			else if (!strcmp("pt", order))
+			{
+				actuatorsMgr->pelleTient();
+			}
 
             else if (!strcmp("pf", order))      //position de livraison de boules de la pelle
             {
@@ -615,9 +620,13 @@ int main(void)
 
 			//0 = droit, 1 = gauche
 			 //Côté droit
-			 else if (!strcmp("amdd", order))
+			else if (!strcmp("amdd", order))
 			{
 				actuatorsMgr->moduleDeb(0);
+			}
+			else if (!strcmp("ammd", order))
+			{
+				actuatorsMgr->moduleMid(0);
 			}
 			else if (!strcmp("amfd", order))
 			{
@@ -627,6 +636,10 @@ int main(void)
 			else if (!strcmp("amdg", order))
 			{
 				actuatorsMgr->moduleDeb(1);
+			}
+			else if (!strcmp("ammg", order))
+			{
+				actuatorsMgr->moduleMid(1);
 			}
 			else if (!strcmp("amfg", order))
 			{
