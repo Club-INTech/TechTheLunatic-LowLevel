@@ -5,8 +5,19 @@
  * Sens: PE9|PE11 en OUT
  * Marche: PB0 en PWM (TIM1_CH2)
  *
- * TODO:Pourquoi l'un des moteurs avait son ENABLE sur le PB2 (qui n'a pas de timer à priori)
+ *
+ * Pins de sens du moteur (bornier gauche):
+ * PE9(INPUT1) PE11(INPUT2) en mode OUTPUT
+ *
+ * SENS: en vue du dessus: PE9/PE11
+ * Trigonométrique:1/0
+ * Antitrigonomètrique:0/1
+ *
  */
+
+//TODO:Pourquoi l'un des moteurs avait son ENABLE sur le PB2 (qui n'a pas de timer à priori)
+
+
 #define GREEN_PIN       GPIO_Pin_12
 #define ORANGE_PIN      GPIO_Pin_13
 #define RED_PIN         GPIO_Pin_14
@@ -17,20 +28,9 @@
 #include <stm32f4xx.h>
 #include "Elevator.h"
 
-//TODO:voir fonctionnement de initPWM dans motor.cpp
-
-
 Elevator::Elevator(void) {
 	sens = UP;
-	/**
-	 * Pins de sens du moteur (bornier gauche):
-	 * PE9(INPUT1) PE11(INPUT2) en mode OUTPUT
-	 *
-	 * SENS: en vue du dessus: PE9/PE11
-	 * Trigonométrique:1/0
-	 * Antitrigonomètrique:0/1
-	 *
-	 */
+
 	 
 
 	/*
@@ -51,6 +51,7 @@ Elevator::Elevator(void) {
 
 void Elevator::initTimer()  //Initialise le timer
 {
+	
 	/*
 	uint32_t TIMER_Frequency = 72000000;
 	uint32_t COUNTER_Frequency = 100000;
@@ -70,6 +71,7 @@ void Elevator::initTimer()  //Initialise le timer
 
 void Elevator::initPWM() //Initialise le PWM
 {
+	
 	/*
 	//Leds:
 	
@@ -183,8 +185,9 @@ void Elevator::setSens(Sens sensToSet) { //Change la direction dans le sens souh
 	}
 }
 
-void Elevator::stop(void){
+void Elevator::stop(void){ //
 	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
+	switchSens();
 }
 
 void Elevator::run() {//Tourne dans le sens de sens(a déterminer empiriquement)

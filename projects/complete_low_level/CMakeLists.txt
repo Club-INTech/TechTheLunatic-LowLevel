@@ -88,12 +88,15 @@ set(SOURCE_FILES
     include/Counter.h
     include/MotionControlSystem.h
     include/Motor.h
+    include/Elevator.h
+    include/ElevatorMgr.h
     include/SensorMgr.h
+    src/ElevatorMgr.cpp
     src/Counter.cpp
     src/MotionControlSystem.cpp
     src/Motor.cpp
     src/SensorMgr.cpp
     syscalls/syscalls.c
-    main.cpp src/Elevator.cpp include/Elevator.h src/ElevatorMgr.cpp include/ElevatorMgr.h)
+    main.cpp src/Elevator.cpp)
 
 add_executable(complete_low_level ${SOURCE_FILES})

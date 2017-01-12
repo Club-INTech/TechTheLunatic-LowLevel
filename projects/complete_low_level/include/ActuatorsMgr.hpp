@@ -22,6 +22,8 @@ extern Uart<1> serial;
 #define vBraPelMed 15
 #define vBraPelDep 10
 
+#define vCale 50
+
 
 //Positions des AX12
 
@@ -41,17 +43,19 @@ extern Uart<1> serial;
 //TODO:positions des deux AX12 d'attrappe-module
 
 #define AMdebG 230
-#define AMmidG 230
-#define AMfinG 60 // 60
-#define AMdebD 0
-#define AMmidD 0
-#define AMfinD 0
+#define AMmidG 140
+#define AMfinG 50 // 60
+#define AMdebD 130
+#define AMmidD 190
+#define AMfinD 255
 
 //Les calle-modules
 #define CaleHautG 96 //gauche 96 droite 183
-#define CaleBasG 280 //gauche 280 droite 3
-#define CaleHautD 183
-#define CaleBasD 3
+#define CaleReposG 200
+#define CaleBasG 215 //gauche 280 droite 3
+#define CaleHautD 100
+#define CaleReposD 30
+#define CaleBasD 10
 
 //Largue modules
 #define LargueRepos 0
@@ -302,20 +306,28 @@ public:
  */
 
 	void caleHautD(){
-		CMD->changeSpeed(50);
+		CMD->changeSpeed(vCale);
 		CMD->goTo(CaleHautD);
 	}
+	void caleMidD(){
+		CMD->changeSpeed(vCale);
+		CMD->goTo(CaleReposD);
+	}
 	void caleBasD(){
-		CMD->changeSpeed(40);
+		CMD->changeSpeed(vCale);
 		CMD->goTo(CaleBasD);
 	}
 	
 	void caleHautG(){
-		CMG->changeSpeed(50);
+		CMG->changeSpeed(vCale);
 		CMG->goTo(CaleHautG);
 	}
+	void caleMidG(){
+		CMG->changeSpeed(vCale);
+		CMG->goTo(CaleReposG);
+	}
 	void caleBasG(){
-		CMG->changeSpeed(40);
+		CMG->changeSpeed(vCale);
 		CMG->goTo(CaleBasG);
 	}
 /*			 ___________________

@@ -651,36 +651,60 @@ int main(void)
 				actuatorsMgr->moduleFin(1);
 			}
 			//Cale Modules
-			else if (!strcmp("cmdd",order)){
+			else if (!strcmp("cmdd",order))
+			{
 				actuatorsMgr->caleHautD();
 			}
-			else if(!strcmp("cmfd",order)){
+			else if (!strcmp("cmmd", order))
+			{
+				actuatorsMgr->caleMidD();
+			}
+			else if(!strcmp("cmfd",order))
+			{
 				actuatorsMgr->caleBasD();
 			}
-			else if (!strcmp("cmdg",order)){
+			else if(!strcmp("cmmg", order))
+			{
+				actuatorsMgr->caleMidG();
+			}
+			else if (!strcmp("cmdg",order))
+			{
 				actuatorsMgr->caleHautG();
 			}
-			else if(!strcmp("cmfg",order)){
+			else if(!strcmp("cmfg",order))
+			{
 				actuatorsMgr->caleBasG();
 			}
 			//Largue Modules
-			else if(!strcmp("lmd",order)){
+			else if(!strcmp("lmd",order))
+			{
 				actuatorsMgr->largueRepos();
 			}
-			else if(!strcmp("lmf",order)){
+			else if(!strcmp("lmf",order))
+			{
 				actuatorsMgr->larguePousse();
 			}
+				
 				//Assensceur
-			else if(!strcmp("asup", order)){
+			else if(!strcmp("asup", order))
+			{
 				elevator.setSens(UP);
 				elevator.run();
 				Delay(500); // ~1.5tours à 10V
 				elevator.stop();
 			}
-			else if(!strcmp("asdown", order)){
+			else if(!strcmp("asdown", order))
+			{
 				elevator.setSens(DOWN);
 				elevator.run();
 				Delay(500);
+				elevator.stop();
+			}
+			else if(!strcmp("asrun", order)){
+				elevator.run();
+			}
+			else if(!strcmp("asstop", order))
+			{
 				elevator.stop();
 			}
 /*			 __________________
