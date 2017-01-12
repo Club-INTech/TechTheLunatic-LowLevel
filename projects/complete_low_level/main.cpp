@@ -1,14 +1,17 @@
+#include <stm32f4xx_gpio.h>
 #include "library/Uart.hpp"
 #include "MotionControlSystem.h"
 #include "ActuatorsMgr.hpp"
 #include "SensorMgr.h"
 #include "library/voltage_controller.hpp"
+#include "Elevator.h"
 
 bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
 
 
 int main(void)
 {
+	
 	Delay_Init();
 	Uart<1> serial;
 	Uart<2> serial_ax;
@@ -21,6 +24,8 @@ int main(void)
 	ActuatorsMgr* actuatorsMgr = &ActuatorsMgr::Instance();
 	SensorMgr* sensorMgr = &SensorMgr::Instance();
 	Voltage_controller* voltage = &Voltage_controller::Instance();
+	Elevator elevator = Elevator();
+	elevator.pinsInit();
 
 	char order[64];//Permet le stockage du message re�u par la liaison s�rie
 
@@ -665,8 +670,19 @@ int main(void)
 			else if(!strcmp("lmf",order)){
 				actuatorsMgr->larguePousse();
 			}
-				
-				//TODO:Ascenseur
+				//Assensceur
+			else if(!strcmp("asup", order)){
+				elevator.setSens(UP);
+				elevator.run();
+				Delay(500); // ~1.5tours à 10V
+				elevator.stop();
+			}
+			else if(!strcmp("asdown", order)){
+				elevator.setSens(DOWN);
+				elevator.run();
+				Delay(500);
+				elevator.stop();
+			}
 /*			 __________________
  * 		   *|                  |*
  *		   *|  ERREURS DE COM  |*
@@ -708,7 +724,6 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 	volatile static uint32_t i = 0, j = 0, k = 0, l = 0;
 	static MotionControlSystem* motionControlSystem = &MotionControlSystem::Instance();
 	static Voltage_controller* voltage = &Voltage_controller::Instance();
-
 
 	if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
 		//Remise � 0 manuelle du flag d'interruption n�cessaire
