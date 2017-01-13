@@ -90,11 +90,13 @@ set(SOURCE_FILES
     include/Motor.h
     include/Elevator.h
     include/SensorMgr.h
+    include/Elevator.h
     src/Counter.cpp
     src/MotionControlSystem.cpp
     src/Motor.cpp
     src/SensorMgr.cpp
+    src/Elevator.cpp
     syscalls/syscalls.c
-    main.cpp src/Elevator.cpp)
+    main.cpp )
 
 add_executable(complete_low_level ${SOURCE_FILES})

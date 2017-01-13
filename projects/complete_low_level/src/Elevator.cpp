@@ -83,20 +83,22 @@ void Elevator::initPins(void)
 	gpioPinEn.GPIO_Pin=GPIO_Pin_0;
 	
 	gpioPinsDir.GPIO_Mode=GPIO_Mode_OUT;
-	gpioPinEn.GPIO_Mode=GPIO_Mode_AF;
+	gpioPinEn.GPIO_Mode=GPIO_Mode_OUT;
+	/*
 	gpioPinEn.GPIO_PuPd=GPIO_PuPd_UP;
 	gpioPinEn.GPIO_OType=GPIO_OType_PP;
 	gpioPinEn.GPIO_Speed=GPIO_Speed_100MHz;
+	 */
 	
 	
 	GPIO_Init(GPIOE, &gpioPinsDir);
 	GPIO_Init(GPIOB, &gpioPinEn);
-	//Démarre le moteur dans le sens montant
+	//Initialise le moteur dans le sens montant
 	
 	GPIO_SetBits(GPIOE, GPIO_Pin_11 + GPIO_Pin_9);
 	GPIO_ResetBits(GPIOE, GPIO_Pin_11);
 	
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource0, GPIO_AF_TIM1);
+	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 }
 
 

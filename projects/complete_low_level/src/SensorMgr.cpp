@@ -1,3 +1,4 @@
+#include <stm32f4xx_gpio.h>
 #include "SensorMgr.h"
 
 /*		PINS DES CAPTEURS
@@ -5,13 +6,14 @@
  * 	ULTRASONS:
  * 		Avant Droit   :	PA6
  * 		Avant Gauche  :	PA4
- * 		Arrière Droit :	PA7
- * 		Arrière Gauche:	PB1
+ * 		Arriï¿½re Droit :	PA7
+ * 		Arriï¿½re Gauche:	PB1
  *
  * 	CONTACTEURS:
- * 		Monte-plot		: PC15
- * 		Gobelet Droit	: PD9
- * 		Gobelet Gauche	: PD11
+ * 		Jumper : PC9
+ * 		Contacteur 1	: PC0
+ * 		Contacteur 2	: PD9
+ * 		Contacteur 3	: PD11
  */
 
 
@@ -30,7 +32,7 @@ SensorMgr::SensorMgr():
 	 * Initialisation des pins des capteurs de contact
 	 */
 
-	GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
+	GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par dï¿½faut
 
 /*         _________________________________________
 		 *|								            |*
@@ -38,7 +40,10 @@ SensorMgr::SensorMgr():
 		 *|_________________________________________|*
 */
 
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);//Active l'horloge du port A
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);//Active l'horloge du port B
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);//Active l'horloge du port C
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);//Active l'horloge du port D
 
 	//Jumper (PC9)
 
@@ -56,20 +61,31 @@ SensorMgr::SensorMgr():
 	 *|________________________________|*
 */
 
-	// Capteur porte DROITE OUVERTE (PC0)
+	// Contacteur 1 (PC0)
 	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStruct);
 
+	// Contacteur 2 (PD9)
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9;
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+	// Contacteur 3 (PD11)
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_11;
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 
 
 	 // Capteur US ARD :
 
-
-		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
 
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 
@@ -111,7 +127,7 @@ SensorMgr::SensorMgr():
 
 
 /*
- * Fonction de mise à jour des capteurs à ultrason
+ * Fonction de mise ï¿½ jour des capteurs ï¿½ ultrason
  */
 void SensorMgr::refresh(MOVING_DIRECTION direction)
 {
@@ -126,7 +142,7 @@ void SensorMgr::refresh(MOVING_DIRECTION direction)
 
 
 /*
- * Fonctions d'interruption des capteurs à ultrason
+ * Fonctions d'interruption des capteurs ï¿½ ultrason
  */
 
 void SensorMgr::sensorInterrupt(int pin){
@@ -134,6 +150,7 @@ void SensorMgr::sensorInterrupt(int pin){
 
 	if(pin == 6)
 		ultrasonARD.interruption();
+
 
 
 }
@@ -145,7 +162,7 @@ void SensorMgr::ARDInterrupt(){
 
 
 /*
- * Fonctions de récupération de la distance mesurée
+ * Fonctions de rï¿½cupï¿½ration de la distance mesurï¿½e
  */
 
 int SensorMgr::getSensorDistanceARD() {
@@ -155,10 +172,19 @@ int SensorMgr::getSensorDistanceARD() {
 
 
 /*
- * Fonctions de récupération de l'état des capteurs de contact et du jumper
+ * Fonctions de rï¿½cupï¿½ration de l'ï¿½tat des capteurs de contact et du jumper
  */
 
 
 bool SensorMgr::isJumperOut() const{
-	return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_14);
+	return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_9);
+}
+bool SensorMgr::isContactor1engaged() const{
+	return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_0);
+}
+bool SensorMgr::isContactor2engaged() const{
+	return !GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_9);
+}
+bool SensorMgr::isContactor3engaged() const{
+	return !GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_11);
 }
