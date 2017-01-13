@@ -690,14 +690,15 @@ int main(void)
 			{
 				elevator.setSens(UP);
 				elevator.run();
-				Delay(500); // ~1.5tours à 10V
+				Delay(700); // ~1.5tours à 10V
 				elevator.stop();
 			}
+			
 			else if(!strcmp("asdown", order))
 			{
 				elevator.setSens(DOWN);
 				elevator.run();
-				Delay(500);
+				Delay(350);
 				elevator.stop();
 			}
 			else if(!strcmp("asrun", order)){
