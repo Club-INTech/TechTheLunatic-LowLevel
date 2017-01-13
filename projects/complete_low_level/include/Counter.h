@@ -13,6 +13,7 @@ public:
 	Counter();
 	static int32_t getLeftValue();
 	static int32_t getRightValue();
+    static int32_t getMoteurValue();
 };
 
 #endif
