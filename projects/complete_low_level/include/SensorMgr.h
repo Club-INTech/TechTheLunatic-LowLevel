@@ -25,6 +25,9 @@ public:
 	int getSensorDistanceARD();
 
 	bool isJumperOut() const;
+	bool isContactor1engaged() const;
+	bool isContactor2engaged() const;
+	bool isContactor3engaged() const;
 
 	void refresh(MOVING_DIRECTION);
 

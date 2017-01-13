@@ -40,7 +40,10 @@ SensorMgr::SensorMgr():
 		 *|_________________________________________|*
 */
 
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);//Active l'horloge du port A
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);//Active l'horloge du port B
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);//Active l'horloge du port C
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);//Active l'horloge du port D
 
 	//Jumper (PC9)
 
@@ -83,8 +86,6 @@ SensorMgr::SensorMgr():
 
 	 // Capteur US ARD :
 
-
-		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
 
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 
@@ -151,6 +152,7 @@ void SensorMgr::sensorInterrupt(int pin){
 		ultrasonARD.interruption();
 
 
+
 }
 
 
@@ -175,5 +177,14 @@ int SensorMgr::getSensorDistanceARD() {
 
 
 bool SensorMgr::isJumperOut() const{
-	return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_14);
+	return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_9);
+}
+bool SensorMgr::isContactor1engaged() const{
+	return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_0);
+}
+bool SensorMgr::isContactor2engaged() const{
+	return !GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_9);
+}
+bool SensorMgr::isContactor3engaged() const{
+	return !GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_11);
 }
