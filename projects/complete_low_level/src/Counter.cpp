@@ -74,7 +74,7 @@ Counter::Counter() {
 	TIM_TimeBaseStructure.TIM_Period = -1;
 	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
-
+	
 	TIM_Cmd(TIM3, ENABLE);
 
 	TIM_SetCounter(TIM3, 32767);
@@ -83,7 +83,7 @@ Counter::Counter() {
 	 * Configuration encodeur MOTEUR sur TIMER 9 (16 bits)
 	 * Pins A2 et A3
 	 */
-
+/*
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
     RCC_APB1PeriphClockCmd(RCC_APB2Periph_TIM9, ENABLE);
 
@@ -112,7 +112,7 @@ Counter::Counter() {
     TIM_Cmd(TIM9, ENABLE);
 
     TIM_SetCounter(TIM9, 32767);
-
+*/
 }
 
 int32_t Counter::getLeftValue() {

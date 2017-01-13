@@ -26,6 +26,7 @@
 #include <delay.h>
 #include <stm32f4xx_tim.h>
 #include <stm32f4xx_gpio.h>
+#include <stm32f4xx_rcc.h>
 #include "Elevator.h"
 
 Elevator::Elevator(void) {
@@ -42,8 +43,8 @@ void Elevator::initTimer()  //Initialise le timer
 	uint16_t prescaler = (uint16_t)((SystemCoreClock / 2) / 256000) - 1;
 	
 	//Configuration du TIMER 1
-	timTimeBaseInitTypeDef.TIM_Period=10;//ancienne valeur = 255
-	timTimeBaseInitTypeDef.TIM_Prescaler=prescaler;
+	timTimeBaseInitTypeDef.TIM_Period=255;//ancienne valeur = 255
+	timTimeBaseInitTypeDef.TIM_Prescaler=40000;
 	timTimeBaseInitTypeDef.TIM_ClockDivision = 0;
 	timTimeBaseInitTypeDef.TIM_CounterMode = TIM_CounterMode_Up;
 	
@@ -68,7 +69,7 @@ void Elevator::initPWM() //Initialise le PWM
 	TIM_Cmd(TIM1, ENABLE); //Active le TIM
 }
 
-void Elevator::pinsInit(void)
+void Elevator::initPins(void)
 {
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE,ENABLE);
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,ENABLE);
@@ -123,10 +124,16 @@ void Elevator::setSens(Sens sensToSet) { //Change la direction dans le sens souh
 }
 
 void Elevator::stop(void){ //
-	TIM1->CCR2=0;
+	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 	switchSens();
 }
 
 void Elevator::run() {//Tourne dans le sens de sens(a déterminer empiriquement)
-	TIM1->CCR2=2;
+	GPIO_SetBits(GPIOB, GPIO_Pin_0);
+}
+
+void Elevator::initialize(void){
+	initPins();
+//	initTimer();
+//	initPWM();
 }
