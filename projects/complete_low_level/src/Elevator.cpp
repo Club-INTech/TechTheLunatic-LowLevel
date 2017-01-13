@@ -26,6 +26,7 @@
 #include <delay.h>
 #include <stm32f4xx_tim.h>
 #include <stm32f4xx_gpio.h>
+#include <stm32f4xx_rcc.h>
 #include "Elevator.h"
 
 Elevator::Elevator(void) {
@@ -68,7 +69,7 @@ void Elevator::initPWM() //Initialise le PWM
 	TIM_Cmd(TIM1, ENABLE); //Active le TIM
 }
 
-void Elevator::pinsInit(void)
+void Elevator::initPins(void)
 {
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE,ENABLE);
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,ENABLE);
@@ -82,20 +83,22 @@ void Elevator::pinsInit(void)
 	gpioPinEn.GPIO_Pin=GPIO_Pin_0;
 	
 	gpioPinsDir.GPIO_Mode=GPIO_Mode_OUT;
-	gpioPinEn.GPIO_Mode=GPIO_Mode_AF;
+	gpioPinEn.GPIO_Mode=GPIO_Mode_OUT;
+	/*
 	gpioPinEn.GPIO_PuPd=GPIO_PuPd_UP;
 	gpioPinEn.GPIO_OType=GPIO_OType_PP;
 	gpioPinEn.GPIO_Speed=GPIO_Speed_100MHz;
+	 */
 	
 	
 	GPIO_Init(GPIOE, &gpioPinsDir);
 	GPIO_Init(GPIOB, &gpioPinEn);
-	//Démarre le moteur dans le sens montant
+	//Initialise le moteur dans le sens montant
 	
 	GPIO_SetBits(GPIOE, GPIO_Pin_11 + GPIO_Pin_9);
 	GPIO_ResetBits(GPIOE, GPIO_Pin_11);
 	
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource0, GPIO_AF_TIM1);
+	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 }
 
 
@@ -123,10 +126,10 @@ void Elevator::setSens(Sens sensToSet) { //Change la direction dans le sens souh
 }
 
 void Elevator::stop(void){ //
-	TIM1->CCR2=0;
+	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 	switchSens();
 }
 
 void Elevator::run() {//Tourne dans le sens de sens(a déterminer empiriquement)
-	TIM1->CCR2=2;
+	GPIO_SetBits(GPIOB, GPIO_Pin_0);
 }

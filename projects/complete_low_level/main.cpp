@@ -25,7 +25,7 @@ int main(void)
 	SensorMgr* sensorMgr = &SensorMgr::Instance();
 	Voltage_controller* voltage = &Voltage_controller::Instance();
 	Elevator elevator = Elevator();
-	elevator.pinsInit();
+	elevator.initPins();
 
 	char order[64];//Permet le stockage du message re�u par la liaison s�rie
 
