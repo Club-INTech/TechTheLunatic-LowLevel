@@ -9,7 +9,11 @@ A3	Codeuse ascenseur
 A4	Capteur US avant gauche
 A6	Capteur US arriere droit
 A7	Capteur US avant droit
+A8	Capteur IR ?
+A9	Capteur IR ?
 A10	V (led)
+A13	Capteur IR ?
+A14     Capteur IR ?
 A15	V (led)
 
 B0	Moteur ascenseur (PWM)

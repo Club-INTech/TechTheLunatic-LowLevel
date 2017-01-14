@@ -4,10 +4,10 @@
 /*		PINS DES CAPTEURS
  *
  * 	ULTRASONS:
- * 		Avant Droit   :	PA7
+ * 		Avant Droit   :	PA6
  * 		Avant Gauche  :	PA4
- * 		Arri�re Droit :	PA6
- * 		Arri�re Gauche:	PB1
+ * 		Arri�re Droit :	PB1
+ * 		Arri�re Gauche:	PA7
  *
  * 	CONTACTEURS:
  * 		Jumper : PC10
@@ -88,21 +88,21 @@ SensorMgr::SensorMgr():
 
 
 
-	 // Capteur US ARD : (PA6)
+	 // Capteur US ARD : (PB1)
 
 
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
 		GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
-		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6;
+		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_1;
 		GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
 		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-		GPIO_Init(GPIOA, &GPIO_InitStruct);
+		GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-		SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource6);
+		SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOB, EXTI_PinSource1);
 
-		EXTI_InitStruct.EXTI_Line = EXTI_Line6;
+		EXTI_InitStruct.EXTI_Line = EXTI_Line1;
 		EXTI_InitStruct.EXTI_LineCmd = DISABLE;
 		EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
 		EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
@@ -114,41 +114,13 @@ SensorMgr::SensorMgr():
 		NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 		NVIC_Init(&NVIC_InitStruct);
 
-		ultrasonARD.init(GPIOA, GPIO_InitStruct, EXTI_InitStruct);
+		ultrasonARD.init(GPIOB, GPIO_InitStruct, EXTI_InitStruct);
 
 
     //@M : à tester + voir pour les priorités
 
 
-    // Capteur US ARG : (PB1)
-
-
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
-
-    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
-    GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_1;
-    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
-    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-    GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOB, EXTI_PinSource1);
-
-    EXTI_InitStruct.EXTI_Line = EXTI_Line1;
-    EXTI_InitStruct.EXTI_LineCmd = DISABLE;
-    EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
-    EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
-    EXTI_Init(&EXTI_InitStruct);
-
-    NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
-    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x255;
-    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x255;
-    NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init(&NVIC_InitStruct);
-
-    ultrasonARD.init(GPIOB, GPIO_InitStruct, EXTI_InitStruct);
-
-    // Capteur US AVD : (PA7)
+    // Capteur US ARG : (PA7)
 
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
@@ -163,6 +135,34 @@ SensorMgr::SensorMgr():
     SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource7);
 
     EXTI_InitStruct.EXTI_Line = EXTI_Line7;
+    EXTI_InitStruct.EXTI_LineCmd = DISABLE;
+    EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
+    EXTI_Init(&EXTI_InitStruct);
+
+    NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
+    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x255;
+    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x255;
+    NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStruct);
+
+    ultrasonARD.init(GPIOA, GPIO_InitStruct, EXTI_InitStruct);
+
+    // Capteur US AVD : (PA6)
+
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6;
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource6);
+
+    EXTI_InitStruct.EXTI_Line = EXTI_Line6;
     EXTI_InitStruct.EXTI_LineCmd = DISABLE;
     EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
     EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
