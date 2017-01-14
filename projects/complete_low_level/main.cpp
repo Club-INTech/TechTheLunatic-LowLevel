@@ -12,6 +12,7 @@ bool autoUpdatePosition = false; // active le mode d'envoi automatique de positi
 int main(void)
 {
 	
+	RCC_APB1PeriphClockCmd(RCC_APB1ENR_PWREN
 	Delay_Init();
 	Uart<1> serial;
 	Uart<3> serial_ax;

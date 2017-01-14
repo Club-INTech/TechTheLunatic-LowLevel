@@ -15,8 +15,6 @@
  *
  */
 
-//TODO:Pourquoi l'un des moteurs avait son ENABLE sur le PB2 (qui n'a pas de timer à priori)
-
 
 #define GREEN_PIN       GPIO_Pin_12
 #define ORANGE_PIN      GPIO_Pin_13
@@ -83,12 +81,11 @@ void Elevator::initPins(void)
 	gpioPinEn.GPIO_Pin=GPIO_Pin_0;
 	
 	gpioPinsDir.GPIO_Mode=GPIO_Mode_OUT;
-	gpioPinEn.GPIO_Mode=GPIO_Mode_OUT;
-	/*
+	gpioPinEn.GPIO_Mode=GPIO_Mode_AF;
+
 	gpioPinEn.GPIO_PuPd=GPIO_PuPd_UP;
 	gpioPinEn.GPIO_OType=GPIO_OType_PP;
 	gpioPinEn.GPIO_Speed=GPIO_Speed_100MHz;
-	 */
 	
 	
 	GPIO_Init(GPIOE, &gpioPinsDir);
@@ -99,6 +96,8 @@ void Elevator::initPins(void)
 	GPIO_ResetBits(GPIOE, GPIO_Pin_11);
 	
 	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
+	
+	
 }
 
 
@@ -125,7 +124,7 @@ void Elevator::setSens(Sens sensToSet) { //Change la direction dans le sens souh
 	}
 }
 
-void Elevator::stop(void){ //
+void Elevator::stop(void){
 	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 	switchSens();
 }
