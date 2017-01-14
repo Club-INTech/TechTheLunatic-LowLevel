@@ -1,0 +1,50 @@
+PINS/TIMs Utilisés:
+
+M=Moteurs, C=Capteurs, U=Uart, R=Roues Codeuses, I=Interruptions, V=Voltage
+
+A0	R
+A1	R
+A2	U
+A3	U/V(ADC)
+A4	C
+A6	C
+A7	C
+A15	V
+A10	V
+
+B0	M
+B1	M
+B4	R
+B5	R
+B6	U
+B7	U
+B9
+B10
+B11	M
+
+C0	C
+C6	U
+C7	U/V
+C8	V
+C9	V/C
+C10	U
+C11	U/V
+C12	U
+
+D0	V
+D2	U / V
+D4	V
+D6	V
+D8	U
+D9	U/C
+D11	C
+D12	M
+D14 M
+
+E1	V (Buzzer)
+E9	M
+E11	M
+
+
+
+(Voltage Controller: 2eme et dernier de gauche à droite ne fonctionnent pas) -> pins PC9 et PD6 à tester
