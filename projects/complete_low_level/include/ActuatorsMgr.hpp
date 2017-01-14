@@ -53,7 +53,7 @@ extern Uart<1> serial;
 #define CaleHautG 100 //gauche 96 droite 183
 #define CaleReposG 200
 #define CaleBasG 215 //gauche 280 droite 3
-#define CaleHautD 100
+#define CaleHautD 110
 #define CaleReposD 30
 #define CaleBasD 10
 

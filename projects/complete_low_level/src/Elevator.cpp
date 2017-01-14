@@ -136,6 +136,6 @@ void Elevator::run() {//Tourne dans le sens de sens(a déterminer empiriquement)
 
 void Elevator::initialize(void){
 	initPins();
-//	initTimer();
-//	initPWM();
+	initTimer();
+	initPWM();
 }
