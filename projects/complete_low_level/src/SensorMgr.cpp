@@ -18,6 +18,10 @@
 
 
 SensorMgr::SensorMgr():
+	ultrasonARD(),
+    ultrasonARG(),
+    ultrasonAVD(),
+    ultrasonAVG()
 
 {
 	lastRefreshTime = 0;
