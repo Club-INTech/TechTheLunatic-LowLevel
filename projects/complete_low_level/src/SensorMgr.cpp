@@ -10,7 +10,7 @@
  * 		Arri�re Gauche:	PB1
  *
  * 	CONTACTEURS:
- * 		Jumper : PC9
+ * 		Jumper : PC10
  * 		Contacteur 1	: PC0
  * 		Contacteur 2	: PD9
  * 		Contacteur 3	: PD11
@@ -49,9 +49,9 @@ SensorMgr::SensorMgr():
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);//Active l'horloge du port C
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);//Active l'horloge du port D
 
-	//Jumper (PC9)
+	//Jumper (PC10)
 
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9;
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_10;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
