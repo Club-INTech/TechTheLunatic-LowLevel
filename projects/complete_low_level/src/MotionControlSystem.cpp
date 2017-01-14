@@ -329,7 +329,7 @@ void MotionControlSystem::manageStop()
 			timeToEstablish=Millis();
 		}
 
-		else if(timeToEstablish>delayToEstablish && !isSpeedEstablished){
+		else if((timeToEstablish > delayToEstablish) && !isSpeedEstablished){
 			isSpeedEstablished = true;
 
 		}
@@ -363,7 +363,7 @@ void MotionControlSystem::manageStop()
 		{
 			if ((Millis() - time) >= delayToStop)
 			{ //Si arr�t� plus de 'delayToStop' ms
-				if (ABS(translationPID.getError()) <= toleranceTranslation && ABS(rotationPID.getError()) <= toleranceRotation)
+				if (ABS((translationPID.getError()) <= toleranceTranslation) && ABS(rotationPID.getError()) <= toleranceRotation)
 				{ //Stop� pour cause de fin de mouvement
 					stop();
 					moveAbnormal = false;

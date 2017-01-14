@@ -4,13 +4,13 @@
 /*		PINS DES CAPTEURS
  *
  * 	ULTRASONS:
- * 		Avant Droit   :	PA6
+ * 		Avant Droit   :	PA7
  * 		Avant Gauche  :	PA4
- * 		Arri�re Droit :	PA7
+ * 		Arri�re Droit :	PA6
  * 		Arri�re Gauche:	PB1
  *
  * 	CONTACTEURS:
- * 		Jumper : PC9
+ * 		Jumper : PC10
  * 		Contacteur 1	: PC0
  * 		Contacteur 2	: PD9
  * 		Contacteur 3	: PD11
@@ -18,7 +18,11 @@
 
 
 SensorMgr::SensorMgr():
-	ultrasonARD()
+	ultrasonARD(),
+    ultrasonARG(),
+    ultrasonAVD(),
+    ultrasonAVG()
+
 {
 	lastRefreshTime = 0;
 	refreshDelay = 13;//( en ms)
@@ -45,9 +49,9 @@ SensorMgr::SensorMgr():
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);//Active l'horloge du port C
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);//Active l'horloge du port D
 
-	//Jumper (PC9)
+	//Jumper (PC10)
 
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9;
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_10;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
@@ -84,7 +88,7 @@ SensorMgr::SensorMgr():
 
 
 
-	 // Capteur US ARD :
+	 // Capteur US ARD : (PA6)
 
 
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
@@ -105,14 +109,100 @@ SensorMgr::SensorMgr():
 		EXTI_Init(&EXTI_InitStruct);
 
 		NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
-		NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x00;
-		NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x00;
+		NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x255;
+		NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x255;
 		NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 		NVIC_Init(&NVIC_InitStruct);
 
 		ultrasonARD.init(GPIOA, GPIO_InitStruct, EXTI_InitStruct);
 
 
+    //@M : à tester + voir pour les priorités
+
+
+    // Capteur US ARG : (PB1)
+
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_1;
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOB, EXTI_PinSource1);
+
+    EXTI_InitStruct.EXTI_Line = EXTI_Line1;
+    EXTI_InitStruct.EXTI_LineCmd = DISABLE;
+    EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
+    EXTI_Init(&EXTI_InitStruct);
+
+    NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
+    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x255;
+    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x255;
+    NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStruct);
+
+    ultrasonARD.init(GPIOB, GPIO_InitStruct, EXTI_InitStruct);
+
+    // Capteur US AVD : (PA7)
+
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_7;
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource7);
+
+    EXTI_InitStruct.EXTI_Line = EXTI_Line7;
+    EXTI_InitStruct.EXTI_LineCmd = DISABLE;
+    EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
+    EXTI_Init(&EXTI_InitStruct);
+
+    NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
+    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x255;
+    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x255;
+    NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStruct);
+
+    ultrasonARD.init(GPIOA, GPIO_InitStruct, EXTI_InitStruct);
+
+    // Capteur US AVG : (PA4)
+
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_4;
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource4);
+
+    EXTI_InitStruct.EXTI_Line = EXTI_Line4;
+    EXTI_InitStruct.EXTI_LineCmd = DISABLE;
+    EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
+    EXTI_Init(&EXTI_InitStruct);
+
+    NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
+    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x255;
+    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x255;
+    NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStruct);
+
+    ultrasonARD.init(GPIOA, GPIO_InitStruct, EXTI_InitStruct);
 
 
 
@@ -129,15 +219,32 @@ SensorMgr::SensorMgr():
 /*
  * Fonction de mise � jour des capteurs � ultrason
  */
+//@M
+
 void SensorMgr::refresh(MOVING_DIRECTION direction)
 {
 	currentTime = Millis();
 	static uint8_t capteur = 0;
 
-	if(currentTime - lastRefreshTime >= refreshDelay)
+	if(currentTime - lastRefreshTime >= refreshDelay && direction == FORWARD)
 	{
-		ultrasonARD.refresh();
+		ultrasonAVD.refresh();
+        ultrasonAVG.refresh();
 	}
+
+    else if(currentTime - lastRefreshTime >= refreshDelay && direction == BACKWARD)
+    {
+        ultrasonARD.refresh();
+        ultrasonARG.refresh();
+    }
+    else if(currentTime - lastRefreshTime >= refreshDelay && direction == NONE)
+    {
+        ultrasonAVD.refresh();
+        ultrasonAVG.refresh();
+        ultrasonARD.refresh();
+        ultrasonARG.refresh();
+    }
+
 }
 
 
@@ -145,21 +252,37 @@ void SensorMgr::refresh(MOVING_DIRECTION direction)
  * Fonctions d'interruption des capteurs � ultrason
  */
 
-void SensorMgr::sensorInterrupt(int pin){
+void SensorMgr::sensorInterrupt(int idsensor){
 
-
-	if(pin == 6)
+	if(idsensor == 0)
 		ultrasonARD.interruption();
+    //@M:à tester
+    else if (idsensor == 1)
+        ultrasonARG.interruption();
+    else if (idsensor == 2)
+        ultrasonAVD.interruption();
+    else if (idsensor == 3)
+        ultrasonAVG.interruption();
 
 
 
 }
+//0 correspond à avant gauche, 1 à avant droit, 2 à arrière gauche, 3 à arrière droit
 
 
 void SensorMgr::ARDInterrupt(){
 	ultrasonARD.interruption();
 }
-
+//@M:à tester
+void SensorMgr::ARGInterrupt(){
+    ultrasonARG.interruption();
+}
+void SensorMgr::AVDInterrupt(){
+    ultrasonAVD.interruption();
+}
+void SensorMgr::AVGInterrupt(){
+    ultrasonAVG.interruption();
+}
 
 /*
  * Fonctions de r�cup�ration de la distance mesur�e
@@ -167,6 +290,15 @@ void SensorMgr::ARDInterrupt(){
 
 int SensorMgr::getSensorDistanceARD() {
 	return ultrasonARD.value();
+}
+int SensorMgr::getSensorDistanceARG() {
+    return ultrasonARG.value();
+}
+int SensorMgr::getSensorDistanceAVD() {
+    return ultrasonAVD.value();
+}
+int SensorMgr::getSensorDistanceAVG() {
+    return ultrasonAVG.value();
 }
 
 
@@ -179,6 +311,7 @@ int SensorMgr::getSensorDistanceARD() {
 bool SensorMgr::isJumperOut() const{
 	return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_9);
 }
+//@M:à tester
 bool SensorMgr::isContactor1engaged() const{
 	return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_0);
 }

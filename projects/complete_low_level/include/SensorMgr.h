@@ -23,6 +23,9 @@ public:
 
 
 	int getSensorDistanceARD();
+    int getSensorDistanceARG();
+    int getSensorDistanceAVD();
+    int getSensorDistanceAVG();
 
 	bool isJumperOut() const;
 	bool isContactor1engaged() const;
@@ -35,12 +38,19 @@ public:
 
 
 	void ARDInterrupt();
+    void ARGInterrupt();
+    void AVDInterrupt();
+    void AVGInterrupt();
 
 
 
 private:
 
 	CapteurSRF ultrasonARD;
+    //@M:à tester
+    CapteurSRF ultrasonARG;
+    CapteurSRF ultrasonAVD;
+    CapteurSRF ultrasonAVG;
 
 	unsigned int refreshDelay;
 	unsigned int currentTime;
