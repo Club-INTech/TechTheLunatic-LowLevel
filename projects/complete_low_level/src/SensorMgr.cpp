@@ -12,7 +12,7 @@
  * 	CONTACTEURS:
  * 		Jumper : PC10
  * 		Contacteur 1	: PC0
- * 		Contacteur 2	: PD9
+ * 		Contacteur 2	: PC12
  * 		Contacteur 3	: PD11
  */
 
@@ -72,12 +72,12 @@ SensorMgr::SensorMgr():
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-	// Contacteur 2 (PD9)
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9;
+	// Contacteur 2 (PC12)
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_12;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-	GPIO_Init(GPIOD, &GPIO_InitStruct);
+	GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	// Contacteur 3 (PD11)
 	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_11;

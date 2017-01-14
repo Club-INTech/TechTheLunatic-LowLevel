@@ -4,42 +4,42 @@ M=Moteurs, C=Capteurs, U=Uart, R=Roues Codeuses, I=Interruptions, V=Voltage
 
 A0	Codeuse droite (TIM5)
 A1	Codeuse droite (TIM5)
-A2	U / codeuse ascenseur ?
-A3	U / codeuse ascenseur ?
-A4	Capteur US
-A6	Capteur US
-A7	Capteur US
+A2	Codeuse ascenseur
+A3	Codeuse ascenseur
+A4	Capteur US avant gauche
+A6	Capteur US arriere droit
+A7	Capteur US avant droit
 A10	V (led)
 A15	V (led)
 
 B0	Moteur ascenseur (PWM)
-B1	Capteur US
+B1	Capteur US arriere gauche
 B4	Codeuse gauche (TIM3)
 B5	Codeuse gauche (TIM3)
-B6	U
-B7	U
+B6	UART ax12 (TX) : UART3V
+B7	UART ax12 (RX) 
 B9
 B10     Moteur gauche (PWM)
 B11	Moteur gauche (PWM)
 
-C0	Contacteur
+C0	Contacteur 1
 C1      Test Lipo (ADC3 channel 11)
 C2      Test Lipo (ADC3 channel 12)
-C6	U
-C7	U / V (led)
+C6	
+C7	V (led)
 C8	V (led)
 C9	V (led)
-C10	U / Contacteur?
-C11	U / V (led)
-C12	U
+C10	Contacteur (jumper)
+C11	V (led)
+C12	Contacteur 2
 
 D0	V (led)
-D2	U / V (led)
+D2	V (led)
 D4	V (led)
 D6	V (led)
-D8	U
-D9	U / Contacteur
-D11	Contacteur
+D8	UART
+D9	UART
+D11	Contacteur 3
 D12	Moteur droit (DIR)
 D14     Moteur gauche (DIR)
 
@@ -50,3 +50,7 @@ E11	Moteur ascenseur (INPUT2)
 
 
 (Voltage Controller: 2eme et dernier de gauche à droite ne fonctionnent pas) -> pins PC9 et PD6 à tester
+
+MAXON
+2322.982-52 200
+858553
