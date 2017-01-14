@@ -2,48 +2,50 @@ PINS/TIMs Utilisés:
 
 M=Moteurs, C=Capteurs, U=Uart, R=Roues Codeuses, I=Interruptions, V=Voltage
 
-A0	R
-A1	R
-A2	U
-A3	U/V(ADC)
-A4	C
-A6	C
-A7	C
-A15	V
-A10	V
+A0	Codeuse droite (TIM5)
+A1	Codeuse droite (TIM5)
+A2	U / codeuse ascenseur ?
+A3	U / codeuse ascenseur ?
+A4	Capteur US
+A6	Capteur US
+A7	Capteur US
+A10	V (led)
+A15	V (led)
 
-B0	M
-B1	M
-B4	R
-B5	R
+B0	Moteur ascenseur (PWM)
+B1	Capteur US
+B4	Codeuse gauche (TIM3)
+B5	Codeuse gauche (TIM3)
 B6	U
 B7	U
 B9
-B10
-B11	M
+B10     Moteur gauche (PWM)
+B11	Moteur gauche (PWM)
 
-C0	C
+C0	Contacteur
+C1      Test Lipo (ADC3 channel 11)
+C2      Test Lipo (ADC3 channel 12)
 C6	U
-C7	U/V
-C8	V
-C9	V/C
-C10	U
-C11	U/V
+C7	U / V (led)
+C8	V (led)
+C9	V (led)
+C10	U / Contacteur?
+C11	U / V (led)
 C12	U
 
-D0	V
-D2	U / V
-D4	V
-D6	V
+D0	V (led)
+D2	U / V (led)
+D4	V (led)
+D6	V (led)
 D8	U
-D9	U/C
-D11	C
-D12	M
-D14 M
+D9	U / Contacteur
+D11	Contacteur
+D12	Moteur droit (DIR)
+D14     Moteur gauche (DIR)
 
 E1	V (Buzzer)
-E9	M
-E11	M
+E9	Moteur ascenseur (INPUT1)
+E11	Moteur ascenseur (INPUT2)
 
 
 

@@ -11,8 +11,8 @@
  *********************************************************
  * Pins :
  *
- * UART1: B6 (TX) B7 (RX)
- * UART2: A2 (TX) A3 (RX)
+ * UART1: B6 (TX) B7 (RX) : utilisé
+ * UART2: A2 (TX) A3 (RX) : utilisé
  * UART3: D8 (TX) D9 (RX)
  * UART4: C10 (TX) C11 (RX)
  * UART5: C12 (TX) D2 (RX)
