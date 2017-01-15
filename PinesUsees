@@ -9,11 +9,11 @@ A3	Codeuse ascenseur
 A4	Capteur US avant gauche
 A6	Capteur US arriere droit
 A7	Capteur US avant droit
-A8	Capteur IR ?
-A9	Capteur IR ?
+A8	 ?			//Pas cool, pas utiliser
+A9	 ?			//De meme
 A10	V (led)
-A13	Capteur IR ?
-A14     Capteur IR ?
+A13	 ?			//Encore
+A14  ?		//Idem
 A15	V (led)
 
 B0	Moteur ascenseur (PWM)
@@ -36,6 +36,8 @@ C9	V (led)
 C10	Contacteur (jumper)
 C11	V (led)
 C12	Contacteur 2
+C14				//DO NOT USE, plz
+
 
 D0	V (led)
 D2	V (led)
@@ -58,3 +60,5 @@ E11	Moteur ascenseur (INPUT2)
 MAXON
 2322.982-52 200
 858553
+Codeuse:HEDL-5540 A01
+
