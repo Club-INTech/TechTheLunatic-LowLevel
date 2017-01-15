@@ -91,13 +91,13 @@ set(SOURCE_FILES
     include/Elevator.h
     include/SensorMgr.h
     include/Elevator.h
+    include/ElevatorMgr.h
     src/ElevatorMgr.cpp
     src/Counter.cpp
     src/MotionControlSystem.cpp
     src/Motor.cpp
     src/SensorMgr.cpp
     src/Elevator.cpp
-    src/ElevatorMgr.h
     syscalls/syscalls.c
     main.cpp)
 

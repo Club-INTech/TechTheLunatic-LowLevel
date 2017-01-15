@@ -6,7 +6,8 @@
 #define ARM_ELEVATORMGR_H
 
 #define PI 3.14159265
-
+#define rayon 10
+#define circonf (2*PI*rayon)
 
 class ElevatorMgr {
 	
