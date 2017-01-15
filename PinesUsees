@@ -7,17 +7,17 @@ A1	Codeuse droite (TIM5)
 A2	Codeuse ascenseur
 A3	Codeuse ascenseur
 A4	Capteur US avant gauche
-A6	Capteur US arriere droit
-A7	Capteur US avant droit
-A8	 ?			//Pas cool, pas utiliser
-A9	 ?			//De meme
+A6	Capteur US avant droit
+A7	Capteur US arriere gauche
+A8					//ne pas utiliser
+A9		       		//de même
 A10	V (led)
-A13	 ?			//Encore
-A14  ?		//Idem
+A13		       		//encore
+A14     	       	//idem
 A15	V (led)
 
 B0	Moteur ascenseur (PWM)
-B1	Capteur US arriere gauche
+B1	Capteur US arriere droit
 B4	Codeuse gauche (TIM3)
 B5	Codeuse gauche (TIM3)
 B6	UART ax12 (TX) : UART3V
@@ -36,8 +36,7 @@ C9	V (led)
 C10	Contacteur (jumper)
 C11	V (led)
 C12	Contacteur 2
-C14				//DO NOT USE, plz
-
+C14					//DO NOT USE, plz
 
 D0	V (led)
 D2	V (led)
