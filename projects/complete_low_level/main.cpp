@@ -14,7 +14,7 @@ int main(void)
 	
 	Delay_Init();
 	Uart<1> serial;
-	Uart<3> serial_ax;
+	Uart<2> serial_ax;
 	serial.init(115200);
 	serial_ax.init(9600);
 	serial_ax.disable_rx();

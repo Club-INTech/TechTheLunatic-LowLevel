@@ -82,6 +82,7 @@ Counter::Counter() {
     /**
 	 * Configuration encodeur MOTEUR sur TIMER 9 (16 bits)
 	 * Pins A2 et A3
+     * --> PINS et TIMER à changer
 	 */
 /*
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);

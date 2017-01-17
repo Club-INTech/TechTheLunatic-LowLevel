@@ -109,8 +109,8 @@ SensorMgr::SensorMgr():
 		EXTI_Init(&EXTI_InitStruct);
 
 		NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
-		NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x255;
-		NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x255;
+		NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0xff;
+		NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0xff;
 		NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 		NVIC_Init(&NVIC_InitStruct);
 
@@ -141,8 +141,8 @@ SensorMgr::SensorMgr():
     EXTI_Init(&EXTI_InitStruct);
 
     NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
-    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x255;
-    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x255;
+    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0xff;
+    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0xff;
     NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStruct);
 
@@ -169,8 +169,8 @@ SensorMgr::SensorMgr():
     EXTI_Init(&EXTI_InitStruct);
 
     NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
-    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x255;
-    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x255;
+    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0xff;
+    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0xff;
     NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStruct);
 
@@ -197,8 +197,8 @@ SensorMgr::SensorMgr():
     EXTI_Init(&EXTI_InitStruct);
 
     NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
-    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x255;
-    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x255;
+    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0xff;
+    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0xff;
     NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStruct);
 
@@ -309,14 +309,14 @@ int SensorMgr::getSensorDistanceAVG() {
 
 
 bool SensorMgr::isJumperOut() const{
-	return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_9);
+	return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_10);
 }
 //@M:à tester
 bool SensorMgr::isContactor1engaged() const{
 	return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_0);
 }
 bool SensorMgr::isContactor2engaged() const{
-	return !GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_9);
+	return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_12);
 }
 bool SensorMgr::isContactor3engaged() const{
 	return !GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_11);

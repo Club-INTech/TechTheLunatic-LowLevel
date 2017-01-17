@@ -4,8 +4,8 @@ M=Moteurs, C=Capteurs, U=Uart, R=Roues Codeuses, I=Interruptions, V=Voltage
 
 A0	Codeuse droite (TIM5)
 A1	Codeuse droite (TIM5)
-A2	Codeuse ascenseur
-A3	Codeuse ascenseur
+A2	UART AX12 / Codeuse ascenseur
+A3	UART AX12 /Codeuse ascenseur
 A4	Capteur US avant gauche
 A6	Capteur US avant droit
 A7	Capteur US arriere gauche
@@ -42,8 +42,8 @@ D0	V (led)
 D2	V (led)
 D4	V (led)
 D6	V (led)
-D8	UART
-D9	UART
+D8	
+D9	
 D11	Contacteur 3
 D12	Moteur droit (DIR)
 D14     Moteur gauche (DIR)
