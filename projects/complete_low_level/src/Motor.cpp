@@ -7,10 +7,10 @@
  *
  * Gauche :
  * 	-pins de sens : PD14
- * 	-pin de pwm : PB10
+ * 	-pin de pwm : PB10/PE6
  * Droit :
  * 	-pins de sens : PD12
- * 	-pin de pwm : PB11
+ * 	-pin de pwm : PB11/PE4
  *
  */
 

@@ -81,11 +81,11 @@ void Elevator::initPins(void)
 	gpioPinEn.GPIO_Pin=GPIO_Pin_0;
 	
 	gpioPinsDir.GPIO_Mode=GPIO_Mode_OUT;
-	gpioPinEn.GPIO_Mode=GPIO_Mode_AF;
+	gpioPinEn.GPIO_Mode=GPIO_Mode_OUT;
 
-	gpioPinEn.GPIO_PuPd=GPIO_PuPd_UP;
-	gpioPinEn.GPIO_OType=GPIO_OType_PP;
-	gpioPinEn.GPIO_Speed=GPIO_Speed_100MHz;
+	//gpioPinEn.GPIO_PuPd=GPIO_PuPd_UP;
+	//gpioPinEn.GPIO_OType=GPIO_OType_PP;
+	//gpioPinEn.GPIO_Speed=GPIO_Speed_100MHz;
 	
 	
 	GPIO_Init(GPIOE, &gpioPinsDir);
@@ -135,6 +135,6 @@ void Elevator::run() {//Tourne dans le sens de sens(a déterminer empiriquement)
 
 void Elevator::initialize(void){
 	initPins();
-	initTimer();
-	initPWM();
+	//initTimer();
+	//initPWM();
 }

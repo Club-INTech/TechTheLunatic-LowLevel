@@ -11,7 +11,7 @@ bool autoUpdatePosition = false; // active le mode d'envoi automatique de positi
 
 int main(void)
 {
-	
+	int module=0; //nombre de modules dans la soute, entre 0 et 2(retour à 0 à 3)
 	Delay_Init();
 	Uart<1> serial;
 	Uart<2> serial_ax;
@@ -721,7 +721,18 @@ int main(void)
 			{
 				elevator.setSens(UP);
 				elevator.run();
-				Delay(700); // ~1.5tours à 10V
+				if (module==0){
+					Delay(700);
+					module++;
+				}
+				else if(module==1){
+					Delay(730);
+					module++;
+				}
+				else if(module==2){
+					Delay(780);
+					module=0;
+				}
 				elevator.stop();
 			}
 			
@@ -729,7 +740,7 @@ int main(void)
 			{
 				elevator.setSens(DOWN);
 				elevator.run();
-				Delay(350);
+				Delay(340);
 				elevator.stop();
 			}
 			else if(!strcmp("asrun", order)){
