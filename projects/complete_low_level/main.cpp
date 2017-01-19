@@ -26,6 +26,9 @@ int main(void)
 	Voltage_controller* voltage = &Voltage_controller::Instance();
 	Elevator elevator = Elevator();
 	elevator.initialize();
+	//elevator.run();
+	
+		
 
 	char order[64];//Permet le stockage du message re�u par la liaison s�rie
 

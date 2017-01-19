@@ -3,7 +3,8 @@
  *
  * Pins du moteur:
  * Sens: PE9|PE11 en OUT
- * Marche: PB0 en PWM (TIM1_CH2)
+ * Marche: PB0 en PWM sur PA7 ?(avec un pont entre PB0 et celui là, et PB0 bloqué , TIM14)
+ * (Ou PWM du TIM3ch3 sur PB0)
  *
  *
  * Pins de sens du moteur (bornier gauche):
@@ -33,20 +34,20 @@ Elevator::Elevator(void) {
 
 void Elevator::initTimer()  //Initialise le timer
 {
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 	
 	TIM_TimeBaseInitTypeDef timTimeBaseInitTypeDef;
 	TIM_TimeBaseStructInit(&timTimeBaseInitTypeDef);
 	
 	uint16_t prescaler = (uint16_t)((SystemCoreClock / 2) / 256000) - 1;
 	
-	//Configuration du TIMER 1
-	timTimeBaseInitTypeDef.TIM_Period=255;//ancienne valeur = 255
-	timTimeBaseInitTypeDef.TIM_Prescaler=40000;
+	//Configuration du TIMER 14
+	timTimeBaseInitTypeDef.TIM_Period=100;//ancienne valeur = 255
+	timTimeBaseInitTypeDef.TIM_Prescaler=prescaler;
 	timTimeBaseInitTypeDef.TIM_ClockDivision = 0;
 	timTimeBaseInitTypeDef.TIM_CounterMode = TIM_CounterMode_Up;
 	
-	TIM_TimeBaseInit(TIM1, &timTimeBaseInitTypeDef);
+	TIM_TimeBaseInit(TIM3, &timTimeBaseInitTypeDef);
 
 }
 
@@ -57,14 +58,14 @@ void Elevator::initPWM() //Initialise le PWM
 	timOcInitTypeDef.TIM_OCMode=TIM_OCMode_PWM1;
 	timOcInitTypeDef.TIM_OCPolarity=TIM_OCPolarity_High;
 	timOcInitTypeDef.TIM_OutputState=TIM_OutputState_Enable;
-	timOcInitTypeDef.TIM_Pulse=0; //PWM initial nul
+	timOcInitTypeDef.TIM_Pulse=100; //PWM initial nul
 	
-	TIM_OC2Init(TIM1, &timOcInitTypeDef); //Canal 2 de TIM1
-	TIM_OC2PreloadConfig(TIM1, TIM_OCPreload_Enable);
+	TIM_OC1Init(TIM3, &timOcInitTypeDef); //TIM3CH3
+	TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);
 	
-	TIM_ARRPreloadConfig(TIM1, ENABLE);
+	TIM_ARRPreloadConfig(TIM3, ENABLE);
 	
-	TIM_Cmd(TIM1, ENABLE); //Active le TIM
+	TIM_Cmd(TIM3, ENABLE); //Active le TIM
 }
 
 void Elevator::initPins(void)
@@ -72,32 +73,34 @@ void Elevator::initPins(void)
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE,ENABLE);
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,ENABLE);
 	
-	GPIO_InitTypeDef gpioPinsDir;
-	GPIO_StructInit(&gpioPinsDir);
-	GPIO_InitTypeDef gpioPinEn;
-	GPIO_StructInit(&gpioPinEn);
+	GPIO_InitTypeDef gpioPinsStruct;
 	
-	gpioPinsDir.GPIO_Pin=GPIO_Pin_9 + GPIO_Pin_11;
-	gpioPinEn.GPIO_Pin=GPIO_Pin_0;
-	
-	gpioPinsDir.GPIO_Mode=GPIO_Mode_OUT;
-	gpioPinEn.GPIO_Mode=GPIO_Mode_OUT;
-
-	//gpioPinEn.GPIO_PuPd=GPIO_PuPd_UP;
-	//gpioPinEn.GPIO_OType=GPIO_OType_PP;
-	//gpioPinEn.GPIO_Speed=GPIO_Speed_100MHz;
+	GPIO_StructInit(&gpioPinsStruct);
+		
+	gpioPinsStruct.GPIO_Pin=GPIO_Pin_9 + GPIO_Pin_11;
+	gpioPinsStruct.GPIO_Mode=GPIO_Mode_OUT;
+	//gpioPinEn.GPIO_Mode=GPIO_Mode_OUT;
 	
 	
-	GPIO_Init(GPIOE, &gpioPinsDir);
-	GPIO_Init(GPIOB, &gpioPinEn);
+	GPIO_Init(GPIOE, &gpioPinsStruct);
+	
+	GPIO_StructInit(&gpioPinsStruct);
+	
+	gpioPinsStruct.GPIO_Pin=GPIO_Pin_0;
+	gpioPinsStruct.GPIO_Mode=GPIO_Mode_OUT;
+	//gpioPinsStruct.GPIO_PuPd=GPIO_PuPd_UP;
+	//gpioPinsStruct.GPIO_OType=GPIO_OType_PP;
+	//gpioPinsStruct.GPIO_Speed=GPIO_Speed_100MHz;
+	
+	GPIO_Init(GPIOB, &gpioPinsStruct);
+	//GPIO_PinAFConfig(GPIOB, GPIO_PinSource0, GPIO_AF_TIM3);
 	//Initialise le moteur dans le sens montant
 	
 	GPIO_SetBits(GPIOE, GPIO_Pin_11 + GPIO_Pin_9);
 	GPIO_ResetBits(GPIOE, GPIO_Pin_11);
 	
-	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
-	
-	
+//	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
+
 }
 
 
@@ -126,15 +129,17 @@ void Elevator::setSens(Sens sensToSet) { //Change la direction dans le sens souh
 
 void Elevator::stop(void){
 	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
+	//TIM3->CCR3=0;
 	switchSens();
 }
 
 void Elevator::run() {//Tourne dans le sens de sens(a déterminer empiriquement)
 	GPIO_SetBits(GPIOB, GPIO_Pin_0);
+	//TIM3->CCR3=80;
 }
 
 void Elevator::initialize(void){
 	initPins();
 	//initTimer();
-	//initPWM();
+	initPWM();
 }
