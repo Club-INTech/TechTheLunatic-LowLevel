@@ -26,6 +26,8 @@ B9
 B10     Moteur gauche (PWM)
 B11	Moteur gauche (PWM)
 
+B15 Moteur ascenseur potentiel
+
 C0	Contacteur 1
 C1      Test Lipo (ADC3 channel 11)
 C2      Test Lipo (ADC3 channel 12)

@@ -15,12 +15,6 @@
  *
  */
 
-
-#define GREEN_PIN       GPIO_Pin_12
-#define ORANGE_PIN      GPIO_Pin_13
-#define RED_PIN         GPIO_Pin_14
-#define BLUE_PIN        GPIO_Pin_15
-
 #include <delay.h>
 #include <stm32f4xx_tim.h>
 #include <stm32f4xx_gpio.h>

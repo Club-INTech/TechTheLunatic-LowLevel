@@ -609,6 +609,15 @@ int main(void)
             {
                 actuatorsMgr->reanimation();
             }
+				
+			else if(!strcmp("setPunch", order))
+			{
+				actuatorsMgr->setPunch();
+			}
+			else if(!strcmp("setSlopes", order))
+			{
+				actuatorsMgr->setSlopes();
+			}
 
 /*			 ____________________
  * 		   *|                    |*
@@ -719,7 +728,7 @@ int main(void)
 				actuatorsMgr->larguePousse();
 			}
 				
-				//Assensceur
+				//Ascensseur
 			else if(!strcmp("asup", order))
 			{
 				elevator.setSens(UP);

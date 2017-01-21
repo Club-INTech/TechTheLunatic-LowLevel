@@ -371,6 +371,26 @@ public:
 	{
 		ax12test->reanimationMode(9600);
 	}
+	
+	void setPunch(){
+		uint16_t punchL=32;
+		uint16_t punchH=0;
+		serial.printflnDebug("Entrez punch_H(défaut=0)");
+		serial.read(punchH);
+		serial.printflnDebug("Entrez punch_L(défaut=32)");
+		serial.read(punchL);
+		ax12test->setPunch(punchL,punchH);
+	}
+	void setSlopes(){  //Change la variation de
+		uint16_t cwSlope=32;
+		uint16_t ccwSlope=32;
+		serial.printflnDebug("Entrez CW_SLOPE (défaut=32)");
+		serial.read(cwSlope);
+		serial.printflnDebug("Entrez CCW_Slope(défaut=32)");
+		serial.read(ccwSlope);
+		ax12test->setSlopes(cwSlope,ccwSlope);
+		
+	}
 };
 
 #endif /* ACTUATORSMGR_HPP */
