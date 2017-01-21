@@ -14,7 +14,7 @@ private:
 	Sens sens;
 public:
 	Elevator(void);
-	void initTimer();
+	void initTimer(bool moving);
 	void initPWM();
 	void initPins();
 	void switchSens();

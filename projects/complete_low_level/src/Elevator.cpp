@@ -32,7 +32,7 @@ Elevator::Elevator(void) {
 	sens = UP;
 }
 
-void Elevator::initTimer()  //Initialise le timer
+void Elevator::initTimer(bool moving)  //Initialise le timer
 {
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 	
@@ -41,8 +41,14 @@ void Elevator::initTimer()  //Initialise le timer
 	
 	uint16_t prescaler = (uint16_t)((SystemCoreClock / 2) / 256000) - 1; //CF Motor.cpp
 	
-	timTimeBaseInitTypeDef.TIM_Period=1000;
-	timTimeBaseInitTypeDef.TIM_ClockDivision=TIM_CKD_DIV1;
+	if(moving){ //Pour utiliser le même timer que les roues, en attendant de lier une autre pin au moteur de l'ascenseur
+		timTimeBaseInitTypeDef.TIM_Period=1000;
+		timTimeBaseInitTypeDef.TIM_ClockDivision=TIM_CKD_DIV1;
+	}
+	else{
+		timTimeBaseInitTypeDef.TIM_Period=10;
+		timTimeBaseInitTypeDef.TIM_ClockDivision=0;
+	}
 	timTimeBaseInitTypeDef.TIM_Prescaler=prescaler;
 	timTimeBaseInitTypeDef.TIM_CounterMode=TIM_CounterMode_Up;
 	//Configuration du TIMER 3
@@ -109,6 +115,7 @@ void Elevator::setSens(Sens sensToSet) { //Change la direction dans le sens souh
 
 void Elevator::stop(void){
 	TIM3->CCR3=0;
+	initTimer(false);
 	if(sens==UP){
 		sens=DOWN;
 	}
@@ -118,11 +125,11 @@ void Elevator::stop(void){
 }
 
 void Elevator::run() {//Tourne dans le sens de sens(a déterminer empiriquement)
+	initTimer(true);
 	TIM3->CCR3=200;
 }
 
 void Elevator::initialize(void){
 	initPins();
-	initTimer();
 	initPWM();
 }
