@@ -3,7 +3,7 @@
  *
  * Pins du moteur:
  * Sens: PE9|PE11 en OUT
- * Marche: PB0 en PWM (TIM3_CH3)
+ * Marche: PB15 (TIM12CH2)
  *
  *
  * Pins de sens du moteur (bornier gauche):
@@ -26,28 +26,28 @@ Elevator::Elevator(void) {
 	sens = UP;
 }
 
-void Elevator::initTimer(bool moving)  //Initialise le timer
+void Elevator::initTimer(void)  //Initialise le timer
 {
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM12, ENABLE);
 	
 	TIM_TimeBaseInitTypeDef timTimeBaseInitTypeDef;
 	TIM_TimeBaseStructInit(&timTimeBaseInitTypeDef);
 	
 	uint16_t prescaler = (uint16_t)((SystemCoreClock / 2) / 256000) - 1; //CF Motor.cpp
 	
-	if(moving){ //Pour utiliser le même timer que les roues, en attendant de lier une autre pin au moteur de l'ascenseur
+	//if(moving){ //Pour utiliser le même timer que les roues, en attendant de lier une autre pin au moteur de l'ascenseur
 		timTimeBaseInitTypeDef.TIM_Period=1000;
 		timTimeBaseInitTypeDef.TIM_ClockDivision=TIM_CKD_DIV1;
-	}
-	else{
+	//}
+	/*else{
 		timTimeBaseInitTypeDef.TIM_Period=10;
 		timTimeBaseInitTypeDef.TIM_ClockDivision=0;
-	}
+	}*/
 	timTimeBaseInitTypeDef.TIM_Prescaler=prescaler;
 	timTimeBaseInitTypeDef.TIM_CounterMode=TIM_CounterMode_Up;
 	//Configuration du TIMER 3
 	
-	TIM_TimeBaseInit(TIM3, &timTimeBaseInitTypeDef);
+	TIM_TimeBaseInit(TIM12, &timTimeBaseInitTypeDef);
 }
 
 void Elevator::initPWM() //Initialise le PWM
@@ -59,11 +59,11 @@ void Elevator::initPWM() //Initialise le PWM
 	timOcInitTypeDef.TIM_OCPolarity=TIM_OCPolarity_High;
 	timOcInitTypeDef.TIM_Pulse=0; //PWM initial nul
 	
-	TIM_OC3Init(TIM3, &timOcInitTypeDef); //Canal 2N de TIM1
-	TIM_OC3PreloadConfig(TIM3, TIM_OCPreload_Enable);
-	TIM_ARRPreloadConfig(TIM3, ENABLE);
+	TIM_OC3Init(TIM12, &timOcInitTypeDef); //Canal 2N de TIM1
+	TIM_OC3PreloadConfig(TIM12, TIM_OCPreload_Enable);
+	TIM_ARRPreloadConfig(TIM12, ENABLE);
 	
-	TIM_Cmd(TIM3, ENABLE); //Active le TIM
+	TIM_Cmd(TIM12, ENABLE); //Active le TIM
 }
 
 void Elevator::initPins(void)
@@ -86,7 +86,7 @@ void Elevator::initPins(void)
 	gpioPinInitStruct.GPIO_Speed=GPIO_Speed_100MHz;
 	GPIO_Init(GPIOB, &gpioPinInitStruct);
 	
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource0, GPIO_AF_TIM3);
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource0, GPIO_AF_TIM12);
 	
 	//Initialise le moteur dans le sens montant
 	
@@ -108,8 +108,8 @@ void Elevator::setSens(Sens sensToSet) { //Change la direction dans le sens souh
 }
 
 void Elevator::stop(void){
-	TIM3->CCR3=0;
-	initTimer(false);
+	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
+	//TIM12->CCR2=0;
 	if(sens==UP){
 		sens=DOWN;
 	}
@@ -119,11 +119,12 @@ void Elevator::stop(void){
 }
 
 void Elevator::run() {//Tourne dans le sens de sens(a déterminer empiriquement)
-	initTimer(true);
-	TIM3->CCR3=200;
+	GPIO_SetBits(GPIOB, GPIO_Pin_0);
+	//TIM12->CCR2=200;
 }
 
 void Elevator::initialize(void){
+	//initTimer();
 	initPins();
-	initPWM();
+	//initPWM();
 }

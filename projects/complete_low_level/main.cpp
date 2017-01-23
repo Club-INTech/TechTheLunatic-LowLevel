@@ -752,7 +752,7 @@ int main(void)
 			{
 				elevator.setSens(DOWN);
 				elevator.run();
-				Delay(340);
+				Delay(320);
 				elevator.stop();
 			}
 			else if(!strcmp("asrun", order)){
