@@ -43,10 +43,10 @@ extern Uart<1> serial;
 //TODO:positions des deux AX12 d'attrappe-module
 
 #define AMdebG 220
-#define AMmidG 140
+#define AMmidG 150
 #define AMfinG 50 // 60
 #define AMdebD 120
-#define AMmidD 190
+#define AMmidD 180
 #define AMfinD 255
 
 //Les calle-modules
