@@ -58,8 +58,8 @@ extern Uart<1> serial;
 #define CaleBasD 10
 
 //Largue modules
-#define LargueRepos 0
-#define LarguePousse 0
+#define LargueRepos 73
+#define LarguePousse 36
 
 class ActuatorsMgr : public Singleton<ActuatorsMgr>
 {

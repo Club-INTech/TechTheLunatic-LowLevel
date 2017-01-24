@@ -11,7 +11,7 @@ bool autoUpdatePosition = false; // active le mode d'envoi automatique de positi
 
 int main(void)
 {
-	
+	int module =0;
 	Delay_Init();
 	Uart<1> serial;
 	Uart<2> serial_ax;
@@ -686,11 +686,27 @@ int main(void)
 			}
 				
 				//Assensceur
-			else if(!strcmp("asup", order))
-			{
+			else if(!strcmp("asup", order)) {
+
 				elevator.setSens(UP);
 				elevator.run();
-				Delay(700); // ~1.5tours à 10V
+				
+
+				if (module == 0)
+				{
+					Delay(980); // ~1.5tours à 10V
+				module++;
+				}
+				else if(module==1)
+				{
+					Delay(1010);
+					module++;
+				}
+				else if(module==2)
+				{
+					Delay(1060);
+					module=0;
+				}
 				elevator.stop();
 			}
 			
