@@ -527,6 +527,18 @@ public:
     {
         readData(regstart, reglength, answer);
     }
+    
+    void setSlopes(uint16_t cwSlope,uint16_t ccwSlope){ //Valeur initiale = 32, on veut diminuer la pente, donc augmenter la longueur des pentes
+        if(cwSlope>=32 and ccwSlope>=32){
+            writeData(AX_CW_COMPLIANCE_SLOPE,1,cwSlope);
+            writeData(AX_CCW_COMPLIANCE_SLOPE,1,ccwSlope);
+        }
+    }
+    void setPunch(uint8_t punchL, uint8_t punchH){ //Punch=influence le courant minimal/couple minimal applicable en fonctionnement
+        //initialement, PunchH=0, PunchL=32, max=1023
+        writeData(AX_PUNCH_H,1,punchH);
+        writeData(AX_PUNCH_L,1,punchL);
+    }
 
 };
 

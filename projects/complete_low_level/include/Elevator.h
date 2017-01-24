@@ -14,13 +14,12 @@ private:
 	Sens sens;
 public:
 	Elevator(void);
-	void initTimer();
-	void initPWM();
-	void initPins();
-	void switchSens();
+	void initTimer(void);
+	void initPWM(void);
+	void initPins(void);
 	void setSens(Sens);
-	void run();
-	void stop();
-	void initialize();
+	void run(void);
+	void stop(void);
+	void initialize(void);
 };
 #endif //ARM_ELEVATOR_H

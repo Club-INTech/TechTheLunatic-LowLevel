@@ -1,0 +1,65 @@
+PINS/TIMs Utilisés:
+
+M=Moteurs, C=Capteurs, U=Uart, R=Roues Codeuses, I=Interruptions, V=Voltage
+
+A0	Codeuse droite (TIM5)
+A1	Codeuse droite (TIM5)
+A2	UART AX12 / Codeuse ascenseur
+A3	UART AX12 /Codeuse ascenseur
+A4	Capteur US avant gauche
+A6	Capteur US avant droit
+A7	Capteur US arriere gauche
+A8					//ne pas utiliser
+A9		       		//de même
+A10	V (led)
+A13		       		//encore
+A14     	       	//idem
+A15	V (led)
+
+B0	Moteur ascenseur (PWM)
+B1	Capteur US arriere droit
+B4	Codeuse gauche (TIM3)
+B5	Codeuse gauche (TIM3)
+B6	UART ax12 (TX) : UART3V
+B7	UART ax12 (RX) 
+B9
+B10     Moteur gauche (PWM)
+B11	Moteur gauche (PWM)
+
+B15 Moteur ascenseur potentiel
+
+C0	Contacteur 1
+C1      Test Lipo (ADC3 channel 11)
+C2      Test Lipo (ADC3 channel 12)
+C6	
+C7	V (led)
+C8	V (led)
+C9	V (led)
+C10	Contacteur (jumper)
+C11	V (led)
+C12	Contacteur 2
+C14					//DO NOT USE, plz
+
+D0	V (led)
+D2	V (led)
+D4	V (led)
+D6	V (led)
+D8	
+D9	
+D11	Contacteur 3
+D12	Moteur droit (DIR)
+D14     Moteur gauche (DIR)
+
+E1	V (Buzzer)
+E9	Moteur ascenseur (INPUT1)
+E11	Moteur ascenseur (INPUT2)
+
+
+
+(Voltage Controller: 2eme et dernier de gauche à droite ne fonctionnent pas) -> pins PC9 et PD6 à tester
+
+MAXON
+2322.982-52 200
+858553
+Codeuse:HEDL-5540 A01
+

@@ -11,7 +11,8 @@ bool autoUpdatePosition = false; // active le mode d'envoi automatique de positi
 
 int main(void)
 {
-	int module =0;
+
+	int module=0; //nombre de modules dans la soute, entre 0 et 2(retour à 0 à 3)
 	Delay_Init();
 	Uart<1> serial;
 	Uart<2> serial_ax;
@@ -26,6 +27,9 @@ int main(void)
 	Voltage_controller* voltage = &Voltage_controller::Instance();
 	Elevator elevator = Elevator();
 	elevator.initialize();
+	//elevator.run();
+	
+		
 
 	char order[64];//Permet le stockage du message re�u par la liaison s�rie
 
@@ -114,15 +118,46 @@ int main(void)
 			{
 				motionControlSystem->stop();
 			}
-			else if(!strcmp("us",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+			else if(!strcmp("usard",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
 			{
 				serial.printfln("%d", sensorMgr->getSensorDistanceARD());//en mm
 
 			}
+            else if(!strcmp("usarg",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+            {
+                serial.printfln("%d", sensorMgr->getSensorDistanceARG());//en mm
+
+            }
+            else if(!strcmp("usavd",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+            {
+                serial.printfln("%d", sensorMgr->getSensorDistanceAVD());//en mm
+
+            }
+            else if(!strcmp("usavg",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+            {
+                serial.printfln("%d", sensorMgr->getSensorDistanceAVG());//en mm
+
+            }
 			else if(!strcmp("j",order))			//Indiquer l'�tat du jumper (0='en place'; 1='dehors')
 			{
 				serial.printfln("%d", sensorMgr->isJumperOut());
+
 			}
+            else if(!strcmp("c1",order))			//Indiquer l'�tat du contacteur1 (0='non appuyé'; 1='appuyé')
+            {
+                serial.printfln("%d", sensorMgr->isContactor1engaged());
+
+            }
+            else if(!strcmp("c2",order))			//Indiquer l'�tat du contacteur2 (0='non appuyé'; 1='appuyé')
+            {
+                serial.printfln("%d", sensorMgr->isContactor2engaged());
+
+            }
+            else if(!strcmp("c3",order))			//Indiquer l'�tat du contacteur3 (0='non appuyé'; 1='appuyé')
+            {
+                serial.printfln("%d", sensorMgr->isContactor3engaged());
+
+            }
 			else if(!strcmp("ct0",order))		//D�sactiver l'asservissement en translation
 			{
 				motionControlSystem->enableTranslationControl(false);
@@ -575,6 +610,15 @@ int main(void)
             {
                 actuatorsMgr->reanimation();
             }
+				
+			else if(!strcmp("setPunch", order))
+			{
+				actuatorsMgr->setPunch();
+			}
+			else if(!strcmp("setSlopes", order))
+			{
+				actuatorsMgr->setSlopes();
+			}
 
 /*			 ____________________
  * 		   *|                    |*
@@ -714,7 +758,7 @@ int main(void)
 			{
 				elevator.setSens(DOWN);
 				elevator.run();
-				Delay(350);
+				Delay(320);
 				elevator.stop();
 			}
 			else if(!strcmp("asrun", order)){

@@ -43,17 +43,17 @@ extern Uart<1> serial;
 //TODO:positions des deux AX12 d'attrappe-module
 
 #define AMdebG 220
-#define AMmidG 140
+#define AMmidG 150
 #define AMfinG 50 // 60
 #define AMdebD 120
-#define AMmidD 190
+#define AMmidD 180
 #define AMfinD 255
 
 //Les calle-modules
 #define CaleHautG 100 //gauche 96 droite 183
 #define CaleReposG 200
 #define CaleBasG 215 //gauche 280 droite 3
-#define CaleHautD 100
+#define CaleHautD 110
 #define CaleReposD 30
 #define CaleBasD 10
 
@@ -370,6 +370,26 @@ public:
 	void reanimation () //réanime les ax12 en changeant leur baudrates
 	{
 		ax12test->reanimationMode(9600);
+	}
+	
+	void setPunch(){
+		uint16_t punchL=32;
+		uint16_t punchH=0;
+		serial.printflnDebug("Entrez punch_H(défaut=0)");
+		serial.read(punchH);
+		serial.printflnDebug("Entrez punch_L(défaut=32)");
+		serial.read(punchL);
+		ax12test->setPunch(punchL,punchH);
+	}
+	void setSlopes(){  //Change la variation de
+		uint16_t cwSlope=32;
+		uint16_t ccwSlope=32;
+		serial.printflnDebug("Entrez CW_SLOPE (défaut=32)");
+		serial.read(cwSlope);
+		serial.printflnDebug("Entrez CCW_Slope(défaut=32)");
+		serial.read(ccwSlope);
+		ax12test->setSlopes(cwSlope,ccwSlope);
+		
 	}
 };
 
