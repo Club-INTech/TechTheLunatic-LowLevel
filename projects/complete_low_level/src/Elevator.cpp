@@ -214,14 +214,14 @@ void Elevator::initPins(void)
 	GPIO_Init(GPIOE, &gpioPinInitStruct);
 	
 	gpioPinInitStruct.GPIO_Pin=GPIO_Pin_0;                  //Pin de pwm
-	gpioPinInitStruct.GPIO_Mode=GPIO_Mode_AF;
+	gpioPinInitStruct.GPIO_Mode=GPIO_Mode_OUT;
 	
-	gpioPinInitStruct.GPIO_PuPd=GPIO_PuPd_UP;
-	gpioPinInitStruct.GPIO_OType=GPIO_OType_PP;
-	gpioPinInitStruct.GPIO_Speed=GPIO_Speed_100MHz;
+	//gpioPinInitStruct.GPIO_PuPd=GPIO_PuPd_UP;
+	//gpioPinInitStruct.GPIO_OType=GPIO_OType_PP;
+	//gpioPinInitStruct.GPIO_Speed=GPIO_Speed_100MHz;
 	GPIO_Init(GPIOB, &gpioPinInitStruct);
 	
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource0, GPIO_AF_TIM12);
+	//GPIO_PinAFConfig(GPIOB, GPIO_PinSource0, GPIO_AF_TIM12);
 	
 	//Initialise le moteur dans le sens montant
 	
