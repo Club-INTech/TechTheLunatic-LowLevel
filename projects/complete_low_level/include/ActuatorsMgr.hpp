@@ -50,7 +50,7 @@ extern Uart<1> serial;
 #define AMfinD 255
 
 //Les calle-modules
-#define CaleHautG 100 //gauche 96 droite 183
+#define CaleHautG 120 //gauche 96 droite 183
 #define CaleReposG 200
 #define CaleBasG 215 //gauche 280 droite 3
 #define CaleHautD 110
@@ -58,8 +58,8 @@ extern Uart<1> serial;
 #define CaleBasD 10
 
 //Largue modules
-#define LargueRepos 73
-#define LarguePousse 36
+#define LargueRepos 76
+#define LarguePousse 40
 
 class ActuatorsMgr : public Singleton<ActuatorsMgr>
 {
@@ -372,6 +372,12 @@ public:
 		ax12test->reanimationMode(9600);
 	}
 	
+	void reasserv(){
+		ax12brapel->unasserv();
+		ax12brapel->asserv();
+		ax12pel->unasserv();
+		ax12pel->asserv();
+	}
 	void setPunch(){
 		uint16_t punchL=32;
 		uint16_t punchH=0;

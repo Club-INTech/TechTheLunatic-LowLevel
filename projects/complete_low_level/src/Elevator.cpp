@@ -244,13 +244,7 @@ void Elevator::setSens(Sens sensToSet) { //Change la direction dans le sens souh
 
 void Elevator::stop(void){
 	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
-	//TIM12->CCR2=0;
-	if(sens==UP){
-		sens=DOWN;
-	}
-	else if(sens==DOWN){
-		sens=UP;
-	}
+	//TIM12->CCR2=0; //TODO tests
 }
 
 void Elevator::run() {//Tourne dans le sens de sens(a déterminer empiriquement)

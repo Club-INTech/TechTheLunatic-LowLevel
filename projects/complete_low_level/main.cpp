@@ -660,7 +660,10 @@ int main(void)
             {
                 actuatorsMgr->pelleLib();
             }
-				
+			else if(!strcmp("asserpel", order))
+			{
+				actuatorsMgr->reasserv();
+			}
 /*			 ___________________
  * 		   *|                   |*
  *		   *|Attrappe Module SSV2|*
@@ -758,7 +761,7 @@ int main(void)
 			{
 				elevator.setSens(DOWN);
 				elevator.run();
-				Delay(320);
+				Delay(360);
 				elevator.stop();
 			}
 			else if(!strcmp("asrun", order)){
