@@ -42,10 +42,10 @@ extern Uart<1> serial;
 
 //TODO:positions des deux AX12 d'attrappe-module
 
-#define AMdebG 220
+#define AMdebG 240
 #define AMmidG 150
 #define AMfinG 50 // 60
-#define AMdebD 120
+#define AMdebD 100
 #define AMmidD 180
 #define AMfinD 255
 
@@ -58,8 +58,8 @@ extern Uart<1> serial;
 #define CaleBasD 10
 
 //Largue modules
-#define LargueRepos 75
-#define LarguePousse 43
+#define LargueRepos 78
+#define LarguePousse 46
 
 class ActuatorsMgr : public Singleton<ActuatorsMgr>
 {
