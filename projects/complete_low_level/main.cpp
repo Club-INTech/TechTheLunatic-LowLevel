@@ -739,15 +739,17 @@ int main(void)
 			//Largue Modules
 			else if(!strcmp("lmd",order))
 			{
+                actuatorsMgr->changeAXSpeed(15);
 				actuatorsMgr->largueRepos();
-                Delay(100);
+                Delay(50);
                 ActuatorsMgr();
 
 			}
 			else if(!strcmp("lmf",order))
 			{
+                actuatorsMgr->changeAXSpeed(100);
 				actuatorsMgr->larguePousse();
-                Delay(100);
+                Delay(50);
                 ActuatorsMgr();
 
 			}
@@ -781,7 +783,7 @@ int main(void)
 			{
 				elevator.setSens(DOWN);
 				elevator.run();
-				Delay(420);
+				Delay(820);
 				elevator.stop();
 			}
 			else if(!strcmp("asrun", order)){

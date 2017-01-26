@@ -58,8 +58,8 @@ extern Uart<1> serial;
 #define CaleBasD 10
 
 //Largue modules
-#define LargueRepos 78
-#define LarguePousse 46
+#define LargueRepos 83
+#define LarguePousse 44
 
 class ActuatorsMgr : public Singleton<ActuatorsMgr>
 {
@@ -98,7 +98,7 @@ public:
 		CMG = new AX<serial_ax>(6,0,1023);
 		CMG->init();
 		LM = new AX<serial_ax>(7,0,1023);
-		LM->init();
+		LM->init(15);
 	}
 	
 	~ActuatorsMgr()
@@ -269,8 +269,8 @@ public:
 	
 	void moduleMid(int cote)
 	{
-		AMG->changeSpeed(100);
-		AMD->changeSpeed(100);
+		AMG->changeSpeed(70);
+		AMD->changeSpeed(70);
 		serial.printflnDebug("Medium de l'attrape module");
 		if (cote)
 		{
@@ -285,8 +285,8 @@ public:
 	
 	void moduleFin(int cote)
 	{
-		AMG->changeSpeed(100);
-		AMD->changeSpeed(100);
+		AMG->changeSpeed(70);
+		AMD->changeSpeed(70);
 		serial.printflnDebug("Prise de modules");
 		if (cote)
 		{

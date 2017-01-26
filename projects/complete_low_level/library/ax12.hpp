@@ -293,6 +293,10 @@ public:
 
         changeSpeed(100);
     }
+
+    void init(int speed)
+    {init();
+        changeSpeed(speed);}
     /// Reset de l'AX12
     void reset()
     {
