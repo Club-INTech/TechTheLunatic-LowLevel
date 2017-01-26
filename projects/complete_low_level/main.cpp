@@ -761,17 +761,17 @@ int main(void)
 
 				if (module == 0)
 				{
-					Delay(980); // ~1.5tours à 10V
+					Delay(1080); // ~1.5tours à 10V
 				module++;
 				}
 				else if(module==1)
 				{
-					Delay(1010);
+					Delay(1110);
 					module++;
 				}
 				else if(module==2)
 				{
-					Delay(1060);
+					Delay(1160);
 					module=0;
 				}
 				elevator.stop();
