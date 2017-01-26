@@ -761,7 +761,7 @@ int main(void)
 			{
 				elevator.setSens(DOWN);
 				elevator.run();
-				Delay(360);
+				Delay(420);
 				elevator.stop();
 			}
 			else if(!strcmp("asrun", order)){
