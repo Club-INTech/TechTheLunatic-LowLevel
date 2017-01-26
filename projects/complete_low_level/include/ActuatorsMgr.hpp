@@ -49,12 +49,12 @@ extern Uart<1> serial;
 #define AMmidD 180
 #define AMfinD 255
 
-//Les calle-modules
+//Les cale-modules
 #define CaleHautG 120 //gauche 96 droite 183
 #define CaleReposG 200
 #define CaleBasG 215 //gauche 280 droite 3
 #define CaleHautD 110
-#define CaleReposD 30
+#define CaleReposD 45
 #define CaleBasD 10
 
 //Largue modules

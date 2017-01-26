@@ -714,7 +714,7 @@ int main(void)
 			//Cale Modules
 			else if (!strcmp("cmdd",order))
 			{
-				actuatorsMgr->caleHautD();
+                actuatorsMgr->caleHautD();
 			}
 			else if (!strcmp("cmmd", order))
 			{
@@ -722,7 +722,8 @@ int main(void)
 			}
 			else if(!strcmp("cmfd",order))
 			{
-				actuatorsMgr->caleBasD();
+				actuatorsMgr->changeAXSpeed(190);
+                actuatorsMgr->caleBasD();
 			}
 			else if(!strcmp("cmmg", order))
 			{
