@@ -629,47 +629,40 @@ int main(void)
 			else if (!strcmp("bpr",order))      //releve le bras de la pelleteuse
             {
                 actuatorsMgr->braPelReleve();
-                ActuatorsMgr();
             }
 
             else if (!strcmp("bpd",order))      //abaisse le bras de la pelleteuse
             {
                 actuatorsMgr->braPelDeplie();
-                ActuatorsMgr();
             }
 
             else if (!strcmp("bpm", order))     // position intermédiaire des bras de pelleteuse
             {
                 actuatorsMgr->braPelMoit();
-                ActuatorsMgr();
             }
 
             else if (!strcmp("pd", order))      //position pré prise de boules de la pelle
             {
                 actuatorsMgr->pelleInit();
-                ActuatorsMgr();
             }
 
             else if (!strcmp("pm", order))      //position post prise de boules de la pelle
             {
                 actuatorsMgr->pelleMoit();
-                ActuatorsMgr();
             }
 				
 			else if (!strcmp("pt", order))
 			{
 				actuatorsMgr->pelleTient();
-                ActuatorsMgr();
 			}
 
             else if (!strcmp("pf", order))      //position de livraison de boules de la pelle
             {
                 actuatorsMgr->pelleLib();
-                ActuatorsMgr();
             }
 			else if(!strcmp("asserpel", order))
 			{
-				actuatorsMgr->reasserv();
+				actuatorsMgr->pelreasserv();
 			}
 /*			 ___________________
  * 		   *|                   |*
@@ -715,7 +708,6 @@ int main(void)
 			}
 			else if(!strcmp("cmfd",order))
 			{
-				actuatorsMgr->changeAXSpeed(190);
                 actuatorsMgr->caleBasD();
 			}
 			else if(!strcmp("cmmg", order))
@@ -733,17 +725,16 @@ int main(void)
 			//Largue Modules
 			else if(!strcmp("lmd",order))
 			{
-                actuatorsMgr->changeAXSpeed(15);
 				actuatorsMgr->largueRepos();
-                ActuatorsMgr();
 
 			}
 			else if(!strcmp("lmf",order))
 			{
-                actuatorsMgr->changeAXSpeed(100);
 				actuatorsMgr->larguePousse();
-                ActuatorsMgr();
-
+			}
+			else if(!strcmp("lmreasserv", order))
+			{
+				actuatorsMgr->lmReasserv();
 			}
 				
 				//Assensceur

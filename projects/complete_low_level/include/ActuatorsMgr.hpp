@@ -29,9 +29,9 @@ extern Uart<1> serial;
 
 //Pour la Pelleteusatron 3000
 
-#define brapeldepG 30
-#define brapelmoitG 60
-#define brapelrelG 90
+#define brapeldep 30
+#define brapelmoit 70
+#define brapelrel 90
 
 #define pospelinit 300
 #define pospeltient 105
@@ -43,8 +43,8 @@ extern Uart<1> serial;
 #define AMdebG 240
 #define AMmidG 150
 #define AMfinG 50 // 60
-#define AMdebD 100
-#define AMmidD 180
+#define AMdebD 70
+#define AMmidD 150
 #define AMfinD 255
 
 //Les cale-modules
@@ -83,7 +83,7 @@ public:
 	{
 		ax12test = new AX<serial_ax>(0,0,1023); // (ID, Angle_min, Angle_Max)
 		ax12test->init();
-		ax12brapel = new AX<serial_ax>(1,(uint16_t)1023*brapeldepG/300,(uint16_t)1023*brapelrelG/300); // (ID, Angle_min, Angle_Max)
+		ax12brapel = new AX<serial_ax>(1,0,1023); // (ID, Angle_min, Angle_Max)
 		ax12brapel->init();
 		ax12pel = new AX<serial_ax>(2,0,1023);
 		ax12pel->init();
@@ -96,7 +96,7 @@ public:
 		CMG = new AX<serial_ax>(6,0,1023);
 		CMG->init();
 		LM = new AX<serial_ax>(7,0,1023);
-		LM->init(15);
+		LM->init();
 	}
 	
 	~ActuatorsMgr()
@@ -191,16 +191,16 @@ public:
 	void braPelReleve() //relève les bras de la pelle
 	{
 		serial.printflnDebug("Leve les bras");
-		ax12brapel->changeSpeed(10);
-		ax12brapel->goTo(brapelrelG);
+		ax12brapel->changeSpeed(20);
+		ax12brapel->goTo(brapelrel);
 		serial.printflnDebug("done");
 	}
 	
 	void braPelDeplie() // déplie les bras de la pelle
 	{
 		serial.printflnDebug("Baisse les bras");
-		ax12brapel->changeSpeed(10);
-		ax12brapel->goTo(brapeldepG);
+		ax12brapel->changeSpeed(25);
+		ax12brapel->goTo(brapeldep);
 		serial.printflnDebug("done");
 	}
 	
@@ -208,7 +208,7 @@ public:
 	{
 		serial.printflnDebug("Leve les bras mais pas trop");
 		ax12brapel->changeSpeed(10);
-		ax12brapel->goTo(brapelmoitG);
+		ax12brapel->goTo(brapelmoit);
 		serial.printflnDebug("done");
 	}
 	
@@ -334,10 +334,16 @@ public:
  *		   *|___________________|*
  */
 	void largueRepos(){
+		LM->changeSpeed(50);
 		LM->goTo(LargueRepos);
 	}
 	void larguePousse(){
+		LM->changeSpeed(30);
 		LM->goTo(LarguePousse);
+	}
+	void lmReasserv(){
+		LM->unasserv();
+		LM->asserv();
 	}
 	
 	// Voilà.
@@ -370,11 +376,8 @@ public:
 		ax12test->reanimationMode(9600);
 	}
 	
-	void reasserv(){
-		ax12brapel->unasserv();
-		ax12brapel->asserv();
-		ax12pel->unasserv();
-		ax12pel->asserv();
+	void pelreasserv(){
+		ax12brapel->init();
 	}
 	void setPunch(){
 		uint16_t punchL=32;
