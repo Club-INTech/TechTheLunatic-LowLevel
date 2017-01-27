@@ -30,17 +30,15 @@ extern Uart<1> serial;
 //Pour la Pelleteusatron 3000
 
 #define brapeldepG 30
-#define brapelmoitG 75
+#define brapelmoitG 60
 #define brapelrelG 90
 
 #define pospelinit 300
-#define pospeltient 95
+#define pospeltient 105
 #define pospelmoit 150
 #define pospeldeli 0
 
 //Pour les attrape-modules
-
-//TODO:positions des deux AX12 d'attrappe-module
 
 #define AMdebG 240
 #define AMmidG 150
