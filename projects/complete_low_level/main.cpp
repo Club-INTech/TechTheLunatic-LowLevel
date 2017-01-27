@@ -629,49 +629,42 @@ int main(void)
 			else if (!strcmp("bpr",order))      //releve le bras de la pelleteuse
             {
                 actuatorsMgr->braPelReleve();
-                Delay(100);
                 ActuatorsMgr();
             }
 
             else if (!strcmp("bpd",order))      //abaisse le bras de la pelleteuse
             {
                 actuatorsMgr->braPelDeplie();
-                Delay(100);
                 ActuatorsMgr();
             }
 
             else if (!strcmp("bpm", order))     // position intermédiaire des bras de pelleteuse
             {
                 actuatorsMgr->braPelMoit();
-                Delay(100);
                 ActuatorsMgr();
             }
 
             else if (!strcmp("pd", order))      //position pré prise de boules de la pelle
             {
                 actuatorsMgr->pelleInit();
-                Delay(100);
                 ActuatorsMgr();
             }
 
             else if (!strcmp("pm", order))      //position post prise de boules de la pelle
             {
                 actuatorsMgr->pelleMoit();
-                Delay(100);
                 ActuatorsMgr();
             }
 				
 			else if (!strcmp("pt", order))
 			{
 				actuatorsMgr->pelleTient();
-                Delay(100);
                 ActuatorsMgr();
 			}
 
             else if (!strcmp("pf", order))      //position de livraison de boules de la pelle
             {
                 actuatorsMgr->pelleLib();
-                Delay(100);
                 ActuatorsMgr();
             }
 			else if(!strcmp("asserpel", order))
@@ -742,7 +735,6 @@ int main(void)
 			{
                 actuatorsMgr->changeAXSpeed(15);
 				actuatorsMgr->largueRepos();
-                Delay(50);
                 ActuatorsMgr();
 
 			}
@@ -750,7 +742,6 @@ int main(void)
 			{
                 actuatorsMgr->changeAXSpeed(100);
 				actuatorsMgr->larguePousse();
-                Delay(50);
                 ActuatorsMgr();
 
 			}
