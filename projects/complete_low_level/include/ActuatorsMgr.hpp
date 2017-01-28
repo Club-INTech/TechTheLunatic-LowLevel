@@ -45,7 +45,7 @@ extern Uart<1> serial;
 #define AMfinG 50 // 60
 #define AMdebD 70
 #define AMmidD 150
-#define AMfinD 255
+#define AMfinD 245
 
 //Les cale-modules
 #define CaleHautG 120 //gauche 96 droite 183
