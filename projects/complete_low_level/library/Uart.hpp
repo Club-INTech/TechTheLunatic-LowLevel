@@ -327,6 +327,7 @@ public:
 	 *
 	 */
 	static inline uint8_t available(void) {
+		//retourne la taille de buffer déjà utilisée en réception
 		return (RX_BUFFER_SIZE + rx_buffer_.head - rx_buffer_.tail)
 				% RX_BUFFER_SIZE;
 	}

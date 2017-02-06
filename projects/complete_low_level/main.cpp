@@ -13,20 +13,28 @@ int main(void)
 {
 
 	int module=0; //nombre de modules dans la soute, entre 0 et 2(retour à 0 à 3)
-	Delay_Init();
-	Uart<1> serial;
-	Uart<2> serial_ax;
-	serial.init(115200);
+	Delay_Init(); //on initialise le système de minuterie de la STM32 (SysTick)
+	//SysTicks compte à l'envers depuis la valeur qu'on lui donne dans SysTick_Config() jusqu'à 0
+    //cela permet d'avoir des interruptions (ici toutes les us)
+    Uart<1> serial; //initialise l'uart1 qui permet la communication série
+	Uart<2> serial_ax; //initialise l'uart2 qui permet la communication avec les ax12
+	serial.init(115200); //initialisation de la vitesse de transmission
 	serial_ax.init(9600);
-	serial_ax.disable_rx();
+	serial_ax.disable_rx(); //on décide de ne pas recevoir des ax12
 
-	MotionControlSystem* motionControlSystem = &MotionControlSystem::Instance(); // motionControlSystem est tout simplement un pointeur vers une r�f�rence d'un objet de type MotionControlSystem #TRIVIAL #USELESS
-	motionControlSystem->init();
-	ActuatorsMgr* actuatorsMgr = &ActuatorsMgr::Instance();
-	SensorMgr* sensorMgr = &SensorMgr::Instance();
-	Voltage_controller* voltage = &Voltage_controller::Instance();
-	Elevator elevator = Elevator();
-	elevator.initialize();
+	//on créé des objets (instances) qui ne seront créés qu'une seule fois grâce à Singleton
+    //NB:avec cette synthaxe (...*) on est obligé d'utiliser -> dans le main
+    //on pourrait plutôt utiliser ... & ... (on utilisera . dans le main)
+    MotionControlSystem* motionControlSystem = &MotionControlSystem::Instance();
+    // motionControlSystem est tout simplement un pointeur vers une r�f�rence d'un objet de type MotionControlSystem #TRIVIAL #USELESS
+
+    motionControlSystem->init(); //initialise asservissement, PWM et counters
+	ActuatorsMgr* actuatorsMgr = &ActuatorsMgr::Instance();//ax12
+	SensorMgr* sensorMgr = &SensorMgr::Instance();//capteurs, contacteurs, jumper
+	Voltage_controller* voltage = &Voltage_controller::Instance();//contrôle batterie Lipos
+
+    Elevator elevator = Elevator();
+	elevator.initialize(); //initialise les pins de l'ascenseur
 	
 	char order[64];//Permet le stockage du message re�u par la liaison s�rie
 
@@ -37,6 +45,8 @@ int main(void)
 		sensorMgr->refresh(motionControlSystem->getMovingDirection());
 
 		uint8_t tailleBuffer = serial.available();
+        //taille utilisée pour le passage des données dans le câble série
+
 
 		if (tailleBuffer && tailleBuffer < RX_BUFFER_SIZE - 1)
 		{
@@ -558,7 +568,8 @@ int main(void)
 				actuatorsMgr->setModuleID();
 			}
 
-            else if (!strcmp("changeangleax12",order))//permet de modifier les angle min et max de l'ax12 de test
+            //gestion des paramètres
+            else if (!strcmp("changeangleax12",order))//permet de modifier les angles min et max de l'ax12 de test
             {
 				uint16_t anglemin=0,anglemax=1023;
 				serial.printfln("Entrez l'angle minimal");
@@ -575,9 +586,17 @@ int main(void)
 				actuatorsMgr->changeAXSpeed(speed);
 				serial.printfln("Done");
 			}
+            else if(!strcmp("setPunch", order))
+            {
+                actuatorsMgr->setPunch(); //
+            }
+            else if(!strcmp("setSlopes", order))
+            {
+                actuatorsMgr->setSlopes(); //
+            }
 
-
-            else if (!strcmp("testax12",order)) {       //permet de faire bouger l'ax12 de test
+            //actions ax12
+            else if (!strcmp("testax12",order)) {    //permet de faire bouger l'ax12 de test
                 uint16_t pos = 0;
                 serial.printfln("Entrez la position");
                 serial.read(pos);
@@ -585,6 +604,13 @@ int main(void)
                 serial.printfln("Done");
 
             }
+            else if (!strcmp("reanimation",order))   //permet de réanimer certains ax12
+            {
+                actuatorsMgr->reanimation();
+            }
+
+                /*
+
             else if (!strcmp("testax12cacpos",order))  //ne marche pas et fait planter screen
 			{
                 uint16_t pos = 0;
@@ -602,20 +628,9 @@ int main(void)
                 int pos=actuatorsMgr->posdeax12();
                 serial.printfln("%d",pos);
             }
+                */
 
-            else if (!strcmp("reanimation",order))//permet de réanimer certains ax12
-            {
-                actuatorsMgr->reanimation();
-            }
-				
-			else if(!strcmp("setPunch", order))
-			{
-				actuatorsMgr->setPunch();
-			}
-			else if(!strcmp("setSlopes", order))
-			{
-				actuatorsMgr->setSlopes();
-			}
+
 
 /*			 ____________________
  * 		   *|                    |*
@@ -623,55 +638,55 @@ int main(void)
  *		   *|____________________|*
  */
 			
-			else if (!strcmp("bpr",order))      //releve le bras de la pelleteuse
+			else if (!strcmp("bpr",order)) //(releve le bras de la pelleteuse)
             {
                 actuatorsMgr->braPelReleve();
             }
 
-            else if (!strcmp("bpd",order))      //abaisse le bras de la pelleteuse
+            else if (!strcmp("bpd",order)) //(abaisse le bras de la pelleteuse)
             {
                 actuatorsMgr->braPelDeplie();
             }
 
-            else if (!strcmp("bpm", order))     // position intermédiaire des bras de pelleteuse
+            else if (!strcmp("bpm", order)) // (position intermédiaire des bras de pelleteuse)
             {
                 actuatorsMgr->braPelMoit();
             }
 
-            else if (!strcmp("pd", order))      //position pré prise de boules de la pelle
+            else if (!strcmp("pd", order))
             {
-                actuatorsMgr->pelleInit();
+                actuatorsMgr->pelleInit(); //position pré prise de boules de la pelle
             }
 
-            else if (!strcmp("pm", order))      //position post prise de boules de la pelle
+            else if (!strcmp("pm", order))
             {
-                actuatorsMgr->pelleMoit();
+                actuatorsMgr->pelleMoit(); //position post prise de boules de la pelle
             }
 				
 			else if (!strcmp("pt", order))
 			{
-				actuatorsMgr->pelleTient();
+				actuatorsMgr->pelleTient(); //position pour tenir les boules en haut
 			}
 
-            else if (!strcmp("pf", order))      //position de livraison de boules de la pelle
+            else if (!strcmp("pf", order))
             {
-                actuatorsMgr->pelleLib();
+                actuatorsMgr->pelleLib(); //position de livraison de boules de la pelle
             }
 			else if(!strcmp("asserpel", order))
 			{
 				actuatorsMgr->pelreasserv();
 			}
-/*			 ___________________
- * 		   *|                   |*
- *		   *|Attrappe Module SSV2|*
- *		   *|___________________|*
+/*			 _____________________
+ * 		   *|                     |*
+ *		   *|Attrappes Module SSV2|*
+ *		   *|_____________________|*
  */
 
 			//0 = droit, 1 = gauche
 			 //Côté droit
 			else if (!strcmp("amdd", order))
 			{
-				actuatorsMgr->moduleDeb(0);
+				actuatorsMgr->moduleDeb(0); //position derrière
 			}
 			else if (!strcmp("ammd", order))
 			{
@@ -679,62 +694,76 @@ int main(void)
 			}
 			else if (!strcmp("amfd", order))
 			{
-				actuatorsMgr->moduleFin(0);
+				actuatorsMgr->moduleFin(0); //ramène le module
 			}
 			//Côté gauche
 			else if (!strcmp("amdg", order))
 			{
-				actuatorsMgr->moduleDeb(1);
+				actuatorsMgr->moduleDeb(1); //position derrière
 			}
 			else if (!strcmp("ammg", order))
 			{
 				actuatorsMgr->moduleMid(1);
 			}
-			else if (!strcmp("amfg", order))
+			else if (!strcmp("amfg", order)) //ramène le module
 			{
 				actuatorsMgr->moduleFin(1);
 			}
-			//Cale Modules
-			else if (!strcmp("cmdd",order))
+
+/*			 ___________________
+ * 		   *|                   |*
+ *		   *|   Cales Module    |*
+ *		   *|___________________|*
+ */
+			  //droit
+            else if (!strcmp("cmmd", order))
+            {
+                actuatorsMgr->caleMidD();
+            }
+            else if (!strcmp("cmdd",order))
 			{
-                actuatorsMgr->caleHautD();
-			}
-			else if (!strcmp("cmmd", order))
-			{
-				actuatorsMgr->caleMidD();
+                actuatorsMgr->caleHautD(); //avant de pousser le module
 			}
 			else if(!strcmp("cmfd",order))
 			{
-                actuatorsMgr->caleBasD();
+                actuatorsMgr->caleBasD(); //pour pousser le module
 			}
+                //gauche
 			else if(!strcmp("cmmg", order))
 			{
 				actuatorsMgr->caleMidG();
 			}
 			else if (!strcmp("cmdg",order))
 			{
-				actuatorsMgr->caleHautG();
+				actuatorsMgr->caleHautG(); //avant de pousser le module
 			}
 			else if(!strcmp("cmfg",order))
 			{
-				actuatorsMgr->caleBasG();
+				actuatorsMgr->caleBasG(); //pour pousser le module
 			}
 			//Largue Modules
 			else if(!strcmp("lmd",order))
 			{
 				actuatorsMgr->largueRepos();
+                //position derrière
 
 			}
 			else if(!strcmp("lmf",order))
 			{
 				actuatorsMgr->larguePousse();
+                //position devant (largue les modules)
 			}
 			else if(!strcmp("lmreasserv", order))
 			{
 				actuatorsMgr->lmReasserv();
 			}
-				
-				//Assensceur
+
+
+        /*		 ___________________
+     * 		   *|                   |*
+     *		   *|    Ascenseur      |*
+     *		   *|___________________|*
+     */
 			else if(!strcmp("asup", order)) {
 
 				elevator.setSens(UP);
@@ -767,7 +796,7 @@ int main(void)
 				elevator.stop();
 			}
 			else if(!strcmp("asrun", order)){
-				elevator.run();
+				elevator.run(); //test du moteur à vide
 			}
 			else if(!strcmp("asstop", order))
 			{
@@ -780,13 +809,13 @@ int main(void)
  */
 
 
-			else if(!strcmp("uoe",order)) // test d'un mauvais retour bas niveau --> haut niveau
-			{ // test
+			else if(!strcmp("uoe",order))
+                // test d'un mauvais retour bas niveau --> haut niveau
+			{ // test pour faire exprès d'envoyer n'importe quoi au HL
 				serial.printfln("Une fraise");
 			}
 
 			// Sinon, Ordre inconnu
-
 			else
 			{
 				serial.printfln("Ordre inconnu");
@@ -795,38 +824,42 @@ int main(void)
 		}
 #if DEBUG
 		else if(tailleBuffer == RX_BUFFER_SIZE - 1)
+            //si l'espace utilisé dans le câble série est égal à la taille totale du buffer - 1
 		{
 			serial.printfln("CRITICAL OVERFLOW !");
 			motionControlSystem->enableTranslationControl(false);
 			motionControlSystem->enableRotationControl(false);
 			motionControlSystem->enableSpeedControl(false);
 
-			while(true)
-				;
+			while(true);
 		}
 #endif
 	}
 }
+//fin main
 
-extern "C" {
-//Interruption overflow TIMER4
+
+
+extern "C" { //indique au compilateur que les fonctions créées sont en C et non en C++
+//Interruptions sur le TIMER4
 void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
-	volatile static uint32_t i = 0, j = 0, k = 0, l = 0;
+	volatile static uint32_t i = 0, j = 0, k = 0, l = 0; //compteurs pour lancer des méthodes à différents moments
 	static MotionControlSystem* motionControlSystem = &MotionControlSystem::Instance();
 	static Voltage_controller* voltage = &Voltage_controller::Instance();
 
 	if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
-		//Remise � 0 manuelle du flag d'interruption n�cessaire
-		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
+        //TIM_GetITStatus vérifie si l'interruption a eu lieu (SET) ou non (RESET)
+		//SET donc remise à 0 manuelle du flag d'interruption nécessaire
+		TIM_ClearITPendingBit(TIM4, TIM_IT_Update); //remet les bits de l'interruption à 0
 
-		//Asservissement et mise � jour de la position
+		//Asservissement et mise à jour de la position
 		motionControlSystem->control();
 		motionControlSystem->updatePosition();
 
 
-		if(j >= 5){ //2.5ms
-			motionControlSystem->track();
-            motionControlSystem->manageStop();
+		if(j >= 5){ //0.5ms x 5 = 2.5ms
+			motionControlSystem->track(); //stocke les valeurs de débug
+            motionControlSystem->manageStop(); //regarde si le robot bouge normalement
 
 			j=0;
 		}
@@ -834,7 +867,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 		if(k >= 2000)
 		{
 
-			voltage->measure();
+			voltage->measure(); //regarde la batterie des Lipos
 
 			k=0;
 		}
@@ -842,6 +875,8 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
         if(l>=200)
         {
             if(autoUpdatePosition && !serial.available()) {
+                //si l'envoi automatique de position au HL est activé et que la série a de la place diponible
+                //on affiche la position et l'angle du robot
                 serial.printflnPosition("%d", (int) motionControlSystem->getX());
                 serial.printflnPosition("%d", (int) motionControlSystem->getY());
                 serial.printflnPosition("%f", motionControlSystem->getAngleRadian());
@@ -862,15 +897,18 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 	}
 }
 
-void EXTI9_5_IRQHandler(void)
+void EXTI9_5_IRQHandler(void) //interruptions sur pins
 {
 //	static SensorMgr* sensorMgr = &SensorMgr::Instance(); // Capteurs US
 /*
 	//Interruptions de l'ultrason de test
-    if (EXTI_GetITStatus(EXTI_Line5) != RESET) {
-        sensorMgr->sensorInterrupt(5);
+    if (EXTI_GetITStatus(EXTI_Line5) != RESET) { //le passage de RESET à SET est interne à la carte
+        sensorMgr->sensorInterrupt(0); //lance l'interruption du capteur numéro 0
+        sensorMgr->sensorInterrupt(1);
+        sensorMgr->sensorInterrupt(2);
+        sensorMgr->sensorInterrupt(3);
 
-        // Clear interrupt flag
+        // Clear interrupt flag (on repasse de SET à RESET)
         EXTI_ClearITPendingBit(EXTI_Line5);
 
     }
