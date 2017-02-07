@@ -29,16 +29,16 @@ int main(void)
     // motionControlSystem est tout simplement un pointeur vers une r�f�rence d'un objet de type MotionControlSystem #TRIVIAL #USELESS
 
     motionControlSystem->init(); //initialise asservissement, PWM et counters
-	ActuatorsMgr* actuatorsMgr = &ActuatorsMgr::Instance();//ax12
-	SensorMgr* sensorMgr = &SensorMgr::Instance();//capteurs, contacteurs, jumper
+	ActuatorsMgr* actuatorsMgr = &ActuatorsMgr::Instance(); //ax12
+	SensorMgr* sensorMgr = &SensorMgr::Instance(); //capteurs, contacteurs, jumper
 	Voltage_controller* voltage = &Voltage_controller::Instance();//contrôle batterie Lipos
 
     Elevator elevator = Elevator();
 	elevator.initialize(); //initialise les pins de l'ascenseur
 	
-	char order[64];//Permet le stockage du message re�u par la liaison s�rie
+	char order[64]; //Permet le stockage du message re�u par la liaison s�rie
 
-	bool translation = true;//permet de basculer entre les r�glages de cte d'asserv en translation et en rotation
+	bool translation = true; //permet de basculer entre les r�glages de cte d'asserv en translation et en rotation
 
 
 
@@ -81,7 +81,7 @@ int main(void)
 			{
 				int deplacement = 0;
 				serial.read(deplacement);
-				serial.printfln("_");//Acquittement
+				serial.printfln("_");           //Acquittement
 				motionControlSystem->orderTranslation(deplacement);
 			}
                 /*
@@ -96,7 +96,7 @@ int main(void)
 			{
 				float angle = motionControlSystem->getAngleRadian();
 				serial.read(angle);
-				serial.printfln("_");//Acquittement
+				serial.printfln("_");           //Acquittement
 				motionControlSystem->orderRotation(angle, MotionControlSystem::FREE);
 			}
 			else if(!strcmp("t3", order))		//Ordre de rotation via un angle relatif (en radians)
@@ -118,17 +118,17 @@ int main(void)
                     float arcLenght = 0;
                     float curveRadius = 0;
                     serial.read(arcLenght);
-                    serial.printfln("_");					//Acquittement
+                    serial.printfln("_");		//Acquittement
                     serial.read(curveRadius);
-                    serial.printfln("_");					//Acquittement
+                    serial.printfln("_");		//Acquittement
                     motionControlSystem->orderCurveTrajectory(arcLenght, curveRadius);
                 }
               */
-			else if(!strcmp("stop",order))  //Ordre d'arr�t (asservissement � la position actuelle)
+			else if(!strcmp("stop",order))      //Ordre d'arr�t (asservissement � la position actuelle)
             {
                 motionControlSystem->stop();
             }
-            else if(!strcmp("dts",order))  //définir le Delay To Stop (temps à l'arrêt avant de considérer un blocage)
+            else if(!strcmp("dts",order))       //définir le Delay To Stop (temps à l'arrêt avant de considérer un blocage)
             {
                 uint32_t delayToStop = 0;
                 serial.printfln("Delay to stop ? (ms)");
@@ -165,16 +165,16 @@ int main(void)
                     serial.printfln("_");//Acquittement
                     motionControlSystem->setOriginalAngle(o);
                 }
-                else if(!strcmp("ctv",order))   //R�gler la vitesse de translation
+                else if(!strcmp("ctv",order))       //R�gler la vitesse de translation
                 {
-                    float speed = 0; // unit� de speed : mm/s
+                    float speed = 0;                // unit� de speed : mm/s
                     serial.read(speed);
                     serial.printfln("_");
                     motionControlSystem->setTranslationSpeed(speed);
                 }
-                else if(!strcmp("crv", order))  //R�gler la vitesse de rotation
+                else if(!strcmp("crv", order))     //R�gler la vitesse de rotation
                 {
-                    float speedRotation = 0; // rad/s
+                    float speedRotation = 0;       // rad/s
                     serial.read(speedRotation);
                     serial.printfln("_");
                     motionControlSystem->setRotationSpeed(speedRotation);
@@ -276,7 +276,7 @@ int main(void)
 
             else if(!strcmp("toggle",order))
             {
-                translation = !translation; //Bascule entre le réglage d'asserv en translation et en rotation
+                translation = !translation;   //Bascule entre le réglage d'asserv en translation et en rotation
                 if(translation)
                     serial.printfln("reglage de la transation");
                 else
@@ -285,10 +285,10 @@ int main(void)
             else if(!strcmp("display",order)) //affiche les paramètres des PID des différentes asserv (translation, rotation, vitesse à droite, vitesse à gauche)
             {
                 float
-                        kp_t, ki_t, kd_t,	// Translation
-                        kp_r, ki_r, kd_r,	// Rotation
-                        kp_g, ki_g, kd_g,	// Vitesse gauche
-                        kp_d, ki_d, kd_d;	// Vitesse droite
+                        kp_t, ki_t, kd_t,	  // Translation
+                        kp_r, ki_r, kd_r,	  // Rotation
+                        kp_g, ki_g, kd_g,	  // Vitesse gauche
+                        kp_d, ki_d, kd_d;	  // Vitesse droite
                 motionControlSystem->getTranslationTunings(kp_t, ki_t, kd_t);
                 motionControlSystem->getRotationTunings(kp_r, ki_r, kd_r);
                 motionControlSystem->getLeftSpeedTunings(kp_g, ki_g, kd_g);
@@ -437,22 +437,18 @@ int main(void)
         else if(!strcmp("usard",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
         {
             serial.printfln("%d", sensorMgr->getSensorDistanceARD());//en mm
-
         }
         else if(!strcmp("usarg",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
         {
             serial.printfln("%d", sensorMgr->getSensorDistanceARG());//en mm
-
         }
         else if(!strcmp("usavd",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
         {
             serial.printfln("%d", sensorMgr->getSensorDistanceAVD());//en mm
-
         }
         else if(!strcmp("usavg",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
         {
             serial.printfln("%d", sensorMgr->getSensorDistanceAVG());//en mm
-
         }
 
 
@@ -465,17 +461,14 @@ int main(void)
         else if(!strcmp("j",order))			    //Indiquer l'�tat du jumper (0='en place'; 1='dehors')
         {
             serial.printfln("%d", sensorMgr->isJumperOut());
-
         }
         else if(!strcmp("c1",order))			//Indiquer l'�tat du contacteur1 (0='non appuyé'; 1='appuyé')
         {
             serial.printfln("%d", sensorMgr->isContactor1engaged());
-
         }
         else if(!strcmp("c2",order))			//Indiquer l'�tat du contacteur2 (0='non appuyé'; 1='appuyé')
         {
             serial.printfln("%d", sensorMgr->isContactor2engaged());
-
         }
         else if(!strcmp("c3",order))			//Indiquer l'�tat du contacteur3 (0='non appuyé'; 1='appuyé')
         {
@@ -492,21 +485,21 @@ int main(void)
 			/* --- AX12 ---*/
 
 				//Gestion des ID des AX12
-			else if(!strcmp("setallid",order))//permet de donner les ids définis aux ax12
+			else if(!strcmp("setallid",order))         //permet de donner les ids définis aux ax12
 			{
 				actuatorsMgr->setAllID();
 			}
-			else if(!strcmp("setpelleid",order))//permet de donner les ids aux ax12 de la pelle
+			else if(!strcmp("setpelleid",order))       //permet de donner les ids aux ax12 de la pelle
 			{
 				actuatorsMgr->setPelleID();
 			}
-			else if(!strcmp("setmoduleid",order))//permet de donner les ids aux ax12 de l'attrappe module
+			else if(!strcmp("setmoduleid",order))      //permet de donner les ids aux ax12 de l'attrappe module
 			{
 				actuatorsMgr->setModuleID();
 			}
 
             //gestion des paramètres
-            else if (!strcmp("changeangleax12",order))//permet de modifier les angles min et max de l'ax12 de test
+            else if (!strcmp("changeangleax12",order)) //permet de modifier les angles min et max de l'ax12 de test
             {
 				uint16_t anglemin=0,anglemax=1023;
 				serial.printfln("Entrez l'angle minimal");
@@ -515,36 +508,39 @@ int main(void)
 				serial.read(anglemax);
 				actuatorsMgr->changeangle(anglemin,anglemax);
             }
-			else if(!strcmp("caxs", order)) { //modifie la vitesse de l'ax12 de test
+			else if(!strcmp("caxs", order)) {          //modifie la vitesse de l'ax12 de test
 				int speed = 100;
 				serial.printfln("Entrez vitesse");
 				serial.read(speed);
 				actuatorsMgr->changeAXSpeed(speed);
 				serial.printfln("Done");
 			}
+            //pour avoir des mouvements plus fluides on augmente les slopes et on diminue le punch
             else if(!strcmp("setPunch", order))
             {
-                actuatorsMgr->setPunch(); //
+                actuatorsMgr->setPunch();              // couple minimal appliqué
             }
             else if(!strcmp("setSlopes", order))
             {
-                actuatorsMgr->setSlopes(); //
+                actuatorsMgr->setSlopes(); // longeur de la pente du couple appliqué en f(distance à la position voulue)
+                // (on peut donc modifier la pente de la courbe du couple appliqué)
+
             }
 
             //actions ax12
-            else if (!strcmp("testax12",order)) {    //permet de faire bouger l'ax12 de test
+            else if (!strcmp("testax12",order)) {     //permet de faire bouger l'ax12 de test
                 uint16_t pos = 0;
                 serial.printfln("Entrez la position");
                 serial.read(pos);
                 actuatorsMgr->setAXpos(pos);
                 serial.printfln("Done");
             }
-            else if (!strcmp("reanimation",order))   //permet de réanimer certains ax12
+            else if (!strcmp("reanimation",order))    //permet de réanimer certains ax12
             {
                 actuatorsMgr->reanimation();
             }
                 /*
-            else if (!strcmp("testax12cacpos",order))  //ne marche pas et fait planter screen
+            else if (!strcmp("testax12cacpos",order)) //ne marche pas et fait planter screen
 			{
                 uint16_t pos = 0;
                 serial.printfln("Entrez la position actuelle");
@@ -555,7 +551,7 @@ int main(void)
                 else
                     serial.printfln("ça n'a pas marché");
             }
-            else if (!strcmp("getpos",order))    //ne marche pas (obtenir la position)
+            else if (!strcmp("getpos",order))         //ne marche pas (obtenir la position)
             {
                 int pos=actuatorsMgr->posdeax12();
                 serial.printfln("%d",pos);
@@ -583,11 +579,11 @@ int main(void)
             }
             else if (!strcmp("pd", order))
             {
-                actuatorsMgr->pelleInit(); //position pré prise de boules de la pelle
+                actuatorsMgr->pelleInit();  //position pré prise de boules de la pelle
             }
             else if (!strcmp("pm", order))
             {
-                actuatorsMgr->pelleMoit(); //position post prise de boules de la pelle
+                actuatorsMgr->pelleMoit();  //position post prise de boules de la pelle
             }
 			else if (!strcmp("pt", order))
 			{
@@ -595,7 +591,7 @@ int main(void)
 			}
             else if (!strcmp("pf", order))
             {
-                actuatorsMgr->pelleLib(); //position de livraison de boules de la pelle
+                actuatorsMgr->pelleLib();   //position de livraison de boules de la pelle
             }
 			else if(!strcmp("asserpel", order))
 			{
@@ -656,7 +652,7 @@ int main(void)
 			}
 			else if(!strcmp("cmfd",order))
 			{
-                actuatorsMgr->caleBasD(); //pour pousser le module
+                actuatorsMgr->caleBasD();  //pour pousser le module
 			}
 
                 //gauche
@@ -670,7 +666,7 @@ int main(void)
 			}
 			else if(!strcmp("cmfg",order))
 			{
-				actuatorsMgr->caleBasG(); //pour pousser le module
+				actuatorsMgr->caleBasG();  //pour pousser le module
 			}
 
 
@@ -682,7 +678,7 @@ int main(void)
 
 			else if(!strcmp("lmd",order))
 			{
-				actuatorsMgr->largueRepos(); //position derrière
+				actuatorsMgr->largueRepos();  //position derrière
 			}
 			else if(!strcmp("lmf",order))
 			{
@@ -739,18 +735,18 @@ int main(void)
 			}
 
 
-/*			 __________________
- * 		   *|                  |*
- *		   *|COMMANDES DE DEBUG|*
- *		   *|__________________|*
+/*			 ________________________
+ * 		   *|                        |*
+ *		   *|COMMANDES/TESTS DE DEBUG|*
+ *		   *|________________________|*
  */
 
-            else if(!strcmp("rp",order))  //Reset position et angle du robot, et le stoppe
+            else if(!strcmp("rp",order))             //Reset position et angle du robot, et le stoppe
             {
                 motionControlSystem->resetPosition();
                 serial.printfln("Reset position");
             }
-            else if(!strcmp("testSpeed",order))  //n'active que l'asserv en vitesse et fait un test avec tracking
+            else if(!strcmp("testSpeed",order))      //n'active que l'asserv en vitesse et fait un test (déplacement avec une certaine vitesse) avec tracking
             {
                 motionControlSystem->testSpeed();
             }
@@ -758,11 +754,11 @@ int main(void)
             {
                 motionControlSystem->longTestSpeed();
             }
-            else if(!strcmp("testPosition",order))  //active toutes les asserv et fait un test avec tracking
+            else if(!strcmp("testPosition",order))   //active toutes les asserv et fait un test (déplacement) avec tracking
             {
                 motionControlSystem->testPosition();
             }
-            else if(!strcmp("testRotation",order))  //idem
+            else if(!strcmp("testRotation",order))   //active toutes les asserv et fait un test (rotation) avec tracking
             {
                 motionControlSystem->testRotation();
             }
@@ -783,7 +779,7 @@ int main(void)
 
             else if(!strcmp("adc", order))
             {
-                serial.printfln("%d", voltage->test());  // Pour tester la tension d'alimentation selon l'adc
+                serial.printfln("%d", voltage->test());   // Pour tester la tension d'alimentation selon l'adc
             }
 
 
@@ -822,6 +818,11 @@ int main(void)
 //fin main
 
 
+/*			 ___________________
+ * 		   *|                   |*
+ *		   *|   INTERRUPTIONS   |*
+ *		   *|___________________|*
+ */
 
 extern "C" { //indique au compilateur que les fonctions créées sont en C et non en C++
 //Interruptions sur le TIMER4
