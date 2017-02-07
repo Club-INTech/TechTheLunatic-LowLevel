@@ -6,7 +6,7 @@
 #include "library/voltage_controller.hpp"
 #include "Elevator.h"
 
-bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
+//bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
 
 
 int main(void)
@@ -40,18 +40,26 @@ int main(void)
 
 	bool translation = true;//permet de basculer entre les r�glages de cte d'asserv en translation et en rotation
 
+
+
 	while(1)
 	{
-		sensorMgr->refresh(motionControlSystem->getMovingDirection());
+		sensorMgr->refresh(motionControlSystem->getMovingDirection()); //récupère la direction de déplacement du robot
 
-		uint8_t tailleBuffer = serial.available();
-        //taille utilisée pour le passage des données dans le câble série
+		uint8_t tailleBuffer = serial.available(); //taille utilisée pour le passage des données dans le câble série
 
 
-		if (tailleBuffer && tailleBuffer < RX_BUFFER_SIZE - 1)
+		if (tailleBuffer && tailleBuffer < RX_BUFFER_SIZE - 1) //s'il reste de la place dans le câble série
 		{
 			serial.read(order);
 			serial.printfln("_");				//Acquittement
+
+
+/*			 __________________
+ * 		   *|                  |*
+ *		   *|  TESTS DE BASE   |*
+ *		   *|__________________|*
+ */
 
 			if(!strcmp("?",order))				//Ping
 			{
@@ -76,6 +84,14 @@ int main(void)
 				serial.printfln("_");//Acquittement
 				motionControlSystem->orderTranslation(deplacement);
 			}
+                /*
+            else if(!strcmp("dtest",order))
+            {
+                int distance = 0;
+                serial.printfln("Distance du test : (mm)");
+                serial.read(distance);
+                motionControlSystem->distanceTest = distance;
+            } */
 			else if(!strcmp("t", order))		//Ordre de rotation via un angle absolu (en radians)
 			{
 				float angle = motionControlSystem->getAngleRadian();
@@ -83,30 +99,6 @@ int main(void)
 				serial.printfln("_");//Acquittement
 				motionControlSystem->orderRotation(angle, MotionControlSystem::FREE);
 			}
-
-
-			else if(!strcmp("dc", order)) //Rotation + translation = trajectoire courbe !
-			{
-				float arcLenght = 0;
-				float curveRadius = 0;
-				serial.read(arcLenght);
-				serial.printfln("_");					//Acquittement
-				serial.read(curveRadius);
-				serial.printfln("_");					//Acquittement
-				motionControlSystem->orderCurveTrajectory(arcLenght, curveRadius);
-			}
-
-			else if(!strcmp("efm", order)) // Activer les mouvements forc�s (sans blocage)
-			{
-				motionControlSystem->enableForcedMovement();
-			}
-
-			else if(!strcmp("dfm", order)) // d�sactive le for�age
-			{
-				motionControlSystem->disableForcedMovement();
-			}
-
-
 			else if(!strcmp("t3", order))		//Ordre de rotation via un angle relatif (en radians)
 			{
 				float angle_actuel = motionControlSystem->getAngleRadian(), delta_angle = 0;
@@ -121,116 +113,126 @@ int main(void)
 				serial.printfln("_");
 				motionControlSystem->orderRotation((angle_actuel + delta_angle)*PI/180, MotionControlSystem::FREE);
 			}
-			else if(!strcmp("stop",order))		//Ordre d'arr�t (asservissement � la position actuelle)
-			{
-				motionControlSystem->stop();
-			}
-			else if(!strcmp("usard",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
-			{
-				serial.printfln("%d", sensorMgr->getSensorDistanceARD());//en mm
-
-			}
-            else if(!strcmp("usarg",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+                /*else if(!strcmp("dc", order)) //Rotation + translation = trajectoire courbe !
+                {
+                    float arcLenght = 0;
+                    float curveRadius = 0;
+                    serial.read(arcLenght);
+                    serial.printfln("_");					//Acquittement
+                    serial.read(curveRadius);
+                    serial.printfln("_");					//Acquittement
+                    motionControlSystem->orderCurveTrajectory(arcLenght, curveRadius);
+                }
+              */
+			else if(!strcmp("stop",order))  //Ordre d'arr�t (asservissement � la position actuelle)
             {
-                serial.printfln("%d", sensorMgr->getSensorDistanceARG());//en mm
-
+                motionControlSystem->stop();
             }
-            else if(!strcmp("usavd",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+            else if(!strcmp("dts",order))  //définir le Delay To Stop (temps à l'arrêt avant de considérer un blocage)
             {
-                serial.printfln("%d", sensorMgr->getSensorDistanceAVD());//en mm
-
+                uint32_t delayToStop = 0;
+                serial.printfln("Delay to stop ? (ms)");
+                serial.read(delayToStop);
+                motionControlSystem->setDelayToStop(delayToStop);
+                serial.printfln("Delay to stop = %d", delayToStop);
             }
-            else if(!strcmp("usavg",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
-            {
-                serial.printfln("%d", sensorMgr->getSensorDistanceAVG());//en mm
 
-            }
-			else if(!strcmp("j",order))			//Indiquer l'�tat du jumper (0='en place'; 1='dehors')
-			{
-				serial.printfln("%d", sensorMgr->isJumperOut());
 
-			}
-            else if(!strcmp("c1",order))			//Indiquer l'�tat du contacteur1 (0='non appuyé'; 1='appuyé')
-            {
-                serial.printfln("%d", sensorMgr->isContactor1engaged());
+/*			 _____________________
+ * 		   *|                     |*
+ *		   *|    AUTRES TESTS     |*
+ *		   *|_____________________|*
+ */
 
-            }
-            else if(!strcmp("c2",order))			//Indiquer l'�tat du contacteur2 (0='non appuyé'; 1='appuyé')
-            {
-                serial.printfln("%d", sensorMgr->isContactor2engaged());
+                else if(!strcmp("cx",order))		//R�gler la composante x de la position (en mm)
+                {
+                    float x;
+                    serial.read(x);
+                    serial.printfln("_");//Acquittement
+                    motionControlSystem->setX(x);
+                }
+                else if(!strcmp("cy",order))		//R�gler la composante y de la position (en mm)
+                {
+                    float y;
+                    serial.read(y);
+                    serial.printfln("_");//Acquittement
+                    motionControlSystem->setY(y);
+                }
+                else if(!strcmp("co",order))		//R�gler l'orientation du robot (en radians)
+                {
+                    float o;
+                    serial.read(o);
+                    serial.printfln("_");//Acquittement
+                    motionControlSystem->setOriginalAngle(o);
+                }
+                else if(!strcmp("ctv",order))   //R�gler la vitesse de translation
+                {
+                    float speed = 0; // unit� de speed : mm/s
+                    serial.read(speed);
+                    serial.printfln("_");
+                    motionControlSystem->setTranslationSpeed(speed);
+                }
+                else if(!strcmp("crv", order))  //R�gler la vitesse de rotation
+                {
+                    float speedRotation = 0; // rad/s
+                    serial.read(speedRotation);
+                    serial.printfln("_");
+                    motionControlSystem->setRotationSpeed(speedRotation);
+                }
+                    /*
+                    else if(!strcmp("efm", order)) // Activer les mouvements forc�s (sans blocage)
+                    {
+                        motionControlSystem->enableForcedMovement();
+                    }
 
-            }
-            else if(!strcmp("c3",order))			//Indiquer l'�tat du contacteur3 (0='non appuyé'; 1='appuyé')
-            {
-                serial.printfln("%d", sensorMgr->isContactor3engaged());
+                    else if(!strcmp("dfm", order)) // d�sactive le for�age
+                    {
+                        motionControlSystem->disableForcedMovement();
+                    }
+                   else if(!strcmp("auto", order))
+                   {
+                    autoUpdatePosition = !autoUpdatePosition; //active ou désactive l'envoi automatique de position au HL
+                   }
+                     */
 
-            }
+
+/*			 _____________________
+ * 		   *|                     |*
+ *		   *|   ASSERVISSEMENTS   |*
+ *		   *|_____________________|*
+ */
+
 			else if(!strcmp("ct0",order))		//D�sactiver l'asservissement en translation
 			{
 				motionControlSystem->enableTranslationControl(false);
+                serial.printfln("non asservi en translation");
 			}
 			else if(!strcmp("ct1",order))		//Activer l'asservissement en translation
 			{
 				motionControlSystem->enableTranslationControl(true);
+                serial.printfln("asservi en translation");
 			}
 			else if(!strcmp("cr0",order))		//D�sactiver l'asservissement en rotation
 			{
 				motionControlSystem->enableRotationControl(false);
+                serial.printfln("non asservi en rotation");
 			}
 			else if(!strcmp("cr1",order))		//Activer l'asservissement en rotation
 			{
 				motionControlSystem->enableRotationControl(true);
+                serial.printfln("asservi en rotation");
 			}
-			else if(!strcmp("cv0",order))		//Activer l'asservissement en rotation
+			else if(!strcmp("cv0",order))		//Désactiver l'asservissement en vitesse
 			{
 				motionControlSystem->enableSpeedControl(false);
+                serial.printfln("non asservi en vitesse");
 			}
-			else if(!strcmp("cv1",order))		//Activer l'asservissement en rotation
+			else if(!strcmp("cv1",order))		//Activer l'asservissement en vitesse
 			{
 				motionControlSystem->enableSpeedControl(true);
+                serial.printfln("asservi en vitesse");
 			}
-
-			else if(!strcmp("cx",order))		//R�gler la composante x de la position (en mm)
-			{
-				float x;
-				serial.read(x);
-				serial.printfln("_");//Acquittement
-				motionControlSystem->setX(x);
-			}
-			else if(!strcmp("cy",order))		//R�gler la composante y de la position (en mm)
-			{
-				float y;
-				serial.read(y);
-				serial.printfln("_");//Acquittement
-				motionControlSystem->setY(y);
-			}
-			else if(!strcmp("co",order))		//R�gler l'orientation du robot (en radians)
-			{
-				float o;
-				serial.read(o);
-				serial.printfln("_");//Acquittement
-				motionControlSystem->setOriginalAngle(o);
-			}
-			else if(!strcmp("ctv",order))   //R�gler la vitesse de translation
-			{
-				float speed = 0; // unit� de speed : mm/s
-				serial.read(speed);
-				serial.printfln("_");
-				motionControlSystem->setTranslationSpeed(speed);
-			}
-			else if(!strcmp("crv", order))  //R�gler la vitesse de rotation
-			{
-				float speedRotation = 0; // rad/s
-				serial.read(speedRotation);
-				serial.printfln("_");
-				motionControlSystem->setRotationSpeed(speedRotation);
-			}
-
-            else if(!strcmp("auto", order))
-            {
-                autoUpdatePosition = !autoUpdatePosition;
-            }
-
+               /*
 			// POUR MONTLHERY
 
 			else if(!strcmp("montlhery", order))
@@ -263,287 +265,222 @@ int main(void)
 			{
 				motionControlSystem->setRawNullSpeed();
 			}
+                */
+
+
+/*			 _________________________________
+ * 		   *|                                 |*
+ *		   *|CONSTANTES D'ASSERV (pour le PID)|*
+ *		   *|_________________________________|*
+ */
+
+            else if(!strcmp("toggle",order))
+            {
+                translation = !translation; //Bascule entre le réglage d'asserv en translation et en rotation
+                if(translation)
+                    serial.printfln("reglage de la transation");
+                else
+                    serial.printfln("reglage de la rotation");
+            }
+            else if(!strcmp("display",order)) //affiche les paramètres des PID des différentes asserv (translation, rotation, vitesse à droite, vitesse à gauche)
+            {
+                float
+                        kp_t, ki_t, kd_t,	// Translation
+                        kp_r, ki_r, kd_r,	// Rotation
+                        kp_g, ki_g, kd_g,	// Vitesse gauche
+                        kp_d, ki_d, kd_d;	// Vitesse droite
+                motionControlSystem->getTranslationTunings(kp_t, ki_t, kd_t);
+                motionControlSystem->getRotationTunings(kp_r, ki_r, kd_r);
+                motionControlSystem->getLeftSpeedTunings(kp_g, ki_g, kd_g);
+                motionControlSystem->getRightSpeedTunings(kp_d, ki_d, kd_d);
+                serial.printfln("trans : kp= %g ; ki= %g ; kd= %g", kp_t, ki_t, kd_t);
+                serial.printfln("rot   : kp= %g ; ki= %g ; kd= %g", kp_r, ki_r, kd_r);
+                serial.printfln("gauche: kp= %g ; ki= %g ; kd= %g", kp_g, ki_g, kd_g);
+                serial.printfln("droite: kp= %g ; ki= %g ; kd= %g", kp_d, ki_d, kd_d);
+            }
+                /*else if(!strcmp("autoasserv" ,order))// Commande pour le programme d'autoasserv (python)
+                {
+                    float
+                        kp_g, kp_d, ki_g, ki_d, kd_g, kd_d;
+
+                    motionControlSystem->getLeftSpeedTunings(kp_g, ki_g, kd_g);
+                    motionControlSystem->getRightSpeedTunings(kp_d, ki_d, kd_d);
+
+                    motionControlSystem->printTracking();
+                    serial.printf("endtest");
+                }
+                 */
+
+            // ***********  Paramètres du PID pour l'asserv en position (TRANSLATION)  ***********
+            else if(!strcmp("kpt",order))
+            {
+                float kp, ki, kd;
+                serial.printfln("kp_trans ?");
+                motionControlSystem->getTranslationTunings(kp,ki,kd);
+                serial.read(kp);
+                motionControlSystem->setTranslationTunings(kp,ki,kd);
+                serial.printfln("kp_trans = %g", kp);
+            }
+            else if(!strcmp("kdt",order))
+            {
+                float kp, ki, kd;
+                serial.printfln("kd_trans ?");
+                motionControlSystem->getTranslationTunings(kp,ki,kd);
+                serial.read(kd);
+                motionControlSystem->setTranslationTunings(kp,ki,kd);
+                serial.printfln("kd_trans = %g", kd);
+            }
+            else if(!strcmp("kit",order))
+            {
+                float kp, ki, kd;
+                serial.printfln("ki_trans ?");
+                motionControlSystem->getTranslationTunings(kp,ki,kd);
+                serial.read(ki);
+                motionControlSystem->setTranslationTunings(kp,ki,kd);
+                serial.printfln("ki_trans = %g", ki);
+            }
+
+            // ***********  Paramètres du PID pour l'asserv en ROTATION  ***********
+            else if(!strcmp("kpr",order))
+            {
+                float kp, ki, kd;
+                serial.printfln("kp_rot ?");
+                motionControlSystem->getRotationTunings(kp,ki,kd);
+                serial.read(kp);
+                motionControlSystem->setRotationTunings(kp,ki,kd);
+                serial.printfln("kp_rot = %g", kp);
+            }
+            else if(!strcmp("kir",order))
+            {
+                float kp, ki, kd;
+                serial.printfln("ki_rot ?");
+                motionControlSystem->getRotationTunings(kp,ki,kd);
+                serial.read(ki);
+                motionControlSystem->setRotationTunings(kp,ki,kd);
+                serial.printfln("ki_rot = %g", ki);
+            }
+            else if(!strcmp("kdr",order))
+            {
+                float kp, ki, kd;
+                serial.printfln("kd_rot ?");
+                motionControlSystem->getRotationTunings(kp,ki,kd);
+                serial.read(kd);
+                motionControlSystem->setRotationTunings(kp,ki,kd);
+                serial.printfln("kd_rot = %g", kd);
+            }
+
+            // ***********  Paramètres du PID pour l'asserv en vitesse à gauche  ***********
+            else if(!strcmp("kpg",order))
+            {
+                float kp, ki, kd;
+                serial.printfln("kp_gauche ?");
+                motionControlSystem->getLeftSpeedTunings(kp,ki,kd);
+                serial.read(kp);
+                motionControlSystem->setLeftSpeedTunings(kp,ki,kd);
+                serial.printfln("kp_gauche = %g", kp);
+            }
+            else if(!strcmp("kig",order))
+            {
+                float kp, ki, kd;
+                serial.printfln("ki_gauche ?");
+                motionControlSystem->getLeftSpeedTunings(kp,ki,kd);
+                serial.read(ki);
+                motionControlSystem->setLeftSpeedTunings(kp,ki,kd);
+                serial.printfln("ki_gauche = %g", ki);
+            }
+            else if(!strcmp("kdg",order))
+            {
+                float kp, ki, kd;
+                serial.printfln("kd_gauche ?");
+                motionControlSystem->getLeftSpeedTunings(kp,ki,kd);
+                serial.read(kd);
+                motionControlSystem->setLeftSpeedTunings(kp,ki,kd);
+                serial.printfln("kd_gauche = %g", kd);
+            }
+
+            // ***********  Paramètres du PID pour l'asserv en vitesse à droite ****************
+            else if(!strcmp("kpd",order))
+            {
+                float kp, ki, kd;
+                serial.printfln("kp_droite ?");
+                motionControlSystem->getRightSpeedTunings(kp,ki,kd);
+                serial.read(kp);
+                motionControlSystem->setRightSpeedTunings(kp,ki,kd);
+                serial.printfln("kp_droite = %g", kp);
+            }
+            else if(!strcmp("kid",order))
+            {
+                float kp, ki, kd;
+                serial.printfln("ki_droite ?");
+                motionControlSystem->getRightSpeedTunings(kp,ki,kd);
+                serial.read(ki);
+                motionControlSystem->setRightSpeedTunings(kp,ki,kd);
+                serial.printfln("ki_droite = %g", ki);
+            }
+            else if(!strcmp("kdd",order))
+            {
+                float kp, ki, kd;
+                serial.printfln("kd_droite ?");
+                motionControlSystem->getRightSpeedTunings(kp,ki,kd);
+                serial.read(kd);
+                motionControlSystem->setRightSpeedTunings(kp,ki,kd);
+                serial.printfln("kd_droite = %g", kd);
+            }
 
 
 /*			 __________________
  * 		   *|                  |*
- *		   *|COMMANDES DE DEBUG|*
+ *		   *|     CAPTEURS     |*
  *		   *|__________________|*
  */
-			else if(!strcmp("!",order))//Test quelconque
-			{
 
-			}
-			else if(!strcmp("oxy",order))
-			{
-				serial.printfln("x=%f\r\ny=%f", motionControlSystem->getX(), motionControlSystem->getY());
-				serial.printfln("o=%f", motionControlSystem->getAngleRadian());
-			}
-			else if (!strcmp("at", order))	// Commute l'asservissement en translation
-			{
-				static bool asservTranslation = false;
-				motionControlSystem->enableTranslationControl(asservTranslation);
-				serial.printfln("l'asserv en translation est d�sormais");
-				if (asservTranslation)
-				{
-					serial.printfln("asservi en translation");
-				}
-				else
-				{
-					serial.printfln("non asservi en translation");
-				}
-				asservTranslation = !asservTranslation;
-			}
-			else if (!strcmp("ar", order)) // Commute l'asservissement en rotation
-			{
-				static bool asservRotation = false;
-				motionControlSystem->enableRotationControl(asservRotation);
-				serial.printfln("l'asserv en rotation est d�sormais");
-				if (asservRotation)
-				{
-					serial.printfln("asservi en rotation");
-				}
-				else
-				{
-					serial.printfln("non asservi en rotation");
-				}
-				asservRotation = !asservRotation;
-			}
+        else if(!strcmp("usard",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+        {
+            serial.printfln("%d", sensorMgr->getSensorDistanceARD());//en mm
 
-			else if(!strcmp("rp",order))//Reset position
-			{
-				motionControlSystem->resetPosition();
-				serial.printfln("Reset position");
-			}
+        }
+        else if(!strcmp("usarg",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+        {
+            serial.printfln("%d", sensorMgr->getSensorDistanceARG());//en mm
+
+        }
+        else if(!strcmp("usavd",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+        {
+            serial.printfln("%d", sensorMgr->getSensorDistanceAVD());//en mm
+
+        }
+        else if(!strcmp("usavg",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+        {
+            serial.printfln("%d", sensorMgr->getSensorDistanceAVG());//en mm
+
+        }
 
 
-			else if(!strcmp("testSpeed",order))
-			{
-				motionControlSystem->testSpeed();
-			}
-			else if(!strcmp("dtest",order))
-			{
-				int distance = 0;
-				serial.printfln("Distance du test : (mm)");
-				serial.read(distance);
-				motionControlSystem->distanceTest = distance;
-			}
-
-			else if(!strcmp("continualTest",order))//Test long
-			{
-				motionControlSystem->longTestSpeed();
-			}
-			else if(!strcmp("testPosition",order))
-			{
-				motionControlSystem->testPosition();
-			}
-
-			else if(!strcmp("testRotation",order))
-			{
-				motionControlSystem->testRotation();
-			}
-
-			else if(!strcmp("av", order)) // desactive asserv vitesse
-			{
-				static bool asservVitesse = false;
-				motionControlSystem->enableSpeedControl(asservVitesse);
-				serial.printf("L'asserv en vitesse est ");
-				if(!asservVitesse)
-				{
-					serial.printfln("desactiv�e");
-				}
-				else {
-					serial.printfln("activ�e");
-				}
-			}
-
-
-
-/*			 ___________________
- * 		   *|                   |*
- *		   *|CONSTANTES D'ASSERV|*
- *		   *|___________________|*
+/*			 _____________________
+ * 		   *|                     |*
+ *		   *|CONTACTEURS ET JUMPER|*
+ *		   *|_____________________|*
  */
 
+        else if(!strcmp("j",order))			    //Indiquer l'�tat du jumper (0='en place'; 1='dehors')
+        {
+            serial.printfln("%d", sensorMgr->isJumperOut());
 
-			else if(!strcmp("toggle",order))//Bascule entre le r�glage d'asserv en translation et en rotation
-			{
-				translation = !translation;
-				if(translation)
-					serial.printfln("reglage de la transation");
-				else
-					serial.printfln("reglage de la rotation");
-			}
-			else if(!strcmp("display",order))
-			{
-				float
-					kp_t, ki_t, kd_t,	// Translation
-					kp_r, ki_r, kd_r,	// Rotation
-					kp_g, ki_g, kd_g,	// Vitesse gauche
-					kp_d, ki_d, kd_d;	// Vitesse droite
-				motionControlSystem->getTranslationTunings(kp_t, ki_t, kd_t);
-				motionControlSystem->getRotationTunings(kp_r, ki_r, kd_r);
-				motionControlSystem->getLeftSpeedTunings(kp_g, ki_g, kd_g);
-				motionControlSystem->getRightSpeedTunings(kp_d, ki_d, kd_d);
-				serial.printfln("trans : kp= %g ; ki= %g ; kd= %g", kp_t, ki_t, kd_t);
-				serial.printfln("rot   : kp= %g ; ki= %g ; kd= %g", kp_r, ki_r, kd_r);
-				serial.printfln("gauche: kp= %g ; ki= %g ; kd= %g", kp_g, ki_g, kd_g);
-				serial.printfln("droite: kp= %g ; ki= %g ; kd= %g", kp_d, ki_d, kd_d);
-			}
+        }
+        else if(!strcmp("c1",order))			//Indiquer l'�tat du contacteur1 (0='non appuyé'; 1='appuyé')
+        {
+            serial.printfln("%d", sensorMgr->isContactor1engaged());
 
-			else if(!strcmp("autoasserv" ,order))// Commande pour le programme d'autoasserv (python)
-			{
-				float
-					kp_g, kp_d, ki_g, ki_d, kd_g, kd_d;
+        }
+        else if(!strcmp("c2",order))			//Indiquer l'�tat du contacteur2 (0='non appuyé'; 1='appuyé')
+        {
+            serial.printfln("%d", sensorMgr->isContactor2engaged());
 
-				motionControlSystem->getLeftSpeedTunings(kp_g, ki_g, kd_g);
-				motionControlSystem->getRightSpeedTunings(kp_d, ki_d, kd_d);
-
-				motionControlSystem->printTracking();
-				serial.printf("endtest");
-			}
-
-
-			else if(!strcmp("dts",order))//Delay To Stop
-			{
-				uint32_t delayToStop = 0;
-				serial.printfln("Delay to stop ? (ms)");
-				serial.read(delayToStop);
-				motionControlSystem->setDelayToStop(delayToStop);
-				serial.printfln("Delay to stop = %d", delayToStop);
-			}
-
-// ***********  TRANSLATION  ***********
-			else if(!strcmp("kpt",order))
-			{
-				float kp, ki, kd;
-				serial.printfln("kp_trans ?");
-				motionControlSystem->getTranslationTunings(kp,ki,kd);
-				serial.read(kp);
-				motionControlSystem->setTranslationTunings(kp,ki,kd);
-				serial.printfln("kp_trans = %g", kp);
-			}
-			else if(!strcmp("kdt",order))
-			{
-				float kp, ki, kd;
-				serial.printfln("kd_trans ?");
-				motionControlSystem->getTranslationTunings(kp,ki,kd);
-				serial.read(kd);
-				motionControlSystem->setTranslationTunings(kp,ki,kd);
-				serial.printfln("kd_trans = %g", kd);
-			}
-			else if(!strcmp("kit",order))
-			{
-				float kp, ki, kd;
-				serial.printfln("ki_trans ?");
-				motionControlSystem->getTranslationTunings(kp,ki,kd);
-				serial.read(ki);
-				motionControlSystem->setTranslationTunings(kp,ki,kd);
-				serial.printfln("ki_trans = %g", ki);
-			}
-
-// ***********  ROTATION  ***********
-			else if(!strcmp("kpr",order))
-			{
-				float kp, ki, kd;
-				serial.printfln("kp_rot ?");
-				motionControlSystem->getRotationTunings(kp,ki,kd);
-				serial.read(kp);
-				motionControlSystem->setRotationTunings(kp,ki,kd);
-				serial.printfln("kp_rot = %g", kp);
-			}
-			else if(!strcmp("kir",order))
-			{
-				float kp, ki, kd;
-				serial.printfln("ki_rot ?");
-				motionControlSystem->getRotationTunings(kp,ki,kd);
-				serial.read(ki);
-				motionControlSystem->setRotationTunings(kp,ki,kd);
-				serial.printfln("ki_rot = %g", ki);
-			}
-			else if(!strcmp("kdr",order))
-			{
-				float kp, ki, kd;
-				serial.printfln("kd_rot ?");
-				motionControlSystem->getRotationTunings(kp,ki,kd);
-				serial.read(kd);
-				motionControlSystem->setRotationTunings(kp,ki,kd);
-				serial.printfln("kd_rot = %g", kd);
-			}
-
-// ***********  VITESSE GAUCHE  ***********
-			else if(!strcmp("kpg",order))
-			{
-				float kp, ki, kd;
-				serial.printfln("kp_gauche ?");
-				motionControlSystem->getLeftSpeedTunings(kp,ki,kd);
-				serial.read(kp);
-				motionControlSystem->setLeftSpeedTunings(kp,ki,kd);
-				serial.printfln("kp_gauche = %g", kp);
-			}
-			else if(!strcmp("kig",order))
-			{
-				float kp, ki, kd;
-				serial.printfln("ki_gauche ?");
-				motionControlSystem->getLeftSpeedTunings(kp,ki,kd);
-				serial.read(ki);
-				motionControlSystem->setLeftSpeedTunings(kp,ki,kd);
-				serial.printfln("ki_gauche = %g", ki);
-			}
-			else if(!strcmp("kdg",order))
-			{
-				float kp, ki, kd;
-				serial.printfln("kd_gauche ?");
-				motionControlSystem->getLeftSpeedTunings(kp,ki,kd);
-				serial.read(kd);
-				motionControlSystem->setLeftSpeedTunings(kp,ki,kd);
-				serial.printfln("kd_gauche = %g", kd);
-			}
-
-// ***********  VITESSE DROITE  ***********
-			else if(!strcmp("kpd",order))
-			{
-				float kp, ki, kd;
-				serial.printfln("kp_droite ?");
-				motionControlSystem->getRightSpeedTunings(kp,ki,kd);
-				serial.read(kp);
-				motionControlSystem->setRightSpeedTunings(kp,ki,kd);
-				serial.printfln("kp_droite = %g", kp);
-			}
-			else if(!strcmp("kid",order))
-			{
-				float kp, ki, kd;
-				serial.printfln("ki_droite ?");
-				motionControlSystem->getRightSpeedTunings(kp,ki,kd);
-				serial.read(ki);
-				motionControlSystem->setRightSpeedTunings(kp,ki,kd);
-				serial.printfln("ki_droite = %g", ki);
-			}
-			else if(!strcmp("kdd",order))
-			{
-				float kp, ki, kd;
-				serial.printfln("kd_droite ?");
-				motionControlSystem->getRightSpeedTunings(kp,ki,kd);
-				serial.read(kd);
-				motionControlSystem->setRightSpeedTunings(kp,ki,kd);
-				serial.printfln("kd_droite = %g", kd);
-			}
-
-
-
-	/**
-	 * 		Commandes de tracking des variables du syst�me (d�bug)
-	 */
-			else if(!strcmp("trackAll",order))
-			{
-				motionControlSystem->printTrackingAll();
-			}
-
-			else if(!strcmp("adc", order)) // Pour tester la tension d'alimentation selon l'adc
-			{
-				serial.printfln("%d", voltage->test());
-			}
-
+        }
+        else if(!strcmp("c3",order))			//Indiquer l'�tat du contacteur3 (0='non appuyé'; 1='appuyé')
+        {
+            serial.printfln("%d", sensorMgr->isContactor3engaged());
+        }
 
 
 /*			 __________________
@@ -578,7 +515,6 @@ int main(void)
 				serial.read(anglemax);
 				actuatorsMgr->changeangle(anglemin,anglemax);
             }
-
 			else if(!strcmp("caxs", order)) { //modifie la vitesse de l'ax12 de test
 				int speed = 100;
 				serial.printfln("Entrez vitesse");
@@ -602,15 +538,12 @@ int main(void)
                 serial.read(pos);
                 actuatorsMgr->setAXpos(pos);
                 serial.printfln("Done");
-
             }
             else if (!strcmp("reanimation",order))   //permet de réanimer certains ax12
             {
                 actuatorsMgr->reanimation();
             }
-
                 /*
-
             else if (!strcmp("testax12cacpos",order))  //ne marche pas et fait planter screen
 			{
                 uint16_t pos = 0;
@@ -622,14 +555,12 @@ int main(void)
                 else
                     serial.printfln("ça n'a pas marché");
             }
-
             else if (!strcmp("getpos",order))    //ne marche pas (obtenir la position)
             {
                 int pos=actuatorsMgr->posdeax12();
                 serial.printfln("%d",pos);
             }
                 */
-
 
 
 /*			 ____________________
@@ -642,32 +573,26 @@ int main(void)
             {
                 actuatorsMgr->braPelReleve();
             }
-
             else if (!strcmp("bpd",order)) //(abaisse le bras de la pelleteuse)
             {
                 actuatorsMgr->braPelDeplie();
             }
-
             else if (!strcmp("bpm", order)) // (position intermédiaire des bras de pelleteuse)
             {
                 actuatorsMgr->braPelMoit();
             }
-
             else if (!strcmp("pd", order))
             {
                 actuatorsMgr->pelleInit(); //position pré prise de boules de la pelle
             }
-
             else if (!strcmp("pm", order))
             {
                 actuatorsMgr->pelleMoit(); //position post prise de boules de la pelle
             }
-				
 			else if (!strcmp("pt", order))
 			{
 				actuatorsMgr->pelleTient(); //position pour tenir les boules en haut
 			}
-
             else if (!strcmp("pf", order))
             {
                 actuatorsMgr->pelleLib(); //position de livraison de boules de la pelle
@@ -676,6 +601,8 @@ int main(void)
 			{
 				actuatorsMgr->pelreasserv();
 			}
+
+
 /*			 _____________________
  * 		   *|                     |*
  *		   *|Attrappes Module SSV2|*
@@ -696,6 +623,7 @@ int main(void)
 			{
 				actuatorsMgr->moduleFin(0); //ramène le module
 			}
+
 			//Côté gauche
 			else if (!strcmp("amdg", order))
 			{
@@ -710,12 +638,14 @@ int main(void)
 				actuatorsMgr->moduleFin(1);
 			}
 
+
 /*			 ___________________
  * 		   *|                   |*
  *		   *|   Cales Module    |*
  *		   *|___________________|*
  */
-			  //droit
+
+			    //droit
             else if (!strcmp("cmmd", order))
             {
                 actuatorsMgr->caleMidD();
@@ -728,6 +658,7 @@ int main(void)
 			{
                 actuatorsMgr->caleBasD(); //pour pousser le module
 			}
+
                 //gauche
 			else if(!strcmp("cmmg", order))
 			{
@@ -741,17 +672,21 @@ int main(void)
 			{
 				actuatorsMgr->caleBasG(); //pour pousser le module
 			}
-			//Largue Modules
+
+
+/*			 ____________________
+ * 		   *|                    |*
+ *		   *|   Largues Module   |*
+ *		   *|____________________|*
+ */
+
 			else if(!strcmp("lmd",order))
 			{
-				actuatorsMgr->largueRepos();
-                //position derrière
-
+				actuatorsMgr->largueRepos(); //position derrière
 			}
 			else if(!strcmp("lmf",order))
 			{
-				actuatorsMgr->larguePousse();
-                //position devant (largue les modules)
+				actuatorsMgr->larguePousse(); //position devant (largue les modules)
 			}
 			else if(!strcmp("lmreasserv", order))
 			{
@@ -764,6 +699,7 @@ int main(void)
      *		   *|    Ascenseur      |*
      *		   *|___________________|*
      */
+
 			else if(!strcmp("asup", order)) {
 
 				elevator.setSens(UP);
@@ -787,7 +723,6 @@ int main(void)
 				}
 				elevator.stop();
 			}
-			
 			else if(!strcmp("asdown", order))
 			{
 				elevator.setSens(DOWN);
@@ -802,24 +737,72 @@ int main(void)
 			{
 				elevator.stop();
 			}
+
+
+/*			 __________________
+ * 		   *|                  |*
+ *		   *|COMMANDES DE DEBUG|*
+ *		   *|__________________|*
+ */
+
+            else if(!strcmp("rp",order))  //Reset position et angle du robot, et le stoppe
+            {
+                motionControlSystem->resetPosition();
+                serial.printfln("Reset position");
+            }
+            else if(!strcmp("testSpeed",order))  //n'active que l'asserv en vitesse et fait un test avec tracking
+            {
+                motionControlSystem->testSpeed();
+            }
+            else if(!strcmp("continualTest",order))  //Test long
+            {
+                motionControlSystem->longTestSpeed();
+            }
+            else if(!strcmp("testPosition",order))  //active toutes les asserv et fait un test avec tracking
+            {
+                motionControlSystem->testPosition();
+            }
+            else if(!strcmp("testRotation",order))  //idem
+            {
+                motionControlSystem->testRotation();
+            }
+
+
+/*			 _______________________
+ * 		   *|                       |*
+ *		   *| COMMANDES DE TRACKING |*
+ *		   *|    DES VARIABLES DU   |*
+ *		   *|     SYSTEME (DEBUG)   |*
+ *		   *|_______________________|*
+ */
+
+            else if(!strcmp("trackAll",order))
+            {
+                motionControlSystem->printTrackingAll();  //affiche les paramètres et valeurs (vitesse,...) pour permettre le débug
+            }
+
+            else if(!strcmp("adc", order))
+            {
+                serial.printfln("%d", voltage->test());  // Pour tester la tension d'alimentation selon l'adc
+            }
+
+
 /*			 __________________
  * 		   *|                  |*
  *		   *|  ERREURS DE COM  |*
  *		   *|__________________|*
  */
 
-
-			else if(!strcmp("uoe",order))
+            else if(!strcmp("uoe",order))
                 // test d'un mauvais retour bas niveau --> haut niveau
-			{ // test pour faire exprès d'envoyer n'importe quoi au HL
-				serial.printfln("Une fraise");
-			}
+            { // test pour faire exprès d'envoyer n'importe quoi au HL
+                serial.printfln("Une fraise");
+            }
+            else // Sinon, Ordre inconnu
+            {
+                serial.printfln("Ordre inconnu");
+            }
 
-			// Sinon, Ordre inconnu
-			else
-			{
-				serial.printfln("Ordre inconnu");
-			}
 
 		}
 #if DEBUG
@@ -873,7 +856,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 		}
 
         if(l>=200)
-        {
+        {/*
             if(autoUpdatePosition && !serial.available()) {
                 //si l'envoi automatique de position au HL est activé et que la série a de la place diponible
                 //on affiche la position et l'angle du robot
@@ -887,7 +870,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
                 serial.printflnDebug("available = %d", serial.available());
             }
 
-            l=0;
+            l=0;*/
         }
 
 		k++;
