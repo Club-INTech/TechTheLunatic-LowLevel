@@ -8,6 +8,10 @@
 
 //bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
 
+/** Un main commenté !
+ * (parce que le bas niveau c'est magnifique)
+ * @author melanie
+ **/
 
 int main(void)
 {
@@ -232,10 +236,15 @@ int main(void)
 				motionControlSystem->enableSpeedControl(true);
                 serial.printfln("asservi en vitesse");
 			}
-               /*
-			// POUR MONTLHERY
 
-			else if(!strcmp("montlhery", order))
+
+/*			 ___________________
+ * 		   *|                   |*
+ *		   *|     MONTLHERY     |*
+ *		   *|___________________|*
+ */
+
+			else if(!strcmp("montlhery", order))                        // Désactive l'asservissement en translation et en rotation
 			{
 				motionControlSystem->enableTranslationControl(false);
 				motionControlSystem->enableRotationControl(false);
@@ -243,29 +252,32 @@ int main(void)
 
 			else if(!strcmp("av", order))
 			{
-				motionControlSystem->setRawPositiveTranslationSpeed();
+				motionControlSystem->setRawPositiveTranslationSpeed();  // definit la consigne max de vitesse de translation envoi�e au PID (trap�ze)
+                                                                        // déplacement vers l'avant avec asservissement
 			}
 
 			else if(!strcmp("rc", order))
 			{
-				motionControlSystem->setRawNegativeTranslationSpeed();
+				motionControlSystem->setRawNegativeTranslationSpeed();  // definit la consigne max de vitesse de translation envoi�e au PID (trap�ze)
+                                                                        // déplacement vers l'arrière avec asservissement
 			}
 
 			else if(!strcmp("td", order))
 			{
-				motionControlSystem->setRawNegativeRotationSpeed();
+				motionControlSystem->setRawNegativeRotationSpeed();     // definit la consigne max de vitesse de rotation envoi�e au PID (trap�ze)
+                                                                        // rotation sens antitrigo avec asservissement
 			}
 
 			else if(!strcmp("tg", order))
 			{
-				motionControlSystem->setRawPositiveRotationSpeed();
+				motionControlSystem->setRawPositiveRotationSpeed();     // definit la consigne max de vitesse de rotation envoi�e au PID (trap�ze)
+                                                                        // rotation sens antitrigo avec asservissement
 			}
 
-			else if(!strcmp("sstop", order)) // Stoppe l'asserv en vitesse
+			else if(!strcmp("sstop", order))                            // Stoppe le robot
 			{
 				motionControlSystem->setRawNullSpeed();
 			}
-                */
 
 
 /*			 _________________________________
@@ -644,7 +656,7 @@ int main(void)
 			    //droit
             else if (!strcmp("cmmd", order))
             {
-                actuatorsMgr->caleMidD();
+                actuatorsMgr->caleMidD(); //position de repos
             }
             else if (!strcmp("cmdd",order))
 			{
@@ -658,7 +670,7 @@ int main(void)
                 //gauche
 			else if(!strcmp("cmmg", order))
 			{
-				actuatorsMgr->caleMidG();
+				actuatorsMgr->caleMidG(); //position de repos
 			}
 			else if (!strcmp("cmdg",order))
 			{
@@ -670,10 +682,10 @@ int main(void)
 			}
 
 
-/*			 ____________________
- * 		   *|                    |*
- *		   *|   Largues Module   |*
- *		   *|____________________|*
+/*			 ___________________
+ * 		   *|                   |*
+ *		   *|   Largue Module   |*
+ *		   *|___________________|*
  */
 
 			else if(!strcmp("lmd",order))
@@ -690,13 +702,20 @@ int main(void)
 			}
 
 
-        /*		 ___________________
-     * 		   *|                   |*
-     *		   *|    Ascenseur      |*
-     *		   *|___________________|*
-     */
+/*		     ___________________
+* 		   *|                   |*
+*		   *|     Ascenseur     |*
+*		   *|___________________|*
+*/
 
-			else if(!strcmp("asup", order)) {
+            else if(!strcmp("asdown", order))
+            {
+                elevator.setSens(DOWN);
+                elevator.run();
+                Delay(820);
+                elevator.stop();
+            }
+            else if(!strcmp("asup", order)) {
 
 				elevator.setSens(UP);
 				elevator.run();
@@ -719,20 +738,13 @@ int main(void)
 				}
 				elevator.stop();
 			}
-			else if(!strcmp("asdown", order))
-			{
-				elevator.setSens(DOWN);
-				elevator.run();
-				Delay(820);
-				elevator.stop();
-			}
-			else if(!strcmp("asrun", order)){
+            /*else if(!strcmp("asrun", order)){
 				elevator.run(); //test du moteur à vide
 			}
 			else if(!strcmp("asstop", order))
 			{
 				elevator.stop();
-			}
+			}*/
 
 
 /*			 ________________________
