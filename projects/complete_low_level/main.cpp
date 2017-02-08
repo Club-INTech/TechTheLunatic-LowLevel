@@ -238,10 +238,12 @@ int main(void)
 			}
 
 
-/*			 ___________________
- * 		   *|                   |*
- *		   *|     MONTLHERY     |*
- *		   *|___________________|*
+/*			 ___________________________
+ * 		   *|                           |*
+ *		   *|         MONTLHERY         |*
+ *		   *|   DEPLACEMENT ET ROTATION |*
+ *		   *|    AVEC ASSERVISSEMENT    |*
+ *		   *|___________________________|*
  */
 
 			else if(!strcmp("montlhery", order))                        // Désactive l'asservissement en translation et en rotation
