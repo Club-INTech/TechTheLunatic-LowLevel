@@ -842,11 +842,11 @@ extern "C" { //indique au compilateur que les fonctions créées sont en C et no
 //Interruptions sur le TIMER4
 void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 	volatile static uint32_t i = 0, j = 0, k = 0, l = 0; //compteurs pour lancer des méthodes à différents moments
-	static MotionControlSystem* motionControlSystem = &MotionControlSystem::Instance();
-	static Voltage_controller* voltage = &Voltage_controller::Instance();
+	static MotionControlSystem *motionControlSystem = &MotionControlSystem::Instance();
+	static Voltage_controller *voltage = &Voltage_controller::Instance();
 
 	if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
-        //TIM_GetITStatus vérifie si l'interruption a eu lieu (SET) ou non (RESET)
+		//TIM_GetITStatus vérifie si l'interruption a eu lieu (SET) ou non (RESET)
 		//SET donc remise à 0 manuelle du flag d'interruption nécessaire
 		TIM_ClearITPendingBit(TIM4, TIM_IT_Update); //remet les bits de l'interruption à 0
 
@@ -855,23 +855,21 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 		motionControlSystem->updatePosition();
 
 
-		if(j >= 5){ //0.5ms x 5 = 2.5ms
+		if (j >= 5) { //0.5ms x 5 = 2.5ms
 			motionControlSystem->track(); //stocke les valeurs de débug
-            motionControlSystem->manageStop(); //regarde si le robot bouge normalement
+			motionControlSystem->manageStop(); //regarde si le robot bouge normalement
 
-			j=0;
+			j = 0;
 		}
 
-		if(k >= 2000)
-		{
+		if (k >= 2000) {
 
 			voltage->measure(); //regarde la batterie des Lipos
 
-			k=0;
+			k = 0;
 		}
 
-        if(l>=200)
-        {/*
+		if (l >= 200) {/*
             if(autoUpdatePosition && !serial.available()) {
                 //si l'envoi automatique de position au HL est activé et que la série a de la place diponible
                 //on affiche la position et l'angle du robot
@@ -886,35 +884,39 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
             }
 
             l=0;*/
-        }
+		}
 
 		k++;
 		i++;
 		j++;
-        l++;
+		l++;
 	}
 }
 
-void EXTI9_5_IRQHandler(void) //interruptions sur pins
+void EXTI9_5_IRQHandler(void) // interruptions sur pins
 {
-//	static SensorMgr* sensorMgr = &SensorMgr::Instance(); // Capteurs US
+// static SensorMgr* sensorMgr = &SensorMgr::Instance();   // Capteurs US
 /*
-	//Interruptions de l'ultrason de test
-    if (EXTI_GetITStatus(EXTI_Line5) != RESET) { //le passage de RESET à SET est interne à la carte
-        sensorMgr->sensorInterrupt(0); //lance l'interruption du capteur numéro 0
-        sensorMgr->sensorInterrupt(1);
-        sensorMgr->sensorInterrupt(2);
-        sensorMgr->sensorInterrupt(3);
-
-        // Clear interrupt flag (on repasse de SET à RESET)
-        EXTI_ClearITPendingBit(EXTI_Line5);
-
+   //Interruptions des capteurs US : pour calculer la distance à l'objet
+    if (EXTI_GetITStatus(EXTI_Line4) != RESET) {           // quand on a "SET" donc que le capteur est prêt à être actualisé
+             sensorMgr->sensorInterrupt(0);                // on lance l'interruption du capteur n°0 qui calcule la distance à l'objet
+              EXTI_ClearITPendingBit(EXTI_Line4);          // Clear interrupt flag : on passe de SET à RESET
+                                                           // le passge de RESET à SET est interne à la carte
+    if (EXTI_GetITStatus(EXTI_Line6) != RESET) {
+               sensorMgr->sensorInterrupt(1);
+               EXTI_ClearITPendingBit(EXTI_Line6);
+    if (EXTI_GetITStatus(EXTI_Line1) != RESET) {
+                  sensorMgr->sensorInterrupt(2);
+              EXTI_ClearITPendingBit(EXTI_Line1);
+    if (EXTI_GetITStatus(EXTI_Line7) != RESET) {
+               sensorMgr->sensorInterrupt(3);
+              EXTI_ClearITPendingBit(EXTI_Line7);
     }
-*/
-
+    */
 
 }
 
+}
 
 /*
  *   Dead Pingu in the Main !
@@ -933,4 +935,4 @@ void EXTI9_5_IRQHandler(void) //interruptions sur pins
 	 	~;_  >- . . -<  _i~
 	 	  `'         `'
 */
-}
+
