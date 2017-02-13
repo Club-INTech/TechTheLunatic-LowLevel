@@ -10,7 +10,7 @@
 
 /** Un main commenté !
  * (parce que le bas niveau c'est magnifique)
- * @author melanie
+ * @author caillou, sylvain, rémi, melanie, Ug
  **/
 
 int main(void)
