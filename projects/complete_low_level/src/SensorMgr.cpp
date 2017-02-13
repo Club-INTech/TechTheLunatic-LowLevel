@@ -108,7 +108,7 @@ SensorMgr::SensorMgr():
 		EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
 		EXTI_Init(&EXTI_InitStruct);
 
-		NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
+		NVIC_InitStruct.NVIC_IRQChannel = EXTI1_IRQn;
 		NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0xff;
 		NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0xff;
 		NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
@@ -196,7 +196,7 @@ SensorMgr::SensorMgr():
     EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
     EXTI_Init(&EXTI_InitStruct);
 
-    NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
+    NVIC_InitStruct.NVIC_IRQChannel = EXTI4_IRQn;
     NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0xff;
     NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0xff;
     NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
