@@ -894,12 +894,13 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 }
 
 /*
-void EXTI1_IRQHandler(void)
+void EXTI1_IRQHandler(void) // interruptions sur pins
  {
-    static SensorMgr* sensorMgr = &SensorMgr::Instance();
+ static SensorMgr* sensorMgr = &SensorMgr::Instance();  // Capteurs US
 
-    //Interruptions des capteurs US : pour calculer la distance à l'objet
-    if (EXTI_GetITStatus(EXTI_Line1) != RESET) {        // quand on a "SET" donc que le capteur est prêt à être actualisé
+ //Interruptions des capteurs US : pour calculer la distance à l'objet
+ if (EXTI_GetITStatus(EXTI_Line1) != RESET) {           // quand on a "SET" donc que le capteur est prêt à être actualisé
+           		ultrasonARD.refresh();                  // le capteur envoie un signal de durée 10ms devant lui
            		sensorMgr->sensorInterrupt(2);          // on lance l'interruption qui calcule la distance à l'objet
         		EXTI_ClearITPendingBit(EXTI_Line1);     // Clear interrupt flag : on passe de SET à RESET
         		                                        // le passge de RESET à SET est interne à la carte
@@ -910,19 +911,22 @@ void EXTI4_IRQHandler(void)
     static SensorMgr* sensorMgr = &SensorMgr::Instance();
 
     if (EXTI_GetITStatus(EXTI_Line4) != RESET) {
+ 		    	ultrasonAVD.refresh();
  		    	sensorMgr->sensorInterrupt(0);
         		EXTI_ClearITPendingBit(EXTI_Line4);
  }
 
-void EXTI9_5_IRQHandler(void) // interruptions sur pins
+void EXTI9_5_IRQHandler(void)
  {
-	static SensorMgr* sensorMgr = &SensorMgr::Instance(); // Capteurs US
+	static SensorMgr* sensorMgr = &SensorMgr::Instance();
 
     if (EXTI_GetITStatus(EXTI_Line6) != RESET) {
+    	        ultrasonAVG.refresh();
     	        sensorMgr->sensorInterrupt(1);
     	        EXTI_ClearITPendingBit(EXTI_Line6);
 
     if (EXTI_GetITStatus(EXTI_Line7) != RESET) {
+    	        ultrasonARG.refresh();
     	        sensorMgr->sensorInterrupt(3);
         		EXTI_ClearITPendingBit(EXTI_Line7);
  }
