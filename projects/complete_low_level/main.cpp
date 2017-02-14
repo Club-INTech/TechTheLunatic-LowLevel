@@ -846,7 +846,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
     static MotionControlSystem *motionControlSystem = &MotionControlSystem::Instance();
     static Voltage_controller *voltage = &Voltage_controller::Instance();
 
-    if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
+    if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) { //arbalète
         //TIM_GetITStatus vérifie si l'interruption a eu lieu (SET) ou non (RESET)
         //SET donc remise à 0 manuelle du flag d'interruption nécessaire
         TIM_ClearITPendingBit(TIM4, TIM_IT_Update); //remet les bits de l'interruption à 0
@@ -900,7 +900,7 @@ void EXTI1_IRQHandler(void) // interruptions sur pins
  static SensorMgr* sensorMgr = &SensorMgr::Instance();  // Capteurs US
 
  //Interruptions des capteurs US : pour calculer la distance à l'objet
- if (EXTI_GetITStatus(EXTI_Line1) != RESET) {           // quand on a "SET" donc que le capteur est prêt à être actualisé
+ if (EXTI_GetITStatus(EXTI_Line1) != RESET) {           // arbalète
            		sensorMgr->sensorInterrupt(2);          // on lance l'interruption qui calcule la distance à l'objet
         		EXTI_ClearITPendingBit(EXTI_Line1);     // Clear interrupt flag : on passe de SET à RESET
         		                                        // le passge de RESET à SET est interne à la carte
