@@ -17,6 +17,7 @@ extern Uart<1> serial;
 #define vPelleDeb 25
 #define vPelleMid 20
 #define vPelleFin 45
+
 //Bras Pelle
 #define vBraPelRel 20
 #define vBraPelMed 15
@@ -29,10 +30,9 @@ extern Uart<1> serial;
 
 //Pour la Pelleteusatron 3000
 
-#define brapeldep 30
-#define brapelmoit 70
-#define brapelrel 90
-
+#define brapeldep 130
+#define brapelmoit 160
+#define brapelrel 180
 #define pospelinit 300
 #define pospeltient 105
 #define pospelmoit 150
@@ -215,7 +215,7 @@ public:
 	void pelleInit()
 	{
 		serial.printflnDebug("Pelle va au début");
-		ax12pel->changeSpeed(20);
+		ax12pel->changeSpeed(50);
 		ax12pel->goTo(pospelinit);
 		serial.printflnDebug("done");
 	}
@@ -223,7 +223,7 @@ public:
 	void pelleMoit()
 	{
 		serial.printflnDebug("Pelle tient boules");
-		ax12pel->changeSpeed(15);
+		ax12pel->changeSpeed(20);
 		ax12pel->goTo(pospelmoit);
 		serial.printflnDebug("done");
 	}
@@ -238,7 +238,7 @@ public:
 	void pelleLib()
 	{
 		serial.printflnDebug("Pelle jete boules");
-		ax12pel->changeSpeed(45);
+		ax12pel->changeSpeed(50);
 		ax12pel->goTo(pospeldeli);
 		serial.printflnDebug("done");
 	}
