@@ -6,7 +6,7 @@
 #include "library/voltage_controller.hpp"
 #include "Elevator.h"
 
-//bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
+bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
 
 /** Un main commenté !
  * (parce que le bas niveau c'est magnifique)
@@ -102,7 +102,7 @@ int main(void)
 				float angle = motionControlSystem->getAngleRadian();
 				serial.read(angle);
 				serial.printfln("_");           //Acquittement
-				motionControlSystem->orderRotation(angle, MotionControlSystem::FREE);
+				motionControlSystem->orderRotation(-angle, MotionControlSystem::FREE);  //TODO voir comment corriger ça
 			}
 			else if(!strcmp("t3", order))		//Ordre de rotation via un angle relatif (en radians)
 			{
@@ -116,7 +116,7 @@ int main(void)
 				float angle_actuel = motionControlSystem->getAngleRadian()*180/PI, delta_angle = 0;
 				serial.read(delta_angle);
 				serial.printfln("_");
-				motionControlSystem->orderRotation((angle_actuel + delta_angle)*PI/180, MotionControlSystem::FREE);
+				motionControlSystem->orderRotation((angle_actuel + -delta_angle)*PI/180, MotionControlSystem::FREE); //TODO voir comment corriger ça
 			}
                 /*else if(!strcmp("dc", order)) //Rotation + translation = trajectoire courbe !
                 {
@@ -184,7 +184,7 @@ int main(void)
                     serial.printfln("_");
                     motionControlSystem->setRotationSpeed(speedRotation);
                 }
-                    /*
+
                     else if(!strcmp("efm", order)) // Activer les mouvements forc�s (sans blocage)
                     {
                         motionControlSystem->enableForcedMovement();
@@ -198,7 +198,6 @@ int main(void)
                    {
                     autoUpdatePosition = !autoUpdatePosition; //active ou désactive l'envoi automatique de position au HL
                    }
-                     */
 
 
 /*			 _____________________
@@ -715,7 +714,7 @@ int main(void)
             {
                 elevator.setSens(DOWN);
                 elevator.run();
-                Delay(820);
+                Delay(800);
                 elevator.stop();
             }
             else if(!strcmp("asup", order)) {
@@ -870,7 +869,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
             k = 0;
         }
 
-        if (l >= 200) {/*
+        if (l >= 200) {
             if(autoUpdatePosition && !serial.available()) {
                 //si l'envoi automatique de position au HL est activé et que la série a de la place diponible
                 //on affiche la position et l'angle du robot
@@ -884,7 +883,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
                 serial.printflnDebug("available = %d", serial.available());
             }
 
-            l=0;*/
+            l=0;
         }
 
         k++;

@@ -26,16 +26,21 @@ try:
     position.pack(side=LEFT, expand="yes", fill="both")
     orientation = LabelFrame(state, text="Orientation :")
     orientation.pack(side=LEFT, expand="yes", fill="both")
+    vitesse = LabelFrame(state, text= "Vitesse :")
+    vitesse.pack(side=LEFT, expand="yes", fill="both")
     us = LabelFrame(state, text="Ultra Sons :")
     us.pack(side=LEFT, expand="yes", fill="both")
 
-    realPosition = [0, 0, 0]
+    realPosition = [0, 0, 0, 0, 0]
 
     positionX = Label(position, text="x : "+str(realPosition[0]))
     positionX.pack()
     positionY = Label(position, text="y : "+str(realPosition[1]))
     positionY.pack()
-
+    vitesseDroite=Label(vitesse, text="d : "+str(realPosition[3]))
+    vitesseDroite.pack()
+    vitesseGauche=Label(vitesse, text="g : "+str(realPosition[4]))
+    vitesseGauche.pack()
     orientationLabel = Label(orientation, text=str(realPosition[2])+" rad ")
     orientationLabel.pack()
 

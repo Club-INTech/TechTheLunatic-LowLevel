@@ -30,7 +30,7 @@ extern Uart<1> serial;
 
 //Pour la Pelleteusatron 3000
 
-#define brapeldep 130
+#define brapeldep 120
 #define brapelmoit 160
 #define brapelrel 180
 #define pospelinit 300
@@ -40,12 +40,12 @@ extern Uart<1> serial;
 
 //Pour les attrape-modules
 
-#define AMdebG 240
-#define AMmidG 150
-#define AMfinG 50 // 60
-#define AMdebD 70
-#define AMmidD 150
-#define AMfinD 245
+#define AMdebG 178
+#define AMmidG 135
+#define AMfinG 55 // 60
+#define AMdebD 30
+#define AMmidD 70
+#define AMfinD 145
 
 //Les cale-modules
 #define CaleHautG 120 //gauche 96 droite 183
@@ -56,8 +56,8 @@ extern Uart<1> serial;
 #define CaleBasD 10
 
 //Largue modules
-#define LargueRepos 83
-#define LarguePousse 44
+#define LargueRepos 132
+#define LarguePousse 175
 
 class ActuatorsMgr : public Singleton<ActuatorsMgr>
 {

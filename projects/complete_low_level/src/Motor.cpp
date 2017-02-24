@@ -167,13 +167,13 @@ void Motor::run(int16_t pwm){
 
 void Motor::setDirection(Direction dir) {
 	if (side == Side::RIGHT) {
-		if (dir == Direction::FORWARD) {
+		if (dir == Direction::BACKWARD) {
 			GPIO_SetBits(GPIOD, GPIO_Pin_14);
 		} else {
 			GPIO_ResetBits(GPIOD, GPIO_Pin_14);
 		}
 	} else {
-		if (dir == Direction::FORWARD) {
+		if (dir == Direction::BACKWARD) {
 			GPIO_SetBits(GPIOD, GPIO_Pin_12);
 		} else {
 			GPIO_ResetBits(GPIOD, GPIO_Pin_12);
