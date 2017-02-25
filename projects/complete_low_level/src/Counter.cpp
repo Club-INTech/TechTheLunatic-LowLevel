@@ -116,12 +116,12 @@ Counter::Counter() {
 */
 }
 
-int32_t Counter::getRightValue() {
+int32_t Counter::getLeftValue() {
 	//Translate to int32_t
 	return (TIM_GetCounter(TIM5)-2147483647);
 }
 
-int32_t Counter::getLeftValue() {
+int32_t Counter::getRightValue() {
 	//Translate to int16_t
 	return (TIM_GetCounter(TIM3)-32767);
 }

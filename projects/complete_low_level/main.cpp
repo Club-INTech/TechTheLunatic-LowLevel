@@ -102,7 +102,7 @@ int main(void)
 				float angle = motionControlSystem->getAngleRadian();
 				serial.read(angle);
 				serial.printfln("_");           //Acquittement
-				motionControlSystem->orderRotation(-angle, MotionControlSystem::FREE);  //TODO voir comment corriger ça
+				motionControlSystem->orderRotation(angle, MotionControlSystem::FREE);  //TODO voir comment corriger ça
 			}
 			else if(!strcmp("t3", order))		//Ordre de rotation via un angle relatif (en radians)
 			{
@@ -116,7 +116,7 @@ int main(void)
 				float angle_actuel = motionControlSystem->getAngleRadian()*180/PI, delta_angle = 0;
 				serial.read(delta_angle);
 				serial.printfln("_");
-				motionControlSystem->orderRotation((angle_actuel + -delta_angle)*PI/180, MotionControlSystem::FREE); //TODO voir comment corriger ça
+				motionControlSystem->orderRotation((angle_actuel + delta_angle)*PI/180, MotionControlSystem::FREE); //TODO voir comment corriger ça
 			}
                 /*else if(!strcmp("dc", order)) //Rotation + translation = trajectoire courbe !
                 {
