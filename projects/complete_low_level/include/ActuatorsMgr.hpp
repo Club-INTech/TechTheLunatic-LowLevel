@@ -43,7 +43,7 @@ extern Uart<1> serial;
 #define AMdebG 178
 #define AMmidG 135
 #define AMfinG 55 // 60
-#define AMdebD 30
+#define AMdebD 15
 #define AMmidD 70
 #define AMfinD 145
 
@@ -251,8 +251,8 @@ public:
 	
 	void moduleDeb(int cote)
 	{
-		AMG->changeSpeed(100);
-		AMD->changeSpeed(100);
+		AMG->changeSpeed(40);
+		AMD->changeSpeed(40);
 		serial.printflnDebug("Initialisation de l'attrape module");
 		if (cote)
 		{
@@ -267,8 +267,8 @@ public:
 	
 	void moduleMid(int cote)
 	{
-		AMG->changeSpeed(70);
-		AMD->changeSpeed(70);
+		AMG->changeSpeed(20);
+		AMD->changeSpeed(20);
 		serial.printflnDebug("Medium de l'attrape module");
 		if (cote)
 		{
@@ -283,8 +283,8 @@ public:
 	
 	void moduleFin(int cote)
 	{
-		AMG->changeSpeed(70);
-		AMD->changeSpeed(70);
+		AMG->changeSpeed(20);
+		AMD->changeSpeed(20);
 		serial.printflnDebug("Prise de modules");
 		if (cote)
 		{
