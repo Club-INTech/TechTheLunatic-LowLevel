@@ -643,12 +643,14 @@ void MotionControlSystem::printTrackingAll()
 void MotionControlSystem::printTracking() // Envoie les donn�es n�cessaires � l'analyse d'asserv / l'asserv auto (Python)
 {
 	for(int i=0; i<TRACKER_SIZE; i++)
-						{
-							serial.printf("%d\t%d\t%d\t%d\t", trackArray[i].vitesseGaucheCourante, trackArray[i].vitesseDroiteCourante, trackArray[i].vitesseMoyenneGauche, trackArray[i].vitesseMoyenneDroite);
-							serial.printf("%d\t%d\t%d\t%d\t", trackArray[i].consigneVitesseGauche, trackArray[i].consigneVitesseDroite, trackArray[i].pwmGauche, trackArray[i].pwmDroit);
-							serial.printf("\r\n");
+        {
+            serial.printf("%d\t%d\t%d\t%d\t",
+                          trackArray[i].vitesseGaucheCourante, trackArray[i].vitesseDroiteCourante, trackArray[i].vitesseMoyenneGauche, trackArray[i].vitesseMoyenneDroite);
+            serial.printf("%d\t%d\t%d\t%d\t",
+                          trackArray[i].consigneVitesseGauche, trackArray[i].consigneVitesseDroite, trackArray[i].pwmGauche, trackArray[i].pwmDroit);
+            serial.printf("\r\n");
 
-						}
+        }
 }
 
 void MotionControlSystem::printPosition()
@@ -663,6 +665,15 @@ void MotionControlSystem::printPosition()
 	}
 }
 
+void MotionControlSystem::printSpeed()
+{
+    for(int i=0; i<TRACKER_SIZE; i++)
+    {
+        serial.printflnSpeed("%d\t%d\t%d\t%d",
+                      trackArray[i].vitesseMoyenneDroite, trackArray[i].vitesseMoyenneGauche, trackArray[i].consigneVitesseDroite, trackArray[i].consigneVitesseGauche);
+        serial.printf("\r\n");
+    }
+}
 void MotionControlSystem::resetTracking()
 {
 	trackerType zero;

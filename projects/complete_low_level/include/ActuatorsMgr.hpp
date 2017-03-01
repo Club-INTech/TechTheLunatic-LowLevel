@@ -32,7 +32,7 @@ extern Uart<1> serial;
 
 #define brapeldep 120
 #define brapelmoit 160
-#define brapelrel 180
+#define brapelrel 175
 #define pospelinit 300
 #define pospeltient 105
 #define pospelmoit 150
@@ -42,15 +42,15 @@ extern Uart<1> serial;
 
 #define AMdebG 178
 #define AMmidG 135
-#define AMfinG 55 // 60
-#define AMdebD 15
+#define AMfinG 59
+#define AMdebD 40
 #define AMmidD 70
-#define AMfinD 145
+#define AMfinD 140
 
 //Les cale-modules
-#define CaleHautG 120 //gauche 96 droite 183
+#define CaleHautG 120
 #define CaleReposG 200
-#define CaleBasG 215 //gauche 280 droite 3
+#define CaleBasG 215
 #define CaleHautD 110
 #define CaleReposD 45
 #define CaleBasD 10
@@ -199,7 +199,7 @@ public:
 	void braPelDeplie() // déplie les bras de la pelle
 	{
 		serial.printflnDebug("Baisse les bras");
-		ax12brapel->changeSpeed(25);
+		ax12brapel->changeSpeed(22);
 		ax12brapel->goTo(brapeldep);
 		serial.printflnDebug("done");
 	}
@@ -338,7 +338,7 @@ public:
 		LM->goTo(LargueRepos);
 	}
 	void larguePousse(){
-		LM->changeSpeed(30);
+		LM->changeSpeed(18);
 		LM->goTo(LarguePousse);
 	}
 	void lmReasserv(){

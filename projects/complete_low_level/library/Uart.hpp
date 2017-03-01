@@ -52,6 +52,7 @@
 #define EVENT_HEADER    {0x13, 0x37}
 #define US_HEADER       {0x01, 0x10}
 #define POSITION_HEADER {0x12, 0x19}
+#define SPEED_HEADER {0x11, 0x14}
 
 
 template<uint8_t USART_ID>
@@ -509,7 +510,22 @@ public:
         send_ln();
         va_end(args);
     }
-
+	__attribute__((format(printf, 1, 0)))
+	static inline void printflnSpeed(const char *format, ...)
+	{
+		va_list args;
+		va_start(args, format);
+		char message[64];
+		vsnprintf(message, 64, format, args);
+		char header[HEADER_LENGTH]=SPEED_HEADER;
+		char toSend[64+HEADER_LENGTH];
+		strcpy(toSend, header);
+		char* endHeader=&toSend[2];
+		memcpy( endHeader, &message, 64);
+		write(toSend);
+		send_ln();
+		va_end(args);
+	}
 
 	template<class T>
 	static inline uint8_t read(T &val, uint16_t timeout = 0) {

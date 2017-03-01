@@ -282,6 +282,7 @@ public:
 	void testPosition();
 	void testRotation();
 
+    void printSpeed();
 };
 
 #endif /* MOTION_CONTROL_H_ */

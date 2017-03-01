@@ -1,14 +1,21 @@
 from serial import Serial, SerialTimeoutException, SerialException
 from Tkinter import *
+from matplotlib import pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+from tkMessageBox import showinfo
+from numpy import arange, exp
+
 from threadEcoute import *
 
 
 try:
-    serie = Serial(port="/dev/ttyUSB0", baudrate=115200, timeout=0)
+    serie = Serial(port="/dev/ttyUSB1", baudrate=115200, timeout=0)
     print ("serie OK")
 
 
     fenetre = Tk()
+    fenetre.wm_title("Interface serie")
 
     label = Label(fenetre, text="INTerface")
     label.pack()
@@ -31,15 +38,16 @@ try:
     us = LabelFrame(state, text="Ultra Sons :")
     us.pack(side=LEFT, expand="yes", fill="both")
 
-    realPosition = [0, 0, 0, 0, 0]
+    realPosition = [0, 0, 0]
+    realSpeed = [0,0]
 
     positionX = Label(position, text="x : "+str(realPosition[0]))
     positionX.pack()
     positionY = Label(position, text="y : "+str(realPosition[1]))
     positionY.pack()
-    vitesseDroite=Label(vitesse, text="d : "+str(realPosition[3]))
+    vitesseDroite=Label(vitesse, text="d : "+str(realSpeed[0]))
     vitesseDroite.pack()
-    vitesseGauche=Label(vitesse, text="g : "+str(realPosition[4]))
+    vitesseGauche=Label(vitesse, text="g : "+str(realSpeed[1]))
     vitesseGauche.pack()
     orientationLabel = Label(orientation, text=str(realPosition[2])+" rad ")
     orientationLabel.pack()
@@ -81,11 +89,11 @@ try:
     debugZone.pack(fill="both", expand="yes", side=TOP)
 
     generalLogs = Text(generalZone, background="black", foreground="white")
-    generalLogs.pack(fill="both", expand="yes")
+    generalLogs.pack(fill=BOTH, expand="yes")
     generalLogs.config(state=DISABLED)
 
     debugLogs = Text(debugZone,  background="black", foreground="white")
-    debugLogs.pack(fill="both", expand="yes")
+    debugLogs.pack(side=TOP, fill="both", expand="yes")
     debugLogs.config(state=NORMAL)
 
     def alert():
@@ -99,7 +107,7 @@ try:
     menu1.add_command(label="Creer", command=alert)
     menu1.add_command(label="Editer", command=alert)
     menu1.add_separator()
-    menu1.add_command(label="Quitter", command=fenetre.quit)
+    menu1.add_command(label="Quitter", command=fenetre.destroy)
     menubar.add_cascade(label="Fichier", menu=menu1)
 
 
@@ -109,16 +117,25 @@ try:
 
     fenetre.config(menu=menubar)
 
-
-
-    bouton=Button(droite, text="Fermer", command=fenetre.quit)
+    bouton=Button(droite, text="Fermer", command=fenetre.destroy)
     bouton.pack(side=BOTTOM)
 
+    ##Graph##
+    label="Graphe"
+    figure=Figure(figsize=(8,4),dpi=100)
+    vitesseGauche=figure.add_subplot(111)
+    t=arange(0.0,2.0,0.01)
+    s=1-exp(-t)
+    vitesseGauche.plot(t,s)
+    vitesseGauche.grid()
+    #canvas
+    can=FigureCanvasTkAgg(figure, master=fenetre)
+    can.show()
+    can.get_tk_widget().pack(side=RIGHT, fill=BOTH, expand=1)
 
 
 
-
-    ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition, position, positionX, positionY, orientationLabel)
+    ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition, realSpeed, position, positionX, positionY, vitesseDroite, vitesseGauche, orientationLabel)
 
     ecoute.start()
 

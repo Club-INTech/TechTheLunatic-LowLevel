@@ -9,18 +9,24 @@ debugHeader = "".join([chr(c) for c in debugHeaderCode]) # Passage en string
 positionHeaderCode = [0x12, 0x19]
 positionHeader = "".join([chr(c) for c in positionHeaderCode])
 
+#speedHeaderCode = [0x11, 0x14]
+speedHeader = "".join([chr(c) for c in positionHeaderCode])
+
 
 
 class threadEcoute(Thread):
-    def __init__(self, serie, debugLogs, generalLogs, realPosition, positionZone, positionX, positionY, orientationLabel):
+    def __init__(self, serie, debugLogs, generalLogs, realPosition, realSpeed, positionZone, positionX, positionY, orientationLabel, vitesseD, vitesseG):
         Thread.__init__(self)
         self.serie = serie
         self.debugLogs = debugLogs
         self.generalLogs = generalLogs
         self.realPosition = realPosition
+        self.realSpeed = realSpeed
         self.positionZone = positionZone
         self.positionX = positionX
         self.positionY = positionY
+        self.vitesseD = vitesseD
+        self.vitesseG = vitesseG
         self.orientationLabel = orientationLabel
 
 
@@ -29,6 +35,7 @@ class threadEcoute(Thread):
     def run(self):
 
         position = [0, 0, 0]
+        speed = [0, 0]
         timestamps = [0, 0, 0]
 
         while (True):
@@ -64,6 +71,19 @@ class threadEcoute(Thread):
                         self.positionX.config(text="x : " + str(self.realPosition[0]))
                         self.positionY.config(text="y : " + str(self.realPosition[1]))
                         self.orientationLabel.config(text="Orientation : " + str(self.realPosition[2]))
+
+            elif (a[0:2] == speedHeader):
+                    speed.pop(0)
+                    speed.append(a[2:-2])
+                    timestamps.pop(0)
+                    timestamps.append(time())
+
+                    if (max(timestamps) - min(timestamps) < 0.005):
+                        self.realSpeed=speed
+                        self.vitesseD.config(text="vd : "+str(self.realSpeed[0]))
+                        self.vitesseG.config(text="vg : "+str(self.realSpeed[1]))
+
+
 
             else:
 
