@@ -13,28 +13,28 @@ typedef ring_buffer<uint32_t, NB_VALEURS_MEDIANE_SRF> ringBufferSRF;
 extern Uart<1> serial;
 
 /** @file library/capteur_srf05.hpp
- *  @brief Ce fichier crée une classe capteur_srf05 pour pouvoir utiliser simplement les capteurs SRF05.
+ *  @brief Ce fichier crï¿½e une classe capteur_srf05 pour pouvoir utiliser simplement les capteurs SRF05.
  *  @author Sylvain (adaptation du travail de Thibaut ~MissFrance~)
- *  @date 23 février 2015
+ *  @date 23 fï¿½vrier 2015
  */
 
-//Angle du cône de vision: 38°
+//Angle du cï¿½ne de vision: 38ï¿½
 //Distance maximale: 230cm
 
 
 /** @class capteur_srf05
- *  \brief Classe pour pouvoir gérer facilement les capteurs srf05.
+ *  \brief Classe pour pouvoir gï¿½rer facilement les capteurs srf05.
  * 
  * 
- *  La classe gère la récupération d'une distance entre le capteur et un obstacle.
+ *  La classe gï¿½re la rï¿½cupï¿½ration d'une distance entre le capteur et un obstacle.
  *  
  *  Protocole de ces capteurs :
  *  ---------------------------
  *
- *  La carte envoie une impulsion sur la pin pendant une durée de ~10µs. Puis, après
- *  une durée inconnue, le capteur envoie une impulsion sur cette même pin. La durée
- *  de cette impulsion est proportionnelle à la distance entre les capteurs et l'objet
- *  détecté.
+ *  La carte envoie une impulsion sur la pin pendant une durï¿½e de ~10ï¿½s. Puis, aprï¿½s
+ *  une durï¿½e inconnue, le capteur envoie une impulsion sur cette mï¿½me pin. La durï¿½e
+ *  de cette impulsion est proportionnelle ï¿½ la distance entre les capteurs et l'objet
+ *  dï¿½tectï¿½.
  */
 
 
@@ -71,28 +71,28 @@ public:
 		GPIO_sensor.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_Init(GPIOx, &GPIO_sensor);
 
-			// On met un zéro sur la pin pour 2 µs
+			// On met un zï¿½ro sur la pin pour 2 ï¿½s
 		GPIO_ResetBits(GPIOx, GPIO_sensor.GPIO_Pin);
 		Delay_us(2);
 
-			// On met un "un" sur la pin pour 10 µs
+			// On met un "un" sur la pin pour 10 ï¿½s
 		GPIO_SetBits(GPIOx, GPIO_sensor.GPIO_Pin);
 		Delay_us(10);
 		GPIO_ResetBits(GPIOx, GPIO_sensor.GPIO_Pin);
 
-		risingEdgeTrigger = true;
+        risingEdgeTrigger=true;
 
-			// Le signal a été envoyé, maintenant on attend la réponse dans l'interruption
+			// Le signal a ï¿½tï¿½ envoyï¿½, maintenant on attend la rï¿½ponse dans l'interruption
 		GPIO_sensor.GPIO_Mode = GPIO_Mode_IN;
 		GPIO_Init(GPIOx, &GPIO_sensor);
-		EXTI_sensor.EXTI_Trigger = EXTI_Trigger_Rising;		//On va maintenant recevoir un front montant, il faut se préparer pour ça
-		EXTI_sensor.EXTI_LineCmd = ENABLE;					//On accepte donc de lire les interruptions sur la pin du capteur à partir de maintenant
+		EXTI_sensor.EXTI_Trigger = EXTI_Trigger_Rising;//On va maintenant recevoir un front montant, il faut se prï¿½parer pour ï¿½a
+		EXTI_sensor.EXTI_LineCmd = ENABLE;					//On accepte donc de lire les interruptions sur la pin du capteur ï¿½ partir de maintenant
 		EXTI_Init(&EXTI_sensor);
 	}
 
 
-	/** Fonction appellée par l'interruption. S'occupe d'enregistrer la valeur de la longueur
-	 *  de l'impulsion retournée par le capteur, et de la convertir en une distance en mm.
+	/** Fonction appellï¿½e par l'interruption. S'occupe d'enregistrer la valeur de la longueur
+	 *  de l'impulsion retournï¿½e par le capteur, et de la convertir en une distance en mm.
 	 */
 	void interruption()
 	{
@@ -101,7 +101,7 @@ public:
 		{
 			origineTimer = Micros();
 			risingEdgeTrigger = false;
-			EXTI_sensor.EXTI_Trigger = EXTI_Trigger_Falling;	//On devrait recevoir désormais un front descendant
+			EXTI_sensor.EXTI_Trigger = EXTI_Trigger_Falling;	//On devrait recevoir dï¿½sormais un front descendant
 			EXTI_Init(&EXTI_sensor);
 		}
 		else
@@ -110,10 +110,15 @@ public:
 			current_time = Micros();
 			temps_impulsion = current_time - origineTimer;		//Le temps entre les deux fronts
 			//derniereDistance = 10*temps_impulsion/58;
-			ringBufferValeurs.append( 10*temps_impulsion/58 );	//On ajoute la distance mesurée à cet instant dans un buffer, calculé ainsi en fonction du temps entre les fronts
-			derniereDistance = mediane(ringBufferValeurs);		//Ce qu'on renvoie est la médiane du buffer, ainsi on élimine les valeurs extrêmes qui peuvent être absurdes
+			ringBufferValeurs.append( 10*temps_impulsion/58 );	//On ajoute la distance mesurï¿½e ï¿½ cet instant dans un buffer, calculï¿½ ainsi en fonction du temps entre les fronts
+			derniereDistance = mediane(ringBufferValeurs);		//Ce qu'on renvoie est la mï¿½diane du buffer, ainsi on ï¿½limine les valeurs extrï¿½mes qui peuvent ï¿½tre absurde
+			/*
+			serial.printflnDebug("%d", current_time);
+			serial.printflnDebug("%d", origineTimer);
+			serial.printflnDebug("%d", derniereDistance);
+			*/
 			risingEdgeTrigger = true;
-			EXTI_sensor.EXTI_LineCmd = DISABLE;					//On a reçu la réponse qui nous intéressait, on désactive donc les lectures d'interruptions sur ce capteur
+			EXTI_sensor.EXTI_LineCmd = DISABLE;					//On a reï¿½u la rï¿½ponse qui nous intï¿½ressait, on dï¿½sactive donc les lectures d'interruptions sur ce capteur
 			EXTI_Init(&EXTI_sensor);
 			GPIO_sensor.GPIO_Mode = GPIO_Mode_OUT;
 			GPIO_Init(GPIOx, &GPIO_sensor);
@@ -127,12 +132,12 @@ public:
 	}
 
 private:
-	GPIO_InitTypeDef GPIO_sensor;//Variable permettant de régler les paramètres de la pin du capteur
-	EXTI_InitTypeDef EXTI_sensor;//Variable permettant de régler le vecteur d'interruptions associé au capteur
+	GPIO_InitTypeDef GPIO_sensor;//Variable permettant de rï¿½gler les paramï¿½tres de la pin du capteur
+	EXTI_InitTypeDef EXTI_sensor;//Variable permettant de rï¿½gler le vecteur d'interruptions associï¿½ au capteur
 	GPIO_TypeDef* GPIOx;//Port de la pin du capteur
 	ringBufferSRF ringBufferValeurs;
-	volatile uint32_t derniereDistance;		//contient la dernière distance acquise, prête à être envoyée
-	volatile uint32_t origineTimer;			//origine de temps afin de mesurer une durée
+	volatile uint32_t derniereDistance;		//contient la derniï¿½re distance acquise, prï¿½te ï¿½ ï¿½tre envoyï¿½e
+	volatile uint32_t origineTimer;			//origine de temps afin de mesurer une durï¿½e
 	bool risingEdgeTrigger;
 };
 

@@ -49,7 +49,7 @@ int main(void)
 	while(1)
 	{
 		sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
-																	   //et ils se préparent à recevoir un front montant
+                                                                        // et ils se préparent à recevoir un front montant
 
 		uint8_t tailleBuffer = serial.available(); //taille utilisée pour le passage des données dans le câble série
 

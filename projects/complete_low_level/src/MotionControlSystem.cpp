@@ -32,7 +32,7 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
 	leftSpeedPID.setOutputLimits(-255,255);
 	rightSpeedPID.setOutputLimits(-255,255);
 
-	maxSpeed = 4000; // Vitesse maximum, des moteurs (avec une marge au cas o� on s'amuse � faire forcer un peu la bestiole).
+	maxSpeed = 3000; // Vitesse maximum, des moteurs (avec une marge au cas o� on s'amuse � faire forcer un peu la bestiole).
 	maxSpeedTranslation = 2000; // Consigne max envoy�e au PID
 	maxSpeedRotation = 1400;
 	maxAcceleration = 15;
