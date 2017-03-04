@@ -43,20 +43,17 @@ enum MOVING_DIRECTION {FORWARD, BACKWARD, NONE};
 
 extern Uart<1> serial;
 
-class MotionControlSystem : public Singleton<MotionControlSystem>
-{
+class MotionControlSystem : public Singleton<MotionControlSystem> {
 public:
 
 	/* Définit le sens dans lequel on doit tourner pour répondre à une consigne de rotation */
-	enum RotationWay
-	{
-		FREE,		// On doit tourner dans le sens correspondant au chemin le plus court
-		TRIGO,		// On doit tourner vers la droite
-		ANTITRIGO	// On doit tourner vers la gauche
+	enum RotationWay {
+		FREE,        // On doit tourner dans le sens correspondant au chemin le plus court
+		TRIGO,        // On doit tourner vers la droite
+		ANTITRIGO    // On doit tourner vers la gauche
 	};
 
 	volatile int32_t distanceTest;
-
 
 
 private:
@@ -78,32 +75,32 @@ private:
 
 	//	Asservissement en vitesse du moteur droit
 	PID rightSpeedPID;
-	volatile int32_t rightSpeedSetpoint;	// ticks/seconde
-	volatile int32_t currentRightSpeed;		// ticks/seconde
+	volatile int32_t rightSpeedSetpoint;    // ticks/seconde
+	volatile int32_t currentRightSpeed;        // ticks/seconde
 	volatile int32_t rightPWM;
 
 	//	Asservissement en vitesse du moteur gauche
 	PID leftSpeedPID;
-	volatile int32_t leftSpeedSetpoint;		// ticks/seconde
-	volatile int32_t currentLeftSpeed;		// ticks/seconde
+	volatile int32_t leftSpeedSetpoint;        // ticks/seconde
+	volatile int32_t currentLeftSpeed;        // ticks/seconde
 	volatile int32_t leftPWM;
 
 	//	Asservissement en position : translation
 	PID translationPID;
-	volatile int32_t translationSetpoint;	// ticks
-	volatile int32_t currentDistance;		// ticks
-	volatile int32_t translationSpeed;		// ticks/seconde
+	volatile int32_t translationSetpoint;    // ticks
+	volatile int32_t currentDistance;        // ticks
+	volatile int32_t translationSpeed;        // ticks/seconde
 
 	//	Asservissement en position : rotation
 	PID rotationPID;
-	volatile int32_t rotationSetpoint;		// angle absolu vis� (en ticks)
-	volatile int32_t currentAngle;			// ticks
-	volatile int32_t rotationSpeed;			// ticks/seconde
+	volatile int32_t rotationSetpoint;        // angle absolu vis� (en ticks)
+	volatile int32_t currentAngle;            // ticks
+	volatile int32_t rotationSpeed;            // ticks/seconde
 
 	//	Limitation de vitesses
-	volatile int32_t maxSpeed; 				// definit la vitesse maximal des moteurs du robot
-	volatile int32_t maxSpeedTranslation;	// definit la consigne max de vitesse de translation envoi�e au PID (trap�ze)
-	volatile int32_t maxSpeedRotation;		// definit la consigne max de vitesse de rotation envoi�e au PID (trap�ze)
+	volatile int32_t maxSpeed;                // definit la vitesse maximal des moteurs du robot
+	volatile int32_t maxSpeedTranslation;    // definit la consigne max de vitesse de translation envoi�e au PID (trap�ze)
+	volatile int32_t maxSpeedRotation;        // definit la consigne max de vitesse de rotation envoi�e au PID (trap�ze)
 
 	//	Limitation d'acc�l�ration
 	volatile int32_t maxAcceleration;
@@ -128,9 +125,6 @@ private:
 	Average<int32_t, AVERAGE_DERIVATIVE_SIZE> averageRightDerivativeError;
 
 
-
-
-
 /*
  * 	Variables de positionnement haut niveau (exprimm�es en unit�s pratiques ^^)
  *
@@ -141,9 +135,9 @@ private:
  * 	Le bas niveau met � jour la valeur de ces variables mais ne les utilise jamais pour
  * 	lui m�me, il se contente de les transmettre au haut niveau.
  */
-	volatile float x;				// Positionnement 'x' (mm)
-	volatile float y;				// Positionnement 'y' (mm)
-	volatile float originalAngle;	// Angle d'origine	  (radians)
+	volatile float x;                // Positionnement 'x' (mm)
+	volatile float y;                // Positionnement 'y' (mm)
+	volatile float originalAngle;    // Angle d'origine	  (radians)
 	// 'originalAngle' repr�sente un offset ajout� � l'angle courant pour que nos angles en radians co�ncident avec la repr�sentation haut niveau des angles.
 
 
@@ -182,8 +176,7 @@ private:
 	 * Dispositif d'enregistrement de l'�tat du syst�me pour permettre le d�bug
 	 * La valeur de TRACKER_SIZE d�pend de la valeur de DEBUG.
 	 */
-	struct trackerType
-	{
+	struct trackerType {
 		float x;
 		float y;
 		float angle;
@@ -212,6 +205,7 @@ private:
 
 	bool isPhysicallyStopped();//Indique si le robot est immobile.
 	bool isLeftWheelSpeedAbnormal();
+
 	bool isRightWheelSpeedAbnormal();
 
 public:
@@ -220,16 +214,23 @@ public:
 	void init();
 
 	void setRawPositiveTranslationSpeed();
+
 	void setRawNegativeTranslationSpeed();
+
 	void setRawPositiveRotationSpeed();
+
 	void setRawNegativeRotationSpeed();
+
 	void setRawNullSpeed();
 
 	void control();
+
 	void updatePosition();
+
 	void manageStop();
 
 	void enableForcedMovement();
+
 	void disableForcedMovement();
 
 
@@ -237,52 +238,91 @@ public:
 	void printTrackingAll();//Affiche l'int�gralit� du tableau de tracking
 	void printTracking(); // Envoie des donn�es pour l'asserv auto
 	void printPosition();
+
 	void resetTracking();// Reset le tableau de tracking
 
 
 	void enable(bool);
+
 	void enableTranslationControl(bool);
+
 	void enableRotationControl(bool);
+
 	void enableSpeedControl(bool);
 
 	void orderTranslation(int32_t);
+
 	void orderRotation(float, RotationWay);
-	void orderRawPwm(Side,int16_t);
-	void orderCurveTrajectory(float,float);
+
+	void orderRawPwm(Side, int16_t);
+
+	void orderCurveTrajectory(float, float);
+
 	void stop();
 
 	void setTranslationTunings(float, float, float);
+
 	void setRotationTunings(float, float, float);
+
 	void setLeftSpeedTunings(float, float, float);
+
 	void setRightSpeedTunings(float, float, float);
-	void getTranslationTunings(float &,float &,float &) const;
-	void getRotationTunings(float &,float &,float &) const;
+
+	void getTranslationTunings(float &, float &, float &) const;
+
+	void getRotationTunings(float &, float &, float &) const;
+
 	void getLeftSpeedTunings(float &, float &, float &) const;
+
 	void getRightSpeedTunings(float &, float &, float &) const;
 
 	float getAngleRadian() const;
+
 	void setOriginalAngle(float);
+
 	float getX() const;
+
 	float getY() const;
+
 	void setX(float);
+
 	void setY(float);
+
 	void resetPosition(void);
+
 	void setDelayToStop(uint32_t);
+
 	void setTranslationSpeed(float);
+
 	void setRotationSpeed(float);
 
 	bool isMoving() const;
+
 	bool isMoveAbnormal() const;
+
 	MOVING_DIRECTION getMovingDirection() const;
 
 	void setTestSpeed(int32_t);
+
 	void testSpeed();
+
 	void testSpeedReverse();
+
 	void longTestSpeed();
+
 	void testPosition();
+
 	void testRotation();
 
-    void printSpeed();
+	Average<int32_t, 25> getLeftSpeed();
+
+	Average<int32_t, 25> getRightSpeed();
+
+	float getRightSetPoint();
+
+	float getLeftSetPoint();
+
+	float getTranslationSetPoint();
 };
 
 #endif /* MOTION_CONTROL_H_ */

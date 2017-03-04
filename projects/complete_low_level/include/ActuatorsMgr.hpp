@@ -53,7 +53,7 @@ extern Uart<1> serial;
 #define CaleBasG 230
 #define CaleHautD 200
 #define CaleReposD 135
-#define CaleBasD
+#define CaleBasD    95
 
 //Largue modules
 #define LargueRepos 132

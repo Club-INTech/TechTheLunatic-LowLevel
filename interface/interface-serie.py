@@ -10,7 +10,7 @@ from threadEcoute import *
 
 
 try:
-    serie = Serial(port="/dev/ttyUSB1", baudrate=115200, timeout=0)
+    serie = Serial(port="/dev/ttyUSB0", baudrate=115200, timeout=0)
     print ("serie OK")
 
 
@@ -33,23 +33,32 @@ try:
     position.pack(side=LEFT, expand="yes", fill="both")
     orientation = LabelFrame(state, text="Orientation :")
     orientation.pack(side=LEFT, expand="yes", fill="both")
-    vitesse = LabelFrame(state, text= "Vitesse :")
-    vitesse.pack(side=LEFT, expand="yes", fill="both")
+    speed = LabelFrame(state, text= "Vitesse :")
+    speed.pack(side=LEFT, expand="yes", fill="both")
     us = LabelFrame(state, text="Ultra Sons :")
     us.pack(side=LEFT, expand="yes", fill="both")
 
     realPosition = [0, 0, 0]
-    realSpeed = [0,0]
+    realSpeed = [0, 0]
+    realConsignes = [0, 0, 0]
 
     positionX = Label(position, text="x : "+str(realPosition[0]))
     positionX.pack()
     positionY = Label(position, text="y : "+str(realPosition[1]))
     positionY.pack()
-    vitesseDroite=Label(vitesse, text="d : "+str(realSpeed[0]))
-    vitesseDroite.pack()
-    vitesseGauche=Label(vitesse, text="g : "+str(realSpeed[1]))
-    vitesseGauche.pack()
-    orientationLabel = Label(orientation, text=str(realPosition[2])+" rad ")
+    positionConsigne = Label(position, text="pc : " + str(realConsignes[0]))
+    positionConsigne.pack()
+
+    vitesseG = Label(speed, text="g : " + str(realSpeed[0]))
+    vitesseG.pack()
+    vitesseD = Label(speed, text="d : " + str(realSpeed[1]))
+    vitesseD.pack()
+    vitesseGConsigne = Label(speed, text="consg :" + str(realConsignes[1]))
+    vitesseGConsigne.pack()
+    vitesseDConsigne = Label(speed, text="consd :" + str(realConsignes[2]))
+    vitesseDConsigne.pack()
+
+    orientationLabel = Label(orientation, text=str(realPosition[2]) + " rad ")
     orientationLabel.pack()
 
     Label(us, text="Avant gauche : ").pack()
@@ -98,9 +107,15 @@ try:
 
     def alert():
         showinfo("alerte", "Bravo!")
+    def posGraph():
+        return 1
 
 
-
+    ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition, realSpeed, realConsignes, positionX, positionY,
+                          positionConsigne, orientationLabel, vitesseG, vitesseGConsigne, vitesseD, vitesseDConsigne)
+    """
+    MENU
+    """
     menubar = Menu(fenetre)
 
     menu1 = Menu(menubar, tearoff=0)
@@ -116,26 +131,19 @@ try:
     menubar.add_cascade(label="Aide", menu=menu3)
 
     fenetre.config(menu=menubar)
-
-    bouton=Button(droite, text="Fermer", command=fenetre.destroy)
-    bouton.pack(side=BOTTOM)
-
-    ##Graph##
-    label="Graphe"
-    figure=Figure(figsize=(8,4),dpi=100)
-    vitesseGauche=figure.add_subplot(111)
-    t=arange(0.0,2.0,0.01)
-    s=1-exp(-t)
-    vitesseGauche.plot(t,s)
-    vitesseGauche.grid()
-    #canvas
-    can=FigureCanvasTkAgg(figure, master=fenetre)
-    can.show()
-    can.get_tk_widget().pack(side=RIGHT, fill=BOTH, expand=1)
-
-
-
-    ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition, realSpeed, position, positionX, positionY, vitesseDroite, vitesseGauche, orientationLabel)
+    """
+    BOUTONS
+    """
+    bouton = Button(droite, text="Fermer", command=fenetre.destroy)
+    bouton.pack(side=RIGHT)
+    #speedGraphButton = Button(droite, text="Tracer vit", command=ecoute.speedGraph())
+   # speedGraphButton.pack(side=RIGHT)
+    posGraphButton = Button(droite, text="Tracer pos", command=posGraph)
+    posGraphButton.pack(side=RIGHT)
+    #resetGraphButton = Button(droite, text="Reset graphes", command=resetGraphs(T, G))
+    #resetGraphButton.pack(side=LEFT)
+    ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition, realSpeed, realConsignes, positionX, positionY
+                 , positionConsigne, orientationLabel, vitesseG, vitesseGConsigne, vitesseD, vitesseDConsigne)
 
     ecoute.start()
 

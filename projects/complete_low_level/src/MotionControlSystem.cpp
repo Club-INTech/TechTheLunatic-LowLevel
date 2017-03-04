@@ -12,7 +12,6 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
 	rotationControlled = true;
 	leftSpeedControlled = true;
 	rightSpeedControlled = true;
-
 	originalAngle = 0.0;
 	rotationSetpoint = 0;
 	translationSetpoint = 0;
@@ -35,7 +34,7 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
 	maxSpeed = 3000; // Vitesse maximum, des moteurs (avec une marge au cas o� on s'amuse � faire forcer un peu la bestiole).
 	maxSpeedTranslation = 2000; // Consigne max envoy�e au PID
 	maxSpeedRotation = 1400;
-	maxAcceleration = 15;
+	maxAcceleration = 12;
 
 	// maxjerk = 1; // Valeur de jerk maxi(secousse d'acc�l�ration)
 
@@ -665,15 +664,6 @@ void MotionControlSystem::printPosition()
 	}
 }
 
-void MotionControlSystem::printSpeed()
-{
-    for(int i=0; i<TRACKER_SIZE; i++)
-    {
-        serial.printflnSpeed("%d\t%d\t%d\t%d",
-                      trackArray[i].vitesseMoyenneDroite, trackArray[i].vitesseMoyenneGauche, trackArray[i].consigneVitesseDroite, trackArray[i].consigneVitesseGauche);
-        serial.printf("\r\n");
-    }
-}
 void MotionControlSystem::resetTracking()
 {
 	trackerType zero;
@@ -899,4 +889,29 @@ bool MotionControlSystem::isMoveAbnormal() const{
 
 MOVING_DIRECTION MotionControlSystem::getMovingDirection() const{
 	return direction;
+}
+
+Average<int32_t, 25> MotionControlSystem::getLeftSpeed()
+{
+    return this->averageLeftSpeed;
+}
+Average<int32_t, 25> MotionControlSystem::getRightSpeed()
+{
+    return this->averageRightSpeed;
+}
+
+float MotionControlSystem::getRightSetPoint()
+{
+    return this->rightSpeedSetpoint;
+
+}
+
+float MotionControlSystem::getLeftSetPoint()
+{
+    return this->leftSpeedSetpoint;
+}
+
+float MotionControlSystem::getTranslationSetPoint()
+{
+    return this->translationSetpoint;
 }
