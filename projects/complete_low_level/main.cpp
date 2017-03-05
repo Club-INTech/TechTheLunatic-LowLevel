@@ -754,6 +754,17 @@ int main(void)
  *		   *|COMMANDES/TESTS DE DEBUG|*
  *		   *|________________________|*
  */
+            else if(!strcmp("pfdebug", order))
+            {
+                serial.printfln("%d", (int) motionControlSystem->getX());
+                serial.printfln("%d", (int) motionControlSystem->getY());
+                serial.printfln("%f", motionControlSystem->getAngleRadian());
+                serial.printfln("%d",  (int) motionControlSystem->getLeftSpeed().value());
+                serial.printfln("%d",  (int) motionControlSystem->getRightSpeed().value());
+                serial.printfln("%d", (int) motionControlSystem->getTranslationSetPoint());
+                serial.printfln("%d", (int) motionControlSystem->getLeftSetPoint());
+                serial.printfln("%d", (int) motionControlSystem->getRightSetPoint());
+            }
 
             else if(!strcmp("rp",order))             //Reset position et angle du robot, et le stoppe
             {
