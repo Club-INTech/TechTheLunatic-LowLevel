@@ -755,10 +755,6 @@ int main(void)
  *		   *|________________________|*
  */
 
-            else if(!strcmp("getcod", order))
-            {
-                serial.printflnDebug("codeuse gauche--droite: %d -- %d", Counter::getLeftValue(), Counter::getRightValue());
-            }
             else if(!strcmp("pfdebug", order))
             {
                 serial.printfln("%d", (int) motionControlSystem->getX());
@@ -769,6 +765,16 @@ int main(void)
                 serial.printfln("%d", (int) motionControlSystem->getTranslationSetPoint());
                 serial.printfln("%d", (int) motionControlSystem->getLeftSetPoint());
                 serial.printfln("%d", (int) motionControlSystem->getRightSetPoint());
+            }
+            else if(!strcmp("data", order))
+            {
+                serial.printflnDebug("X: %d -- Y: %d -- O: %f", (int) motionControlSystem->getX(), (int) motionControlSystem->getY(), motionControlSystem->getAngleRadian());
+                serial.printflnDebug("Vitesse Gauche:%d",  (int) motionControlSystem->getLeftSpeed().value());
+                serial.printflnDebug("Vitesse Droite:%d",  (int) motionControlSystem->getRightSpeed().value());
+                serial.printflnDebug("Consignes : \n Transl: %d\n Vit.G: %d, Vit.D: %d",
+                                (int) motionControlSystem->getTranslationSetPoint(), (int) motionControlSystem->getLeftSetPoint(), (int) motionControlSystem->getRightSetPoint());
+                serial.printflnDebug("codeuse gauche--droite: %d -- %d", Counter::getLeftValue(), Counter::getRightValue());
+                motionControlSystem->getData();
             }
 
             else if(!strcmp("rp",order))             //Reset position et angle du robot, et le stoppe

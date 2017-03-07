@@ -915,3 +915,10 @@ float MotionControlSystem::getTranslationSetPoint()
 {
     return this->translationSetpoint;
 }
+
+void MotionControlSystem::getData()
+{
+    serial.printflnDebug("PID Droit:\nErreur: %d\nIntegral: %d\nDerivee: %d", this->rightSpeedPID.getError(), this->rightSpeedPID.getIntegralErrol(), this->rightSpeedPID.getDerivativeError());
+    serial.printflnDebug("PID Gauche:\nErreur: %d\nIntegral: %d\nDerivee: %d", this->leftSpeedPID.getError(), this->leftSpeedPID.getIntegralErrol(), this->leftSpeedPID.getDerivativeError());
+    serial.printflnDebug("PWM: G: %d -- D: %d", leftPWM, rightPWM);
+}

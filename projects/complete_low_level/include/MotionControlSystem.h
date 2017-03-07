@@ -323,6 +323,8 @@ public:
 	float getLeftSetPoint();
 
 	float getTranslationSetPoint();
+
+    void getData();
 };
 
 #endif /* MOTION_CONTROL_H_ */
