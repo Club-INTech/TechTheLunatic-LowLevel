@@ -754,6 +754,11 @@ int main(void)
  *		   *|COMMANDES/TESTS DE DEBUG|*
  *		   *|________________________|*
  */
+
+            else if(!strcmp("getcod", order))
+            {
+                serial.printflnDebug("codeuse gauche--droite: %d -- %d", Counter::getLeftValue(), Counter::getRightValue());
+            }
             else if(!strcmp("pfdebug", order))
             {
                 serial.printfln("%d", (int) motionControlSystem->getX());
