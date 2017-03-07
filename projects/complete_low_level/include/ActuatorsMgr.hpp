@@ -40,10 +40,10 @@ extern Uart<1> serial;
 
 //Pour les attrape-modules
 
-#define AMdebG 178
+#define AMdebG 185
 #define AMmidG 135
 #define AMfinG 59
-#define AMdebD 40
+#define AMdebD 20
 #define AMmidD 70
 #define AMfinD 140
 
