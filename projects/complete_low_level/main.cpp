@@ -38,9 +38,6 @@ int main(void)
 	SensorMgr* sensorMgr = &SensorMgr::Instance(); //capteurs, contacteurs, jumper
 	Voltage_controller* voltage = &Voltage_controller::Instance();//contrôle batterie Lipos
 
-    Elevator elevator = Elevator();
-	elevator.initialize(); //initialise les pins de l'ascenseur
-
     ElevatorMgr & elevatorMgr = ElevatorMgr::Instance();
     elevatorMgr.elevatorInit();
 
