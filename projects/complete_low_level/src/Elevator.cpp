@@ -99,7 +99,7 @@ void Elevator::initPins(void)
                      GPIO_PinSource15,                   // pin qui délivre la fonction alternative
                      GPIO_AF_TIM12);                     // connecte les pins du TIMER à la fonction alternative AF9
 
-    GPIO_SetBits(GPIOE,GPIO_Pin_13);                     // Initialise le moteur dans le sens montant
+    GPIO_ResetBits(GPIOE,GPIO_Pin_13);                     // Initialise le moteur dans le sens montant
 }
 
 //Initialisation utilisée dans le main
@@ -120,11 +120,11 @@ void Elevator::initialize(void){
 void Elevator::setSens(Sens sensToSet) {
     if (sensToSet==UP){
         sens=UP;
-        GPIO_SetBits(GPIOE, GPIO_Pin_13);   // On passe à 1 la valeur du bit de sens PE13 (sens trigo)
+        GPIO_ResetBits(GPIOE, GPIO_Pin_13);   // On passe à 1 la valeur du bit de sens PE13 (sens trigo)
     }
     else if (sensToSet==DOWN){
         sens=DOWN;
-        GPIO_ResetBits(GPIOE, GPIO_Pin_13); // On passe à 0 la valeur du bit de sens PE13 (sens antitrigo)
+        GPIO_SetBits(GPIOE, GPIO_Pin_13); // On passe à 0 la valeur du bit de sens PE13 (sens antitrigo)
     }
 }
 
