@@ -837,10 +837,7 @@ int main(void)
 
             else if(!strcmp("ascdata", order))
             {
-                serial.printflnDebug("pos: \%d -- tick: %d",Counter::getMoteurValue());
-                serial.printflnDebug("Consigne: %d");
-                serial.printflnDebug("PWM: %d");
-                serial.printflnDebug("Erreur: %d");
+                elevatorMgr.getData();
             }
             else if(!strcmp("rp",order))             //Reset position et angle du robot, et le stoppe
             {

@@ -70,6 +70,8 @@ public:
     bool elevatorMoveAbnormal() const;
 
     void run();
+
+    void getData();
 };
 
 

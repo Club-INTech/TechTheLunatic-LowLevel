@@ -138,3 +138,11 @@ void ElevatorMgr::run()
 {
     elevatorMotor.run(255);
 }
+
+void ElevatorMgr::getData()
+{
+    serial.printflnDebug("pos: X -- tick: %d", Counter::getMoteurValue());
+    serial.printflnDebug("Consigne: %d", positionSetpoint);
+    serial.printflnDebug("PWM: %d", elevatorPWM);
+    serial.printflnDebug("Erreur: %d", elevatorPID.getError());
+}
