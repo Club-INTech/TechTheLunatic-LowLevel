@@ -127,6 +127,7 @@ void Elevator::run() {//Tourne dans le sens de sens(a déterminer empiriquement)
 	GPIO_SetBits(GPIOB, GPIO_Pin_0);
 }
 
+
 void Elevator::initialize(void){
 	initPins();
 	initTimer();
@@ -155,6 +156,7 @@ void Elevator::initialize(void){
 #include <stm32f4xx_gpio.h>
 #include <stm32f4xx_rcc.h>
 #include <stm32f4xx.h>
+#include <utils.h>
 #include "Elevator.h"
 
 Elevator::Elevator(void) {
@@ -247,9 +249,22 @@ void Elevator::stop(void){
 	//TIM12->CCR2=0; //TODO tests
 }
 
-void Elevator::run() {//Tourne dans le sens de sens(a déterminer empiriquement)
-	GPIO_SetBits(GPIOB, GPIO_Pin_0);
+//void Elevator::run() {//Tourne dans le sens de sens(a déterminer empiriquement)
+//	GPIO_SetBits(GPIOB, GPIO_Pin_0);
 	//TIM12->CCR2=200;
+//}
+
+// Tourne dans le sens de sens (mouvement non asservi)
+void Elevator::run(int pwm) {
+    if(pwm>=0){
+        setSens(UP);
+        TIM12->CCR2=MIN(pwm,255);           // CCR2 prend la valeur minimale entre 255 et le pwm
+        // Cela met en marche le moteur
+    }
+    else{
+        setSens(DOWN);
+        TIM12->CCR2=MIN(-pwm,255);          // On convient qu'un pwm négatif correspond à l'autre sens de rotation
+    }
 }
 
 void Elevator::initialize(void){

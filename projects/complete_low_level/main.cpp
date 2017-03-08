@@ -1,4 +1,5 @@
 #include <stm32f4xx_gpio.h>
+#include <ElevatorMgr.h>
 #include "library/Uart.hpp"
 #include "MotionControlSystem.h"
 #include "ActuatorsMgr.hpp"
@@ -39,7 +40,10 @@ int main(void)
 
     Elevator elevator = Elevator();
 	elevator.initialize(); //initialise les pins de l'ascenseur
-	
+
+    ElevatorMgr & elevatorMgr = ElevatorMgr::Instance();
+    elevatorMgr.elevatorInit();
+
 	char order[64]; //Permet le stockage du message re�u par la liaison s�rie
 
 	bool translation = true; //permet de basculer entre les r�glages de cte d'asserv en translation et en rotation
@@ -578,7 +582,7 @@ int main(void)
  *		   *|    Pelle T-3000    |*
  *		   *|____________________|*
  */
-			
+
 			else if (!strcmp("bpr",order)) //(releve le bras de la pelleteuse)
             {
                 actuatorsMgr->braPelReleve();
@@ -710,7 +714,56 @@ int main(void)
 *		   *|___________________|*
 */
 
-            else if(!strcmp("asdown", order))
+                //Asensceur
+
+            else if (!strcmp("ascup", order))
+            {
+                elevatorMgr.moveTo(ElevatorMgr::UP);
+            }
+            else if (!strcmp("ascdown", order))
+            {
+                elevatorMgr.moveTo(ElevatorMgr::DOWN);
+            }
+            else if(!strcmp("ascrun", order))
+            {
+                elevatorMgr.run();
+            }
+            else if(!strcmp("getcod", order))
+            {
+                serial.printflnDebug("gauche:%d",Counter::getLeftValue());
+                serial.printflnDebug("droite:%d",Counter::getRightValue());
+            }
+            else if (!strcmp("ascdisplay", order))
+            {
+                float kp, ki, kd;
+                elevatorMgr.getElevatorTunings(kp, ki, kd);
+                serial.printflnDebug("kp=%f , ki=%f, kd=%f", kp, ki, kd);
+            }
+            else if(!strcmp("ascSetKp", order))
+            {
+                float kp, ki, kd;
+                elevatorMgr.getElevatorTunings(kp, ki, kd);
+                serial.printflnDebug("Entrer kp");
+                serial.read(kp);
+                elevatorMgr.setElevatorTunings(kp, ki, kd);
+            }
+            else if(!strcmp("ascSetKi", order))
+            {
+                float kp, ki, kd;
+                elevatorMgr.getElevatorTunings(kp, ki, kd);
+                serial.printflnDebug("Entrer ki");
+                serial.read(ki);
+                elevatorMgr.setElevatorTunings(kp, ki, kd);
+            }
+            else if(!strcmp("ascSetKd", order))
+            {
+                float kp, ki, kd;
+                elevatorMgr.getElevatorTunings(kp, ki, kd);
+                serial.printflnDebug("Entrer kd");
+                serial.read(kd);
+                elevatorMgr.setElevatorTunings(kp, ki, kd);
+            }
+            /*else if(!strcmp("asdown", order))
             {
                 elevator.setSens(DOWN);
                 elevator.run();
@@ -721,7 +774,7 @@ int main(void)
 
 				elevator.setSens(UP);
 				elevator.run();
-				
+
 
 				if (module == 0)
 				{
@@ -739,7 +792,7 @@ int main(void)
 					module=0;
 				}
 				elevator.stop();
-			}
+			}*/
             /*else if(!strcmp("asrun", order)){
 				elevator.run(); //test du moteur à vide
 			}
@@ -774,7 +827,7 @@ int main(void)
                 serial.printflnDebug("Consignes : \n Transl: %d\n Vit.G: %d, Vit.D: %d",
                                 (int) motionControlSystem->getTranslationSetPoint(), (int) motionControlSystem->getLeftSetPoint(), (int) motionControlSystem->getRightSetPoint());
                 serial.printflnDebug("codeuse gauche--droite: %d -- %d", Counter::getLeftValue(), Counter::getRightValue());
-                motionControlSystem->getData();
+                //motionControlSystem->getData();
             }
 
             else if(!strcmp("rp",order))             //Reset position et angle du robot, et le stoppe
@@ -866,6 +919,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
     volatile static uint32_t i = 0, j = 0, k = 0, l = 0; //compteurs pour lancer des méthodes à différents moments
     static MotionControlSystem *motionControlSystem = &MotionControlSystem::Instance();
     static Voltage_controller *voltage = &Voltage_controller::Instance();
+    static ElevatorMgr &elevatorMgr = ElevatorMgr::Instance();
 
     if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) { //arbalète
         //TIM_GetITStatus vérifie si l'interruption a eu lieu (SET) ou non (RESET)
@@ -875,6 +929,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
         //Asservissement et mise à jour de la position
         motionControlSystem->control();
         motionControlSystem->updatePosition();
+        elevatorMgr.elevatorControl();
 
 
         if (j >= 5) { //0.5ms x 5 = 2.5ms

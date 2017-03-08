@@ -19,6 +19,7 @@ public:
 	void initPins(void);
 	void setSens(Sens);
 	void run(void);
+	void run(int);
 	void stop(void);
 	void initialize(void);
 };

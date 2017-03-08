@@ -104,6 +104,7 @@ private:
 
 	//	Limitation d'acc�l�ration
 	volatile int32_t maxAcceleration;
+	volatile int32_t maxDeceleration;
 
 	//Les ratios de vitesse pour commander un d�placement courbe
 	volatile float leftCurveRatio;
