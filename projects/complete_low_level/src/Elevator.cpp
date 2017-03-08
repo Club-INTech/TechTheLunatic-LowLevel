@@ -268,7 +268,7 @@ void Elevator::run(int pwm) {
 }
 
 void Elevator::initialize(void){
-	//initTimer();
+	initTimer();
 	initPins();
-	//initPWM();
+	initPWM();
 }

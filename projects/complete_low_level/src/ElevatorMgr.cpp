@@ -89,8 +89,9 @@ void ElevatorMgr::elevatorControl(){
     //controle
 
     currentPosition = Counter::getMoteurValue();
-
+    //serial.printflnDebug("%d: ah!", Counter::getMoteurValue());
     elevatorPID.compute();	// Actualise la valeur calculée par le PID
+    //serial.printflnDebug("%d :elevatorPWM", elevatorPWM);
     elevatorMotor.run(elevatorPWM);
 }
 
