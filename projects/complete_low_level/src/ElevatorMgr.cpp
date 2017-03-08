@@ -50,10 +50,10 @@ void ElevatorMgr::moveTo(Sens setSens) {
         elevatorPID.resetErrors();
         moving = true;
     }
-    if ((setSens == UP)&&(Position=DOWN)) {
+    if (setSens == UP) {
         positionSetpoint = (int32_t)(HEIGHT / TICKS_TO_MM);
     }
-    else if ((setSens == DOWN)&&(Position=UP)){
+    else if (setSens == DOWN){
         positionSetpoint = 0; //c'est la position initiale basse
     }
     moveAbnormal = false;
