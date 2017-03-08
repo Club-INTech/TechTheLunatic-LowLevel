@@ -58,8 +58,8 @@ void Elevator::initPWM() //Initialise le PWM
 	timOcInitTypeDef.TIM_OCPolarity=TIM_OCPolarity_High;
 	timOcInitTypeDef.TIM_Pulse=0; //PWM initial nul
 	
-	TIM_OC3Init(TIM12, &timOcInitTypeDef); //Canal 2N de TIM1
-	TIM_OC3PreloadConfig(TIM12, TIM_OCPreload_Enable);
+	TIM_OC2Init(TIM12, &timOcInitTypeDef); //Canal 2 de TIM12
+	TIM_OC2PreloadConfig(TIM12, TIM_OCPreload_Enable);
 	TIM_ARRPreloadConfig(TIM12, ENABLE);
 	
 	TIM_Cmd(TIM12, ENABLE); //Active le TIM
@@ -103,25 +103,21 @@ void Elevator::setSens(Sens sensToSet) { //Change la direction dans le sens souh
 }
 
 void Elevator::stop(void){
-	TIM12->CCR3=0;
+	TIM12->CCR2=0;
 }
-
-//void Elevator::run() {//Tourne dans le sens de sens(a déterminer empiriquement)
-//	GPIO_SetBits(GPIOB, GPIO_Pin_0);
-	//TIM12->CCR2=200;
-//}
 
 // Tourne dans le sens de sens (mouvement non asservi)
 void Elevator::run(int pwm) {
     if(pwm>=0){
         setSens(UP);
-        TIM12->CCR3=MIN(pwm,255);           // CCR2 prend la valeur minimale entre 255 et le pwm
+        TIM12->CCR2=MIN(pwm,255);           // CCR2 prend la valeur minimale entre 255 et le pwm
         // Cela met en marche le moteur
     }
     else{
         setSens(DOWN);
-        TIM12->CCR3=MIN(-pwm,255);          // On convient qu'un pwm négatif correspond à l'autre sens de rotation
+        pwm=-pwm;         					// On convient qu'un pwm négatif correspond à l'autre sens de rotation
     }
+	TIM12->CCR2=MIN(pwm,255);
 }
 
 void Elevator::initialize(void){
