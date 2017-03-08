@@ -84,7 +84,7 @@ void Elevator::initPins(void)
 	gpioPinInitStruct.GPIO_Speed=GPIO_Speed_100MHz;
 	GPIO_Init(GPIOB, &gpioPinInitStruct);
 	
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource0, GPIO_AF_TIM12);
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource15, GPIO_AF_TIM12);
 	
 	//Initialise le moteur dans le sens montant
 	
@@ -109,15 +109,13 @@ void Elevator::stop(void){
 // Tourne dans le sens de sens (mouvement non asservi)
 void Elevator::run(int pwm) {
     if(pwm>=0){
-        setSens(UP);
-        TIM12->CCR2=MIN(pwm,255);           // CCR2 prend la valeur minimale entre 255 et le pwm
-        // Cela met en marche le moteur
+        setSens(UP);				       // Cela met en marche le moteur
     }
     else{
         setSens(DOWN);
         pwm=-pwm;         					// On convient qu'un pwm négatif correspond à l'autre sens de rotation
     }
-	TIM12->CCR2=MIN(pwm,255);
+	TIM12->CCR2=MIN(pwm,255);				// CCR2 prend la valeur minimale entre 255 et le pwm
 }
 
 void Elevator::initialize(void){
