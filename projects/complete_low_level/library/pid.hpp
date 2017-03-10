@@ -1,7 +1,7 @@
 /**
  * pid.hpp
  *
- * Classe PID : implémente un régulateur PID (proportionnel intégral dérivé)
+ * Classe PID : implï¿½mente un rï¿½gulateur PID (proportionnel intï¿½gral dï¿½rivï¿½)
  *
  * Auteur : Paul BERNIER - bernier.pja@gmail.com
  */
@@ -123,6 +123,16 @@ public:
 		return integral;
 	}
 
+	int getInput(){
+		return (int)(*input);
+	}
+	int getOutput(){
+		return (int)(*output);
+	}
+	int getSet(){
+		return (int)(*setPoint);
+	}
+
 private:
 
 	float kp;
@@ -131,7 +141,7 @@ private:
 
 	volatile int32_t* input; //Valeur du codeur
 	volatile int32_t* output; //Output : pwm
-	volatile int32_t* setPoint; //Valeur à atteindre
+	volatile int32_t* setPoint; //Valeur ï¿½ atteindre
 
 	int32_t epsilon;
 	int32_t outMin, outMax;

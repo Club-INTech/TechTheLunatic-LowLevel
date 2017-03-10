@@ -326,6 +326,10 @@ public:
 	float getTranslationSetPoint();
 
     void getData();
+
+	int16_t getMotorPWM(int sens);
+
+	void getSens(int sens);
 };
 
 #endif /* MOTION_CONTROL_H_ */

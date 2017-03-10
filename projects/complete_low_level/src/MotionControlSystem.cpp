@@ -923,3 +923,38 @@ float MotionControlSystem::getTranslationSetPoint()
 {
     return this->translationSetpoint;
 }
+
+void MotionControlSystem::getData()
+{
+    serial.printflnDebug("PWM:Gauche : %d __ Droit : %d ", this->leftPWM, this->rightPWM);
+    serial.printflnDebug("Erreur:    Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getError(), this->leftSpeedPID.getError(), this->rightSpeedPID.getError());
+    serial.printflnDebug("Intégrale: Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getIntegralErrol(), this->leftSpeedPID.getIntegralErrol(), this->rightSpeedPID.getIntegralErrol());
+    serial.printflnDebug("Dérivée:   Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getDerivativeError(), this->leftSpeedPID.getDerivativeError(), this->rightSpeedPID.getDerivativeError());
+    serial.printflnDebug("Input:     Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getInput(), this->leftSpeedPID.getInput(), this->rightSpeedPID.getInput());
+    serial.printflnDebug("Output:    Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getOutput(), this->leftSpeedPID.getOutput(), this->rightSpeedPID.getOutput());
+    serial.printflnDebug("SetPoint:  Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getSet(), this->leftSpeedPID.getSet(), this->rightSpeedPID.getSet());
+}
+
+int16_t MotionControlSystem::getMotorPWM(int sens){
+    if (sens==0){
+        return this->leftMotor.getPWM();
+    }
+    else if(sens==1){
+        return this->rightMotor.getPWM();
+    }
+}
+
+void MotionControlSystem::getSens(int sens){
+    if (sens==0){
+        serial.printflnDebug("Direction:");
+        serial.printflnDebug((const char *) this->leftMotor.getDir());
+        serial.printflnDebug("Side:");
+        serial.printflnDebug((const char *) this->leftMotor.getSide());
+    }
+    else if(sens==1){
+        serial.printflnDebug("Direction:");
+        serial.printflnDebug((const char *) this->rightMotor.getDir());
+        serial.printflnDebug("Side:");
+        serial.printflnDebug((const char *) this->rightMotor.getSide());
+    }
+}

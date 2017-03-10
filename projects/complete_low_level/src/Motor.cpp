@@ -17,7 +17,8 @@
 #include "Motor.h"
 
 Motor::Motor(Side s) :
-		side(s){
+		side(s), direction(Direction::FORWARD){
+    pwm=0;
 
 	/**
 	 * Configuration des pins pour le sens des moteurs
@@ -146,27 +147,27 @@ void Motor::initPWM(){
 	TIM_Cmd(TIM2, ENABLE);
 }
 
-void Motor::run(int16_t pwm){
+void Motor::run(int16_t pwminput){
+    pwm=pwminput;
+    //serial.printflnDebug("pwm avant run! %d", pwm);
 	if (pwm >= 0) {
 		setDirection(Direction::FORWARD);
-		if (side == Side::LEFT) {
-			TIM2->CCR3 = MIN(pwm,255);
-		} else {
-			TIM2->CCR4 = MIN(pwm,255);
-		}
-
+        pwm=MIN(pwm,255);
 	} else {
 		setDirection(Direction::BACKWARD);
-		if (side == Side::LEFT) {
-			TIM2->CCR3 = MIN(-pwm,255);
-		} else {
-			TIM2->CCR4 = MIN(-pwm,255);
-		}
+        pwm=MIN(-pwm,255);
 	}
+    if (side == Side::LEFT) {
+        TIM2->CCR3 = pwm;
+    } else {
+        TIM2->CCR4 = pwm;
+    }
+    //serial.printflnDebug("pwm après run: %d", pwm);
 }
 
 void Motor::setDirection(Direction dir) {
-	if (side == Side::RIGHT) {
+    direction=dir;
+	if (side == Side::LEFT) {
 		if (dir == Direction::BACKWARD) {
 			GPIO_SetBits(GPIOD, GPIO_Pin_14);
 		} else {
@@ -179,4 +180,22 @@ void Motor::setDirection(Direction dir) {
 			GPIO_ResetBits(GPIOD, GPIO_Pin_12);
 		}
 	}
+}
+
+int Motor::getPWM(){
+    return pwm;
+}
+
+char Motor::getDir(){
+    if(direction==Direction::FORWARD)
+        return 'f';
+    else
+        return 'b';
+}
+
+char Motor::getSide(){
+    if(side==Side::LEFT)
+        return 'l';
+    else
+        return 'r';
 }

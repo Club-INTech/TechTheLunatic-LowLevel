@@ -805,6 +805,26 @@ int main(void)
  *		   *|________________________|*
  */
 
+            else if(!strcmp("rawpwm", order)) {
+                motionControlSystem->enable(false);
+                int16_t pwm;
+                int sens;
+                serial.printflnDebug("Entrer le pwm:");
+                serial.read(pwm);
+                serial.printflnDebug("Entrer roue: 0=gauche, 1=droite");
+                serial.read(sens);
+                if (sens == 0) {
+                    motionControlSystem->orderRawPwm(Side::LEFT, pwm);
+                    serial.printflnDebug("pwm dans le moteur: %d", motionControlSystem->getMotorPWM(0));
+                    motionControlSystem->getSens(0);
+                } else if (sens == 1) {
+                    motionControlSystem->orderRawPwm(Side::RIGHT, pwm);
+                    serial.printflnDebug("pwm dans le moteur: %d", motionControlSystem->getMotorPWM(1));
+                    motionControlSystem->getSens(1);
+                }
+
+
+            }
             else if(!strcmp("pfdebug", order))
             {
                 serial.printfln("%d", (int) motionControlSystem->getX());
@@ -825,14 +845,15 @@ int main(void)
                                      (int) motionControlSystem->getLeftSpeed().value());
                 serial.printflnDebug("Vitesse Droite:%d",
                                      (int) motionControlSystem->getRightSpeed().value());
-                serial.printflnDebug("Consignes : \n Transl: %d\n Vit.G: %d, Vit.D: %d",
+                serial.printflnDebug("Consignes : Transl: %d --- Vit.G: %d --- Vit.D: %d",
                                      (int) motionControlSystem->getTranslationSetPoint(),
                                      (int) motionControlSystem->getLeftSetPoint(),
                                      (int) motionControlSystem->getRightSetPoint());
                 serial.printflnDebug("codeuse gauche--droite: %d -- %d",
                                      Counter::getLeftValue(),
                                      Counter::getRightValue());
-                //motionControlSystem->getData();
+                motionControlSystem->getData();
+
             }
 
             else if(!strcmp("ascdata", order))
