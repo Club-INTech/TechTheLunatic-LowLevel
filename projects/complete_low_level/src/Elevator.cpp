@@ -44,7 +44,7 @@ void Elevator::initTimer()
     uint16_t prescaler = (uint16_t)((SystemCoreClock / 2) / 100000) - 1; // on associe une fréquence de 1KHz au PWM
     // donc le PWM change toutes les ms
 
-    timTimeBaseInitTypeDef.TIM_Period=255;                     // répétition du motif
+    timTimeBaseInitTypeDef.TIM_Period=10;                     // répétition du motif
     // NB: le PWM a pour valeur x<255 et on peut déduire un taux d'occupation sur la période
     timTimeBaseInitTypeDef.TIM_ClockDivision=0;                // on divise par 1 dans la formule (cf Motor.cpp)
 
@@ -120,11 +120,11 @@ void Elevator::initialize(void){
 void Elevator::setSens(Sens sensToSet) {
     if (sensToSet==UP){
         sens=UP;
-        GPIO_ResetBits(GPIOE, GPIO_Pin_13);   // On passe à 1 la valeur du bit de sens PE13 (sens trigo)
+        GPIO_SetBits(GPIOE, GPIO_Pin_13);   // On passe à 1 la valeur du bit de sens PE13 (sens trigo)
     }
     else if (sensToSet==DOWN){
         sens=DOWN;
-        GPIO_SetBits(GPIOE, GPIO_Pin_13); // On passe à 0 la valeur du bit de sens PE13 (sens antitrigo)
+        GPIO_ResetBits(GPIOE, GPIO_Pin_13); // On passe à 0 la valeur du bit de sens PE13 (sens antitrigo)
     }
 }
 
@@ -132,12 +132,12 @@ void Elevator::setSens(Sens sensToSet) {
 void Elevator::run(int pwm) {
     if(pwm>=0){
         setSens(UP);
-        TIM12->CCR2=MIN(pwm,255);           // CCR2 prend la valeur minimale entre 255 et le pwm
+        TIM12->CCR2=MIN(pwm,8);           // CCR2 prend la valeur minimale entre 255 et le pwm
         // Cela met en marche le moteur
     }
     else{
         setSens(DOWN);
-        TIM12->CCR2=MIN(-pwm,255);          // On convient qu'un pwm négatif correspond à l'autre sens de rotation
+        TIM12->CCR2=MIN(-pwm,8);          // On convient qu'un pwm négatif correspond à l'autre sens de rotation
     }
 }
 

@@ -14,10 +14,10 @@
 #define circonf (2*PI*rayon)
 
 
-#define TICKS_TO_MM 0.2088			// unit� : mm/ticks
+#define TICKS_TO_MM 0.00135373			// unit� : mm/ticks
 //TODO : à trouver empiriquement
 
-#define HEIGHT 135 //unit : mm
+#define HEIGHT 110 //unit : mm
 
 
 #include "../library/Singleton.hpp"
@@ -69,7 +69,7 @@ public:
     bool elevatorIsMoving() const;
     bool elevatorMoveAbnormal() const;
 
-    void run();
+    void run(int);
 
     void getData();
 };

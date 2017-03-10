@@ -14,7 +14,7 @@
 
 ElevatorMgr::ElevatorMgr(): elevatorPID(&currentPosition, &elevatorPWM, &positionSetpoint) //position réelle, PWM, consigne de position
 {   elevatorPWM = 110; //TODO why 110?
-    elevatorPID.setTunings(10, 0, 0); //on initialise kp (proportionnel), ki (intégral) et kd (dérivé) du PID
+    elevatorPID.setTunings(0.08, 0, 0); //on initialise kp (proportionnel), ki (intégral) et kd (dérivé) du PID
     positionSetpoint = 0;
 
     Position = DOWN;
@@ -86,9 +86,19 @@ void ElevatorMgr::elevatorControl(){
     int32_t Ticks = rawTicks + Overflow*65535;	//On calcule le nombre r�el de ticks
 */
 
-    //controle
 
-    currentPosition = Counter::getMoteurValue();
+    //Gestion du dépassement des ticks de codeuse(car timer en 16bits)
+    static int32_t previousTick=0;
+    static int overflow=0;
+    int32_t rawCurrentPosition = Counter::getMoteurValue();
+    if(previousTick-rawCurrentPosition > 32767)
+        overflow++;
+    else if(previousTick-rawCurrentPosition < -32768)
+        overflow--;
+    previousTick=rawCurrentPosition;
+    currentPosition=rawCurrentPosition+overflow*65535;
+
+    //controle
     //serial.printflnDebug("%d: ah!", Counter::getMoteurValue());
     elevatorPID.compute();	// Actualise la valeur calculée par le PID
     //serial.printflnDebug("%d :elevatorPWM", elevatorPWM);
@@ -134,15 +144,16 @@ bool ElevatorMgr::elevatorMoveAbnormal() const{
 }
 
 //fonctions de test codeuses/moteur
-void ElevatorMgr::run()
+void ElevatorMgr::run(int i)
 {
-    elevatorMotor.run(255);
+    elevatorMotor.run(i);
 }
 
 void ElevatorMgr::getData()
 {
-    serial.printflnDebug("pos: X -- tick: %d", Counter::getMoteurValue());
+    serial.printflnDebug("pos: X -- tick: %d", currentPosition);
     serial.printflnDebug("Consigne: %d", positionSetpoint);
     serial.printflnDebug("PWM: %d", elevatorPWM);
     serial.printflnDebug("Erreur: %d", elevatorPID.getError());
+    serial.printflnDebug("Input: %d", elevatorPID.getInput());
 }

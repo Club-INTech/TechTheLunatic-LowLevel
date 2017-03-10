@@ -120,7 +120,6 @@ void MotionControlSystem::enableSpeedControl(bool enabled){
     rightSpeedControlled = enabled;
 }
 
-
 void MotionControlSystem::setRawPositiveTranslationSpeed(){
     translationSpeed = maxSpeedTranslation;
 }
@@ -182,7 +181,7 @@ void MotionControlSystem::control()
 
     /*
      * Comptage des ticks de la roue gauche
-     * ici on est sur un timer 32bit, pas de probl�me d'overflow sauf si on tente de parcourir plus de 446km...
+     * ici on est sur un timer 32bit, pas de probl�me d'overflow sauf si on tente de parcourir plus de 446km... //TODO: C'est pas la codeuse droite qui est en 32bits? à vérifier sur la datasheet
      */
     int32_t leftTicks = Counter::getLeftValue();
 

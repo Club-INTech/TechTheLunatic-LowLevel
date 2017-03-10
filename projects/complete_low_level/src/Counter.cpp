@@ -126,5 +126,5 @@ int32_t Counter::getLeftValue() {
 }
 int32_t Counter::getMoteurValue() {
     //Translate to int16_t
-    return (TIM_GetCounter(TIM1)-32767);
+    return -(TIM_GetCounter(TIM1)-32767);
 }

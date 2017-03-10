@@ -723,7 +723,13 @@ int main(void)
             }
             else if(!strcmp("ascrun", order))
             {
-                elevatorMgr.run();
+                serial.printflnDebug("Entrer le sens(0=bas, 1=haut");
+                int sens;
+                serial.read(sens);
+                if(sens==0)
+                    elevatorMgr.run(-150);
+                else if(sens==1)
+                    elevatorMgr.run(150);
             }
             else if(!strcmp("getcod", order))
             {
@@ -977,6 +983,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
         }
 
         if (l >= 200) {
+            //elevatorMgr.elevatorControl();
             if(autoUpdatePosition && !serial.available()) {
                 //si l'envoi automatique de position au HL est activé et que la série a de la place diponible
                 //on affiche la position et l'angle du robot
