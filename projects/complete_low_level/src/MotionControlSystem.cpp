@@ -160,30 +160,30 @@ void MotionControlSystem::control()
 
 
     /*
-     * Comptage des ticks de la roue droite
+     * Comptage des ticks de la roue gauche
      * Cette codeuse est connect�e � un timer 16bit
      * on subit donc un overflow/underflow de la valeur des ticks tous les 7 m�tres environ
      * ceci est corrig� de mani�re � pouvoir parcourir des distances grandes sans devenir fou en chemin (^_^)
      */
-    static int32_t lastRawRightTicks = 0;	//On garde en m�moire le nombre de ticks obtenu au pr�c�dent appel
-    static int rightOverflow = 0;			//On garde en m�moire le nombre de fois que l'on a overflow (n�gatif pour les underflow)
+    static int32_t lastRawLeftTicks = 0;	//On garde en m�moire le nombre de ticks obtenu au pr�c�dent appel
+    static int leftOverflow = 0;			//On garde en m�moire le nombre de fois que l'on a overflow (n�gatif pour les underflow)
 
-    int32_t rawRightTicks = Counter::getRightValue();	//Nombre de ticks avant tout traitement
+    int32_t rawLeftTicks = Counter::getLeftValue();	//Nombre de ticks avant tout traitement
 
-    if (lastRawRightTicks - rawRightTicks > 32768)		//D�tection d'un overflow
-        rightOverflow++;
-    else if(lastRawRightTicks - rawRightTicks < -32768)	//D�tection d'un underflow
-        rightOverflow--;
+    if (lastRawLeftTicks - rawLeftTicks > 32768)		//D�tection d'un overflow
+        leftOverflow++;
+    else if(lastRawLeftTicks - rawLeftTicks < -32768)	//D�tection d'un underflow
+        leftOverflow--;
 
-    lastRawRightTicks = rawRightTicks;
+    lastRawLeftTicks = rawLeftTicks;
 
-    int32_t rightTicks = rawRightTicks + rightOverflow*65535;	//On calcule le nombre r�el de ticks
+    int32_t leftTicks = rawLeftTicks + leftOverflow*65535;	//On calcule le nombre r�el de ticks
 
     /*
      * Comptage des ticks de la roue gauche
      * ici on est sur un timer 32bit, pas de probl�me d'overflow sauf si on tente de parcourir plus de 446km... //TODO: C'est pas la codeuse droite qui est en 32bits? à vérifier sur la datasheet
      */
-    int32_t leftTicks = Counter::getLeftValue();
+    int32_t rightTicks = Counter::getRightValue();
 
 
     currentLeftSpeed = (leftTicks - previousLeftTicks)*2000; // (nb-de-tick-passés)*(freq_asserv) (ticks/sec)
