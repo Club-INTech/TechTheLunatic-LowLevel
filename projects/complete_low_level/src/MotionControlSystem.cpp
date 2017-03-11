@@ -74,11 +74,12 @@ void MotionControlSystem::init() {
 /**
  * Initialisation de la boucle d'asservissement (TIMER 4)
  */
+
     NVIC_InitTypeDef NVIC_InitStructure;
     //Configuration et activation de l'interruption
     NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0F;
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0F;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0xfe;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0xfe;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
 

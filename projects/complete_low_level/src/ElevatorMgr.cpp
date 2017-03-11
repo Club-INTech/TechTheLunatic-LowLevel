@@ -127,6 +127,16 @@ void ElevatorMgr::run(int i)
 
 void ElevatorMgr::getData()
 {
+    /*static int32_t previousTick=0;
+    static int overflow=0;
+    int32_t rawCurrentPosition = Counter::getMoteurValue();
+    if(previousTick-rawCurrentPosition > 32767)
+        overflow++;
+    else if(previousTick-rawCurrentPosition < -32768)
+        overflow--;
+    previousTick=rawCurrentPosition;
+    currentPosition=rawCurrentPosition+overflow*65535;*/
+
     serial.printflnDebug("pos: X -- tick: %d", currentPosition);
     serial.printflnDebug("Consigne: %d", positionSetpoint);
     serial.printflnDebug("PWM: %d", elevatorPWM);
