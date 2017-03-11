@@ -35,7 +35,7 @@ int main(void)
 
     motionControlSystem->init(); //initialise asservissement, PWM et counters
 	ActuatorsMgr* actuatorsMgr = &ActuatorsMgr::Instance(); //ax12
-	SensorMgr* sensorMgr = &SensorMgr::Instance(); //capteurs, contacteurs, jumper
+	//SensorMgr* sensorMgr = &SensorMgr::Instance(); //capteurs, contacteurs, jumper
 	Voltage_controller* voltage = &Voltage_controller::Instance();//contrôle batterie Lipos
 
     ElevatorMgr & elevatorMgr = ElevatorMgr::Instance();
@@ -49,7 +49,7 @@ int main(void)
 
 	while(1)
 	{
-		sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
+	//	sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
                                                                         // et ils se préparent à recevoir un front montant
 
 		uint8_t tailleBuffer = serial.available(); //taille utilisée pour le passage des données dans le câble série
@@ -448,7 +448,7 @@ int main(void)
  *		   *|     CAPTEURS     |*
  *		   *|__________________|*
  */
-
+/*
         else if(!strcmp("usard",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
         {
             serial.printfln("%d", sensorMgr->getSensorDistanceARD());//en mm
@@ -472,7 +472,7 @@ int main(void)
  *		   *|CONTACTEURS ET JUMPER|*
  *		   *|_____________________|*
  */
-
+/*
         else if(!strcmp("j",order))			    //Indiquer l'�tat du jumper (0='en place'; 1='dehors')
         {
             serial.printfln("%d", sensorMgr->isJumperOut());
@@ -489,7 +489,7 @@ int main(void)
         {
             serial.printfln("%d", sensorMgr->isContactor3engaged());
         }
-
+*/
 
 /*			 __________________
  * 		   *|                  |*
@@ -712,7 +712,14 @@ int main(void)
 */
 
                 //Asensceur
-
+            else if(!strcmp("asc1", order))
+            {
+                elevatorMgr.enableAsserv(true);
+            }
+            else if(!strcmp("asc0", order))
+            {
+                elevatorMgr.enableAsserv(false);
+            }
             else if (!strcmp("ascup", order))
             {
                 elevatorMgr.moveTo(ElevatorMgr::UP);
@@ -766,43 +773,7 @@ int main(void)
                 serial.read(kd);
                 elevatorMgr.setElevatorTunings(kp, ki, kd);
             }
-            /*else if(!strcmp("asdown", order))
-            {
-                elevator.setSens(DOWN);
-                elevator.run();
-                Delay(800);
-                elevator.stop();
-            }
-            else if(!strcmp("asup", order)) {
 
-				elevator.setSens(UP);
-				elevator.run();
-
-
-				if (module == 0)
-				{
-					Delay(1080); // ~1.5tours à 10V
-				module++;
-				}
-				else if(module==1)
-				{
-					Delay(1110);
-					module++;
-				}
-				else if(module==2)
-				{
-					Delay(1160);
-					module=0;
-				}
-				elevator.stop();
-			}*/
-            /*else if(!strcmp("asrun", order)){
-				elevator.run(); //test du moteur à vide
-			}
-			else if(!strcmp("asstop", order))
-			{
-				elevator.stop();
-			}*/
 
 
 /*			 ________________________

@@ -13,8 +13,8 @@
 
 
 ElevatorMgr::ElevatorMgr(): elevatorPID(&currentPosition, &elevatorPWM, &positionSetpoint) //position réelle, PWM, consigne de position
-{   elevatorPWM = 110; //TODO why 110?
-    elevatorPID.setTunings(0.08, 0, 0); //on initialise kp (proportionnel), ki (intégral) et kd (dérivé) du PID
+{   elevatorPWM = 0;
+    elevatorPID.setTunings(0.006, 0, 0); //on initialise kp (proportionnel), ki (intégral) et kd (dérivé) du PID
     positionSetpoint = 0;
 
     Position = DOWN;
@@ -30,6 +30,8 @@ void ElevatorMgr::elevatorInit(){
     elevatorMotor.initialize();
     Counter();
     enableAsserv(true);
+    elevatorPID.setEpsilon(20);
+    positionSetpoint=LowTicks;
 }
 void ElevatorMgr::enableAsserv(bool enable) {
     if (enable) {
@@ -51,10 +53,10 @@ void ElevatorMgr::moveTo(Sens setSens) {
         moving = true;
     }
     if (setSens == UP) {
-        positionSetpoint = (int32_t)(HEIGHT / TICKS_TO_MM);
+        positionSetpoint = HighTicks;   //Position qui bloque le module en haut
     }
     else if (setSens == DOWN){
-        positionSetpoint = 0; //c'est la position initiale basse
+        positionSetpoint = LowTicks;    //Position de prise de modules
     }
     moveAbnormal = false;
 }
@@ -62,30 +64,6 @@ void ElevatorMgr::moveTo(Sens setSens) {
 
 
 void ElevatorMgr::elevatorControl(){
-    /*
-	 * Comptage des ticks
-	 * Cette codeuse est connect�e � un timer 16bit
-	 * on subit donc un overflow/underflow de la valeur des ticks tous les 7 m�tres environ
-	 * ceci est corrig� de mani�re � pouvoir parcourir des distances grandes sans devenir fou en chemin (^_^)
-*/
-
-/*
-    //éviter overflow
-    static int32_t lastRawTicks = 0;	//On garde en m�moire le nombre de ticks obtenu au pr�c�dent appel
-    static int Overflow = 0;			//On garde en m�moire le nombre de fois que l'on a overflow (n�gatif pour les underflow)
-
-    int32_t rawTicks = Counter::getMoteurValue();	//Nombre de ticks avant tout traitement
-
-    if (lastRawTicks - rawTicks > 32768)		//D�tection d'un overflow
-        Overflow++;
-    else if(lastRawTicks - rawTicks < -32768)	//D�tection d'un underflow
-        Overflow--;
-
-    lastRawTicks = rawTicks;
-
-    int32_t Ticks = rawTicks + Overflow*65535;	//On calcule le nombre r�el de ticks
-*/
-
 
     //Gestion du dépassement des ticks de codeuse(car timer en 16bits)
     static int32_t previousTick=0;
@@ -98,10 +76,8 @@ void ElevatorMgr::elevatorControl(){
     previousTick=rawCurrentPosition;
     currentPosition=rawCurrentPosition+overflow*65535;
 
-    //controle
-    //serial.printflnDebug("%d: ah!", Counter::getMoteurValue());
+    //contrôle
     elevatorPID.compute();	// Actualise la valeur calculée par le PID
-    //serial.printflnDebug("%d :elevatorPWM", elevatorPWM);
     elevatorMotor.run(elevatorPWM);
 }
 

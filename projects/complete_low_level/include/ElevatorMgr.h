@@ -9,15 +9,16 @@
 #ifndef ARM_ELEVATORMGR_H
 #define ARM_ELEVATORMGR_H
 
-#define PI 3.14159265
-#define rayon 10
-#define circonf (2*PI*rayon)
+#define PI          3.14159265
+#define rayon       10
 
 
 #define TICKS_TO_MM 0.00135373			// unit� : mm/ticks
-//TODO : à trouver empiriquement
 
-#define HEIGHT 110 //unit : mm
+#define HIGH        75 //unit : mm
+#define LOW         0
+#define HighTicks   (int32_t)(HIGH / TICKS_TO_MM)
+#define LowTicks    (int32_t)(LOW / TICKS_TO_MM)
 
 
 #include "../library/Singleton.hpp"

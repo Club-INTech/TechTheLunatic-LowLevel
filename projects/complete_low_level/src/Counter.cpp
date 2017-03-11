@@ -108,7 +108,6 @@ Counter::Counter() {
     TIM_TimeBaseStructure.TIM_Period = -1;
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
-
     TIM_Cmd(TIM1, ENABLE);
 
     TIM_SetCounter(TIM1, 32767);
@@ -117,14 +116,14 @@ Counter::Counter() {
 
 int32_t Counter::getRightValue() {
 	//Translate to int32_t
-	return -(TIM_GetCounter(TIM5)-2147483647);
+	return -(TIM_GetCounter(TIM5)-2147483647);  //Pins codeuses inversées sur la stm
 }
 
 int32_t Counter::getLeftValue() {
 	//Translate to int16_t
-	return -(TIM_GetCounter(TIM3)-32767);
+	return -(TIM_GetCounter(TIM3)-32767);       //Pins codeuses inversées sur la stm
 }
 int32_t Counter::getMoteurValue() {
     //Translate to int16_t
-    return -(TIM_GetCounter(TIM1)-32767);
+    return (TIM_GetCounter(TIM1)-32767);
 }
