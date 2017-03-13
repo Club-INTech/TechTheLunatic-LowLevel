@@ -38,8 +38,11 @@ int main(void)
 	//SensorMgr* sensorMgr = &SensorMgr::Instance(); //capteurs, contacteurs, jumper
 	Voltage_controller* voltage = &Voltage_controller::Instance();//contrôle batterie Lipos
 
-    ElevatorMgr & elevatorMgr = ElevatorMgr::Instance();
-    elevatorMgr.elevatorInit();
+    //ElevatorMgr & elevatorMgr = ElevatorMgr::Instance(); TODO:en attente de la correction des ticks de codeuse
+    //elevatorMgr.elevatorInit();
+
+    Elevator elevator=Elevator();
+    elevator.initialize();
 
 	char order[64]; //Permet le stockage du message re�u par la liaison s�rie
 
@@ -711,6 +714,8 @@ int main(void)
 *		   *|___________________|*
 */
 
+            /*
+
                 //Asensceur
             else if(!strcmp("asc1", order))
             {
@@ -773,7 +778,36 @@ int main(void)
                 serial.read(kd);
                 elevatorMgr.setElevatorTunings(kp, ki, kd);
             }
+             */
 
+            else if(!strcmp("asdown", order))
+            {
+                elevator.run(-4);
+                Delay(800);
+                elevator.stop();
+            }
+            else if(!strcmp("asup", order)) {
+
+                elevator.run(4);
+
+
+                if (module == 0)
+                {
+                    Delay(1080); // ~1.5tours à 10V
+                    module++;
+                }
+                else if(module==1)
+                {
+                    Delay(1110);
+                    module++;
+                }
+                else if(module==2)
+                {
+                    Delay(1160);
+                    module=0;
+                }
+                elevator.stop();
+            }
 
 
 /*			 ________________________
@@ -804,8 +838,8 @@ int main(void)
             }
             else if(!strcmp("pfdebug", order))
             {
-                serial.printfln("%d", (int) motionControlSystem->getX());
-                serial.printfln("%d", (int) motionControlSystem->getY());
+                serial.printfln("%d", (int) Counter::getLeftValue());
+                serial.printfln("%d", (int) Counter::getRightValue());
                 serial.printfln("%f", motionControlSystem->getAngleRadian());
                 serial.printfln("%d",  (int) motionControlSystem->getLeftSpeed().value());
                 serial.printfln("%d",  (int) motionControlSystem->getRightSpeed().value());
@@ -832,11 +866,12 @@ int main(void)
                 motionControlSystem->getData();
 
             }
-
-            else if(!strcmp("ascdata", order))
+/*
+            else if(!strcmp("ascdata", order)) TODO:enlever après correction ticks
             {
                 elevatorMgr.getData();
             }
+            */
             else if(!strcmp("rp",order))             //Reset position et angle du robot, et le stoppe
             {
                 motionControlSystem->resetPosition();
@@ -926,7 +961,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
     volatile static uint32_t i = 0, j = 0, k = 0, l = 0; //compteurs pour lancer des méthodes à différents moments
     static MotionControlSystem *motionControlSystem = &MotionControlSystem::Instance();
     static Voltage_controller *voltage = &Voltage_controller::Instance();
-    static ElevatorMgr &elevatorMgr = ElevatorMgr::Instance();
+    //static ElevatorMgr &elevatorMgr = ElevatorMgr::Instance();
 
     if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) { //arbalète
         //TIM_GetITStatus vérifie si l'interruption a eu lieu (SET) ou non (RESET)
@@ -936,7 +971,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
         //Asservissement et mise à jour de la position
         motionControlSystem->control();
         motionControlSystem->updatePosition();
-        elevatorMgr.elevatorControl();
+        //elevatorMgr.elevatorControl();
 
 
         if (j >= 5) { //0.5ms x 5 = 2.5ms
