@@ -55,8 +55,10 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     translationPID.setTunings(23
             , 0, 0);
     rotationPID.setTunings(17, 0, 0);
-    leftSpeedPID.setTunings(0.01, 0.000025, 0.0001); // ki 0.00001
-    rightSpeedPID.setTunings(0.01, 0.000025, 0.0001);
+    leftSpeedPID.setTunings(0.01, 0, 0.0001);
+    //leftSpeedPID.setTunings(0.01, 0.000025, 0.0001); // ki 0.00001
+    rightSpeedPID.setTunings(0.01, 0, 0.0001);
+    //rightSpeedPID.setTunings(0.01, 0.000025, 0.0001);
 
     distanceTest = 200;
 
