@@ -35,11 +35,11 @@ int main(void)
 
     motionControlSystem->init(); //initialise asservissement, PWM et counters
 	ActuatorsMgr* actuatorsMgr = &ActuatorsMgr::Instance(); //ax12
-	//SensorMgr* sensorMgr = &SensorMgr::Instance(); //capteurs, contacteurs, jumper
+	SensorMgr* sensorMgr = &SensorMgr::Instance(); //capteurs, contacteurs, jumper
 	Voltage_controller* voltage = &Voltage_controller::Instance();//contrôle batterie Lipos
 
-    //ElevatorMgr & elevatorMgr = ElevatorMgr::Instance(); TODO:en attente de la correction des ticks de codeuse
-    //elevatorMgr.elevatorInit();
+    ElevatorMgr & elevatorMgr = ElevatorMgr::Instance();
+    elevatorMgr.elevatorInit();
 
     Elevator elevator=Elevator();
     elevator.initialize();
@@ -52,9 +52,10 @@ int main(void)
 
 	while(1)
 	{
-	//	sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
+        //serial.printflnDebug("prerefresh");
+		sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
                                                                         // et ils se préparent à recevoir un front montant
-
+        //serial.printflnDebug("postrefresh");
 		uint8_t tailleBuffer = serial.available(); //taille utilisée pour le passage des données dans le câble série
 
 
@@ -451,7 +452,7 @@ int main(void)
  *		   *|     CAPTEURS     |*
  *		   *|__________________|*
  */
-/*
+
         else if(!strcmp("usard",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
         {
             serial.printfln("%d", sensorMgr->getSensorDistanceARD());//en mm
@@ -475,7 +476,7 @@ int main(void)
  *		   *|CONTACTEURS ET JUMPER|*
  *		   *|_____________________|*
  */
-/*
+
         else if(!strcmp("j",order))			    //Indiquer l'�tat du jumper (0='en place'; 1='dehors')
         {
             serial.printfln("%d", sensorMgr->isJumperOut());
@@ -492,7 +493,7 @@ int main(void)
         {
             serial.printfln("%d", sensorMgr->isContactor3engaged());
         }
-*/
+
 
 /*			 __________________
  * 		   *|                  |*
@@ -990,14 +991,14 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
 
         if (l >= 200) {
             //elevatorMgr.elevatorControl();
-            if(autoUpdatePosition && !serial.available()) {
+            if (autoUpdatePosition && !serial.available()) {
                 //si l'envoi automatique de position au HL est activé et que la série a de la place diponible
                 //on affiche la position et l'angle du robot
                 serial.printflnPosition("%d", (int) motionControlSystem->getX());
                 serial.printflnPosition("%d", (int) motionControlSystem->getY());
                 serial.printflnPosition("%f", motionControlSystem->getAngleRadian());
-                serial.printflnPosition("%d",  (int) motionControlSystem->getLeftSpeed().value());
-                serial.printflnPosition("%d",  (int) motionControlSystem->getRightSpeed().value());
+                serial.printflnPosition("%d", (int) motionControlSystem->getLeftSpeed().value());
+                serial.printflnPosition("%d", (int) motionControlSystem->getRightSpeed().value());
                 serial.printflnPosition("%d", (int) motionControlSystem->getTranslationSetPoint());
                 serial.printflnPosition("%d", (int) motionControlSystem->getLeftSetPoint());
                 serial.printflnPosition("%d", (int) motionControlSystem->getRightSetPoint());
@@ -1006,7 +1007,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
                 serial.printflnDebug("available = %d", serial.available());
             }
 
-            l=0;
+            l = 0;
         }
 
         k++;
@@ -1036,21 +1037,37 @@ void EXTI4_IRQHandler(void)
  		    	sensorMgr->sensorInterrupt(0);
         		EXTI_ClearITPendingBit(EXTI_Line4);
  }
-
-void EXTI9_5_IRQHandler(void)
- {
-	static SensorMgr* sensorMgr = &SensorMgr::Instance();
-
-    if (EXTI_GetITStatus(EXTI_Line6) != RESET) {
-    	        sensorMgr->sensorInterrupt(1);
-    	        EXTI_ClearITPendingBit(EXTI_Line6);
-
-    if (EXTI_GetITStatus(EXTI_Line7) != RESET) {
-    	        sensorMgr->sensorInterrupt(3);
-        		EXTI_ClearITPendingBit(EXTI_Line7);
- }
 */
+void EXTI15_10_IRQHandler(void) {
+    static SensorMgr *sensorMgr = &SensorMgr::Instance();
 
+    if (EXTI_GetITStatus(EXTI_Line13) != RESET) {
+
+        sensorMgr->sensorInterrupt(2);
+        EXTI_ClearITPendingBit(EXTI_Line13);
+    }
+    if (EXTI_GetITStatus(EXTI_Line15) != RESET) {
+
+        sensorMgr->sensorInterrupt(3);
+        EXTI_ClearITPendingBit(EXTI_Line15);
+    }
+    if (EXTI_GetITStatus(EXTI_Line12) != RESET) {
+
+        sensorMgr->sensorInterrupt(1);
+        EXTI_ClearITPendingBit(EXTI_Line12);
+    }
+}
+
+void EXTI0_IRQHandler(void){
+    static SensorMgr *sensorMgr = &SensorMgr::Instance();
+
+    if (EXTI_GetITStatus(EXTI_Line0) != RESET){
+        //serial.printflnDebug("main interruption start");
+        sensorMgr->sensorInterrupt(0);
+        EXTI_ClearITPendingBit(EXTI_Line0);
+        //serial.printflnDebug("main interruption end");
+    }
+}
 
 }
 

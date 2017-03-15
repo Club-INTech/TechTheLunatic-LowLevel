@@ -26,11 +26,11 @@
 
 SensorMgr::SensorMgr():
 
-    // On définit des capteurs US qui attendent le prochain front montant
-    ultrasonAVD(),
-    ultrasonAVG(),
-    ultrasonARD(),
-    ultrasonARG()
+// On définit des capteurs US qui attendent le prochain front montant
+        ultrasonAVD(),
+        ultrasonAVG(),
+        ultrasonARD(),
+        ultrasonARG()
 
 {
     refreshDelay = 13;   // temps tout les combien les capteurs envoient leur signal de 10ms devant eux
@@ -44,18 +44,18 @@ SensorMgr::SensorMgr():
 */
 
     // Définition des variables qu'on va initialiser
-	GPIO_InitTypeDef GPIO_InitStruct;
-	EXTI_InitTypeDef EXTI_InitStruct;
-	NVIC_InitTypeDef NVIC_InitStruct;
+    GPIO_InitTypeDef GPIO_InitStruct;
+    EXTI_InitTypeDef EXTI_InitStruct;
+    NVIC_InitTypeDef NVIC_InitStruct;
 
-	// Initialisation des ports GPIO utilisés pour communiquer au niveau des pins
+    // Initialisation des ports GPIO utilisés pour communiquer au niveau des pins
     GPIO_StructInit(&GPIO_InitStruct); //Initialise avec les valeurs par d�faut
 
     // Activation des horloges pour les différents ports GPIO
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); //Active l'horloge du port A
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE); //Active l'horloge du port B
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); //Active l'horloge du port C
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); //Active l'horloge du port D
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); //Active l'horloge du port A
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE); //Active l'horloge du port B
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE); //Active l'horloge du port C
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); //Active l'horloge du port D
 
 
 /*     ______________________________________
@@ -64,33 +64,33 @@ SensorMgr::SensorMgr():
 	 *|______________________________________|*
 */
 
-	// Initialisation de la pin du Jumper (PC10)
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_10;         // le canal des pins de numéro 10 est initialisé
-	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;       // mode input
-	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;   // rien de particulier
-GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz; // Fréquence maximale en output (100MHz est très élevé)
-	GPIO_Init(GPIOC, &GPIO_InitStruct);             // on actualise les paramètres du port GPIOC
+    // Initialisation de la pin du Jumper (PC10)
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_10;         // le canal des pins de numéro 10 est initialisé
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;       // mode input
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;   // rien de particulier
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz; // Fréquence maximale en output (100MHz est très élevé)
+    GPIO_Init(GPIOC, &GPIO_InitStruct);             // on actualise les paramètres du port GPIOC
 
-	// Contacteur 1 (PB14)
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_14;
-	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
-	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-	GPIO_Init(GPIOB, &GPIO_InitStruct);
+    // Contacteur 1 (PB14)
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_14;
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	// Contacteur 2 (PC12)
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_12;
-	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
-	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-	GPIO_Init(GPIOC, &GPIO_InitStruct);
+    // Contacteur 2 (PC12)
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_12;
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-	// Contacteur 3 (PD11)
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_11;
-	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
-	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-	GPIO_Init(GPIOD, &GPIO_InitStruct);
+    // Contacteur 3 (PD11)
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_11;
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 
 /*     _______________________________________________________
@@ -238,12 +238,12 @@ bool SensorMgr::isContactor3engaged() const{
 */
 
 void SensorMgr::refresh(MOVING_DIRECTION direction) // les capteurs envoient un signal de durée 10 ms devant eux
-	{
-	currentTime = Millis(); // current time (en s)
-/*
-	if(currentTime - lastRefreshTime >= refreshDelay && direction == FORWARD) // actualisation toutes les 13ms
-	{
-		ultrasonAVD.refresh();
+{
+    currentTime = Millis(); // current time (en s)
+
+    if(currentTime - lastRefreshTime >= refreshDelay && direction == FORWARD) // actualisation toutes les 13ms
+    {
+        ultrasonAVD.refresh();
         ultrasonAVG.refresh();
     }
 
@@ -251,8 +251,8 @@ void SensorMgr::refresh(MOVING_DIRECTION direction) // les capteurs envoient un 
     {
         ultrasonARD.refresh();
         ultrasonARG.refresh();
-    } */
-    if(currentTime - lastRefreshTime >= refreshDelay)
+    }
+    else if(currentTime - lastRefreshTime >= refreshDelay && direction == NONE)
     {
         ultrasonAVD.refresh();
         ultrasonAVG.refresh();
@@ -272,14 +272,18 @@ void SensorMgr::refresh(MOVING_DIRECTION direction) // les capteurs envoient un 
 void SensorMgr::sensorInterrupt(int idsensor){
     // Calcule la distance en mm par rapport au prochain objet devant soi, pour tous les capteurs
     // 0 correspond à avant gauche, 1 à avant droit, 2 à arrière gauche, 3 à arrière droit
-	if(idsensor == 0)
-		ultrasonAVD.interruption();
-    else if (idsensor == 1)
+    if(idsensor == 0) {
+        ultrasonAVD.interruption();
+    }
+    else if (idsensor == 1){
         ultrasonAVG.interruption();
-    else if (idsensor == 2)
+    }
+    else if (idsensor == 2) {
         ultrasonARD.interruption();
-    else if (idsensor == 3)
+    }
+    else if (idsensor == 3) {
         ultrasonARG.interruption();
+    }
 }
 
 
@@ -297,11 +301,8 @@ int SensorMgr::getSensorDistanceAVG() {
     return ultrasonAVG.value();
 }
 int SensorMgr::getSensorDistanceARD() {
-	return ultrasonARD.value();
+    return ultrasonARD.value();
 }
 int SensorMgr::getSensorDistanceARG() {
     return ultrasonARG.value();
 }
-
-
-//TODO: tester les capteurs et voir pour les priorités//

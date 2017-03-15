@@ -80,7 +80,7 @@ public:
 		Delay_us(10);
 		GPIO_ResetBits(GPIOx, GPIO_sensor.GPIO_Pin);
 
-        risingEdgeTrigger=true;
+        //risingEdgeTrigger=true;
 
 			// Le signal a �t� envoy�, maintenant on attend la r�ponse dans l'interruption
 		GPIO_sensor.GPIO_Mode = GPIO_Mode_IN;
@@ -99,6 +99,7 @@ public:
 
 		if(risingEdgeTrigger)
 		{
+			//serial.printflnDebug("risingEdgeTrigger");
 			origineTimer = Micros();
 			risingEdgeTrigger = false;
 			EXTI_sensor.EXTI_Trigger = EXTI_Trigger_Falling;	//On devrait recevoir d�sormais un front descendant
@@ -112,11 +113,11 @@ public:
 			//derniereDistance = 10*temps_impulsion/58;
 			ringBufferValeurs.append( 10*temps_impulsion/58 );	//On ajoute la distance mesur�e � cet instant dans un buffer, calcul� ainsi en fonction du temps entre les fronts
 			derniereDistance = mediane(ringBufferValeurs);		//Ce qu'on renvoie est la m�diane du buffer, ainsi on �limine les valeurs extr�mes qui peuvent �tre absurde
-			/*
+/*
 			serial.printflnDebug("%d", current_time);
 			serial.printflnDebug("%d", origineTimer);
 			serial.printflnDebug("%d", derniereDistance);
-			*/
+*/
 			risingEdgeTrigger = true;
 			EXTI_sensor.EXTI_LineCmd = DISABLE;					//On a re�u la r�ponse qui nous int�ressait, on d�sactive donc les lectures d'interruptions sur ce capteur
 			EXTI_Init(&EXTI_sensor);
