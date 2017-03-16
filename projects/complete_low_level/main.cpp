@@ -453,7 +453,24 @@ int main(void)
  *		   *|__________________|*
  */
 
+        else if(!strcmp("usavd",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+        {
+            serial.printfln("%d", sensorMgr->getSensorDistanceARD());//en mm
+        }
+        else if(!strcmp("usavg",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+        {
+            serial.printfln("%d", sensorMgr->getSensorDistanceARG());//en mm
+        }
         else if(!strcmp("usard",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+        {
+            serial.printfln("%d", sensorMgr->getSensorDistanceAVD());//en mm
+        }
+        else if(!strcmp("usarg",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+        {
+            serial.printfln("%d", sensorMgr->getSensorDistanceAVG());//en mm
+        }
+            /*
+            else if(!strcmp("usard",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
         {
             serial.printfln("%d", sensorMgr->getSensorDistanceARD());//en mm
         }
@@ -469,7 +486,7 @@ int main(void)
         {
             serial.printfln("%d", sensorMgr->getSensorDistanceAVG());//en mm
         }
-
+*/
 
 /*			 _____________________
  * 		   *|                     |*
@@ -962,6 +979,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
     volatile static uint32_t i = 0, j = 0, k = 0, l = 0; //compteurs pour lancer des méthodes à différents moments
     static MotionControlSystem *motionControlSystem = &MotionControlSystem::Instance();
     static Voltage_controller *voltage = &Voltage_controller::Instance();
+    static SensorMgr *sensorMgr = &SensorMgr::Instance();
     //static ElevatorMgr &elevatorMgr = ElevatorMgr::Instance();
 
     if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) { //arbalète
@@ -985,7 +1003,6 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
         if (k >= 2000) {
 
             voltage->measure(); //regarde la batterie des Lipos
-
             k = 0;
         }
 
@@ -1006,6 +1023,10 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
                 serial.printflnDebug("Serie occupee !!!");
                 serial.printflnDebug("available = %d", serial.available());
             }
+            serial.printflnUS("%d", sensorMgr->getSensorDistanceAVG());
+            serial.printflnUS("%d", sensorMgr->getSensorDistanceAVD());
+            serial.printflnUS(0);
+            serial.printflnUS(0);
 
             l = 0;
         }
