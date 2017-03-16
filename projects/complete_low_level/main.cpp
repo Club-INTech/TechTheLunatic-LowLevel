@@ -8,7 +8,7 @@
 #include "Elevator.h"
 
 bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
-
+bool autoUpdateUS = false;
 /** Un main commenté !
  * (parce que le bas niveau c'est magnifique)
  * @author caillou, sylvain, rémi, melanie, Ug
@@ -203,7 +203,10 @@ int main(void)
                    {
                     autoUpdatePosition = !autoUpdatePosition; //active ou désactive l'envoi automatique de position au HL
                    }
-
+                else if(!strcmp("autous", order))
+                {
+                    autoUpdateUS=!autoUpdateUS;
+                }
 
 /*			 _____________________
  * 		   *|                     |*
@@ -1023,10 +1026,12 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
                 serial.printflnDebug("Serie occupee !!!");
                 serial.printflnDebug("available = %d", serial.available());
             }
-            serial.printflnUS("%d", sensorMgr->getSensorDistanceAVG());
-            serial.printflnUS("%d", sensorMgr->getSensorDistanceAVD());
-            serial.printflnUS(0);
-            serial.printflnUS(0);
+            if(autoUpdateUS) {
+                serial.printfln("%d", (int) sensorMgr->getSensorDistanceAVG());
+                serial.printfln("%d", (int) sensorMgr->getSensorDistanceAVD());
+                serial.printfln("%d", (int) sensorMgr->getSensorDistanceARG());
+                serial.printfln("%d", (int) sensorMgr->getSensorDistanceARD());
+            }
 
             l = 0;
         }
