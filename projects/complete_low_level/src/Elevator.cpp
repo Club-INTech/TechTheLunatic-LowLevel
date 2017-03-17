@@ -132,12 +132,12 @@ void Elevator::setSens(Sens sensToSet) {
 void Elevator::run(int pwm) {
     if(pwm>=0){
         setSens(UP);
-        TIM12->CCR2=MIN(pwm,8);           // CCR2 prend la valeur minimale entre 255 et le pwm
+        TIM12->CCR2=MIN(pwm,10);           // CCR2 prend la valeur minimale entre 255 et le pwm
         // Cela met en marche le moteur
     }
     else{
         setSens(DOWN);
-        TIM12->CCR2=MIN(-pwm,8);          // On convient qu'un pwm négatif correspond à l'autre sens de rotation
+        TIM12->CCR2=MIN(-pwm,10);          // On convient qu'un pwm négatif correspond à l'autre sens de rotation
     }
 }
 

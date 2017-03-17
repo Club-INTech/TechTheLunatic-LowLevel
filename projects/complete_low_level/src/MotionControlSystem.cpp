@@ -52,12 +52,12 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     toleranceCurveRatio = 0.9;
     toleranceDifferentielle = 500; // Pour les trajectoires "normales", v�rifie que les roues ne font pas nawak chacunes de leur cot�.
 
-    translationPID.setTunings(23
+    translationPID.setTunings(10
             , 0, 0);
     rotationPID.setTunings(17, 0, 0);
-    leftSpeedPID.setTunings(0.01, 0, 0.0001);
+    leftSpeedPID.setTunings(0.009, 0, 0.0001);
     //leftSpeedPID.setTunings(0.01, 0.000025, 0.0001); // ki 0.00001
-    rightSpeedPID.setTunings(0.01, 0, 0.0001);
+    rightSpeedPID.setTunings(0.007, 0, 0.0001);
     //rightSpeedPID.setTunings(0.01, 0.000025, 0.0001);
 
     distanceTest = 200;
