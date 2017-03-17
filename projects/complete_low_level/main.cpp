@@ -472,6 +472,13 @@ int main(void)
         {
             serial.printfln("%d", sensorMgr->getSensorDistanceAVG());//en mm
         }
+        else if(!strcmp("capteurs",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
+        {
+            serial.printfln("AVG %d", sensorMgr->getSensorDistanceAVG());//en mm
+            serial.printfln("AVD %d", sensorMgr->getSensorDistanceAVD());//en mm
+            serial.printfln("ARG %d", sensorMgr->getSensorDistanceARG());//en mm
+            serial.printfln("ARD %d", sensorMgr->getSensorDistanceARD());//en mm
+        }
             /*
             else if(!strcmp("usard",order))		//Indiquer la distance mesur�e par les capteurs � ultrason
         {
@@ -1082,9 +1089,14 @@ void EXTI15_10_IRQHandler(void) {
         sensorMgr->sensorInterrupt(1);
         EXTI_ClearITPendingBit(EXTI_Line12);
     }
+    if (EXTI_GetITStatus(EXTI_Line11) != RESET) {
+
+        sensorMgr->sensorInterrupt(0);
+        EXTI_ClearITPendingBit(EXTI_Line11);
+    }
 }
 
-void EXTI0_IRQHandler(void){
+/*void EXTI0_IRQHandler(void){
     static SensorMgr *sensorMgr = &SensorMgr::Instance();
 
     if (EXTI_GetITStatus(EXTI_Line0) != RESET){
@@ -1094,7 +1106,7 @@ void EXTI0_IRQHandler(void){
         //serial.printflnDebug("main interruption end");
     }
 }
-
+*/
 }
 
 
