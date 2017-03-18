@@ -46,6 +46,7 @@ public:
 		derniereDistance = 0;
 		origineTimer = 0;
 		risingEdgeTrigger = true;
+        dernierPing=Millis();
 
 	}
 
@@ -63,32 +64,34 @@ public:
 		return valeurRetour;
 	}
 
-	void refresh()
-	{
-		EXTI_sensor.EXTI_LineCmd = DISABLE;
-		EXTI_Init(&EXTI_sensor);
-			// On met la pin en output
-		GPIO_sensor.GPIO_Mode = GPIO_Mode_OUT;
-		GPIO_Init(GPIOx, &GPIO_sensor);
+	void refresh() {
+        if (Millis() - dernierPing > 25) {
+            EXTI_sensor.EXTI_LineCmd = DISABLE;
+            EXTI_Init(&EXTI_sensor);
+            // On met la pin en output
+            GPIO_sensor.GPIO_Mode = GPIO_Mode_OUT;
+            GPIO_Init(GPIOx, &GPIO_sensor);
 
-			// On met un z�ro sur la pin pour 2 �s
-		GPIO_ResetBits(GPIOx, GPIO_sensor.GPIO_Pin);
-		Delay_us(2);
+            // On met un z�ro sur la pin pour 2 �s
+            GPIO_ResetBits(GPIOx, GPIO_sensor.GPIO_Pin);
+            Delay_us(2);
 
-			// On met un "un" sur la pin pour 10 �s
-		GPIO_SetBits(GPIOx, GPIO_sensor.GPIO_Pin);
-		Delay_us(10);
-		GPIO_ResetBits(GPIOx, GPIO_sensor.GPIO_Pin);
+            // On met un "un" sur la pin pour 10 �s
+            GPIO_SetBits(GPIOx, GPIO_sensor.GPIO_Pin);
+            Delay_us(10);
+            GPIO_ResetBits(GPIOx, GPIO_sensor.GPIO_Pin);
+            risingEdgeTrigger=true;
+            dernierPing=Millis();
 
-        //risingEdgeTrigger=true;
+            // Le signal a �t� envoy�, maintenant on attend la r�ponse dans l'interruption
+            GPIO_sensor.GPIO_Mode = GPIO_Mode_IN;
+            GPIO_Init(GPIOx, &GPIO_sensor);
+            EXTI_sensor.EXTI_Trigger = EXTI_Trigger_Rising;//On va maintenant recevoir un front montant, il faut se pr�parer pour �a
+            EXTI_sensor.EXTI_LineCmd = ENABLE;                    //On accepte donc de lire les interruptions sur la pin du capteur � partir de maintenant
+            EXTI_Init(&EXTI_sensor);
 
-			// Le signal a �t� envoy�, maintenant on attend la r�ponse dans l'interruption
-		GPIO_sensor.GPIO_Mode = GPIO_Mode_IN;
-		GPIO_Init(GPIOx, &GPIO_sensor);
-		EXTI_sensor.EXTI_Trigger = EXTI_Trigger_Rising;//On va maintenant recevoir un front montant, il faut se pr�parer pour �a
-		EXTI_sensor.EXTI_LineCmd = ENABLE;					//On accepte donc de lire les interruptions sur la pin du capteur � partir de maintenant
-		EXTI_Init(&EXTI_sensor);
-	}
+        }
+    }
 
 
 	/** Fonction appell�e par l'interruption. S'occupe d'enregistrer la valeur de la longueur
@@ -118,7 +121,7 @@ public:
 			serial.printflnDebug("%d", origineTimer);
 			serial.printflnDebug("%d", derniereDistance);
 */
-			risingEdgeTrigger = true;
+			//risingEdgeTrigger = true;
 			EXTI_sensor.EXTI_LineCmd = DISABLE;					//On a re�u la r�ponse qui nous int�ressait, on d�sactive donc les lectures d'interruptions sur ce capteur
 			EXTI_Init(&EXTI_sensor);
 			GPIO_sensor.GPIO_Mode = GPIO_Mode_OUT;
@@ -140,6 +143,7 @@ private:
 	volatile uint32_t derniereDistance;		//contient la derni�re distance acquise, pr�te � �tre envoy�e
 	volatile uint32_t origineTimer;			//origine de temps afin de mesurer une dur�e
 	bool risingEdgeTrigger;
+    uint32_t dernierPing;
 };
 
 #endif

@@ -1034,10 +1034,10 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
                 serial.printflnDebug("available = %d", serial.available());
             }
             if(autoUpdateUS) {
-                serial.printfln("%d", (int) sensorMgr->getSensorDistanceAVG());
-                serial.printfln("%d", (int) sensorMgr->getSensorDistanceAVD());
-                serial.printfln("%d", (int) sensorMgr->getSensorDistanceARG());
-                serial.printfln("%d", (int) sensorMgr->getSensorDistanceARD());
+                serial.printflnUS("%d", sensorMgr->getSensorDistanceAVG());
+                serial.printflnUS("%d", sensorMgr->getSensorDistanceAVD());
+                serial.printflnUS("%d", sensorMgr->getSensorDistanceARG());
+                serial.printflnUS("%d", sensorMgr->getSensorDistanceARD());
             }
 
             l = 0;

@@ -152,10 +152,10 @@ void Motor::run(int16_t pwminput){
     //serial.printflnDebug("pwm avant run! %d", pwm);
 	if (pwm >= 0) {
 		setDirection(Direction::FORWARD);
-        pwm=MIN(pwm,255);
+        pwm=MIN(pwm,10);
 	} else {
 		setDirection(Direction::BACKWARD);
-        pwm=MIN(-pwm,255);
+        pwm=MIN(-pwm,10);
 	}
     if (side == Side::LEFT) {
         TIM2->CCR3 = pwm;
