@@ -117,7 +117,7 @@ try:
 
 
     ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition, realSpeed, realConsignes, realUS, positionX, positionY,
-                          positionConsigne, orientationLabel, vitesseG, vitesseGConsigne, vitesseD, vitesseDConsigne, avg, avd, arg, ard)
+                positionConsigne, orientationLabel, vitesseG, vitesseGConsigne, vitesseD, vitesseDConsigne, avg, avd, arg, ard)
     """
     MENU
     """
@@ -147,10 +147,8 @@ try:
     posGraphButton.pack(side=RIGHT)
     #resetGraphButton = Button(droite, text="Reset graphes", command=resetGraphs(T, G))
     #resetGraphButton.pack(side=LEFT)
-   # ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition, realSpeed, realConsignes, positionX, positionY
-    #             , positionConsigne, orientationLabel, vitesseG, vitesseGConsigne, vitesseD, vitesseDConsigne)
 
-    #ecoute.start()
+    ecoute.start()
 
     fenetre.mainloop()
 

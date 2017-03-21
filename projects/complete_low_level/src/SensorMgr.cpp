@@ -14,12 +14,12 @@
  * 		Jumper : PC10
  * 		Contacteur 1	: PB14
  * 		Contacteur 2	: PC12
- * 		Contacteur 3	: anciennement PD11, maintenant PC0
+ * 		Contacteur 3	: PD11
  *
  * 	ULTRASONS:
  * 		Avant Droit   (US4):	PC13
  * 		Avant Gauche  (US2):	PC15
- * 		Arri�re Droit (US3):	anciennement PC0, maintenant PD11
+ * 		Arri�re Droit (US3):	PC0
  * 		Arri�re Gauche (US1):	PB12
  */
 

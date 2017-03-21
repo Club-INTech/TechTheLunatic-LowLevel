@@ -19,7 +19,7 @@ usHeader = "".join([chr(c) for c in usHeaderCode])
 
 class threadEcoute(Thread):
     def __init__(self, serie, debugLogs, generalLogs, realPosition, realSpeed, realConsignes, realUS, positionX, positionY,
-                positionConsigne, orientationLabel, vitesseG, vitesseGConsigne, vitesseD, vitesseDConsigne, avg, avd, arg, ard)
+                positionConsigne, orientationLabel, vitesseG, vitesseGConsigne, vitesseD, vitesseDConsigne, avg, avd, arg, ard):
         Thread.__init__(self)
         self.serie = serie
         self.debugLogs = debugLogs
@@ -69,18 +69,8 @@ class threadEcoute(Thread):
                 self.debugLogs.insert(END, a[2:-2]+"\n")
                 self.debugLogs.config(state=DISABLED)
                 self.debugLogs.see("end")
-            elif (a[0:2] == usHeader):
 
-                us.pop(0)
-                us.append(a[2:-2])
-                timestamps.pop(0)
-                timestamps.append(time())
-                if (max(timestamps)-min(timestamps)<0.005):
-                    self.realUS=us
-                    self.avg.config(text="Avant gauche : " + str(self.realUS[0]))
-                    self.avd.config(text="Avant droit : " + str(self.realUS[1]))
-                    self.arg.config(text="Arriere gauche : " + str(self.realUS[2]))
-                    self.ard.config(text="Arriere droit : " + str(self.realUS[3]))
+
 
             elif (a[0:2] == positionHeader):
                 position.pop(0)
