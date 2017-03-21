@@ -17,10 +17,10 @@
  * 		Contacteur 3	: anciennement PD11, maintenant PC0
  *
  * 	ULTRASONS:
- * 		Avant Droit   (US4):	anciennement PC0, maintenant PD11
- * 		Avant Gauche  (US2):	PB12
- * 		Arri�re Droit (US3):	PC13
- * 		Arri�re Gauche (US1):	PC15
+ * 		Avant Droit   (US4):	PC13
+ * 		Avant Gauche  (US2):	PC15
+ * 		Arri�re Droit (US3):	anciennement PC0, maintenant PD11
+ * 		Arri�re Gauche (US1):	PB12
  */
 
 
@@ -98,7 +98,7 @@ SensorMgr::SensorMgr():
 	 *| Initialisation des interruptions pour les capteurs US |*
 	 *|_______________________________________________________|*
 */
-    // Capteur US AVD : anciennement PC0, maintenant PD11
+    // Capteur US ARD : anciennement PC0, maintenant PD11
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE); // active l'horloge de SYSCFG (System Configuration)
 
@@ -124,9 +124,9 @@ SensorMgr::SensorMgr():
     NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;                  // autorise l'interruption
     NVIC_Init(&NVIC_InitStruct);                                  // actualisation des paramètres de NVIC
 
-    ultrasonAVD.init(GPIOD, GPIO_InitStruct, EXTI_InitStruct);    // on actualise le capteur US avec le port, la pin et le canal définis ci-dessus
+    ultrasonARD.init(GPIOD, GPIO_InitStruct, EXTI_InitStruct);    // on actualise le capteur US avec le port, la pin et le canal définis ci-dessus
 
-    // Capteur US AVG : PB12
+    // Capteur US ARG : PB12
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 
@@ -153,7 +153,7 @@ SensorMgr::SensorMgr():
 
     ultrasonAVG.init(GPIOB, GPIO_InitStruct, EXTI_InitStruct);
 
-    // Capteur US ARD : PC13
+    // Capteur US AVD : PC13
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 
@@ -178,9 +178,9 @@ SensorMgr::SensorMgr():
     NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStruct);
 
-    ultrasonARD.init(GPIOC, GPIO_InitStruct, EXTI_InitStruct);
+    ultrasonAVD.init(GPIOC, GPIO_InitStruct, EXTI_InitStruct);
 
-    // Capteur US ARG : PC15
+    // Capteur US AVG : PC15
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 

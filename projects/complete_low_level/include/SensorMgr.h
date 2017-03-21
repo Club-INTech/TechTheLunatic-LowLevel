@@ -45,9 +45,7 @@ public:
 
 
 private:
-
 	CapteurSRF ultrasonARD;
-    //@M:à tester
     CapteurSRF ultrasonARG;
     CapteurSRF ultrasonAVD;
     CapteurSRF ultrasonAVG;
