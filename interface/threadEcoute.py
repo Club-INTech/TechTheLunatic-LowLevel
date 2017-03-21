@@ -9,14 +9,17 @@ debugHeader = "".join([chr(c) for c in debugHeaderCode]) # Passage en string
 positionHeaderCode = [0x12, 0x19]
 positionHeader = "".join([chr(c) for c in positionHeaderCode])
 
-#speedHeaderCode = [0x11, 0x14]
-speedHeader = "".join([chr(c) for c in positionHeaderCode])
+speedHeaderCode = [0x11, 0x14]
+speedHeader = "".join([chr(c) for c in speedHeaderCode])
+
+usHeaderCode = [0x01, 0x10]
+usHeader = "".join([chr(c) for c in usHeaderCode])
 
 
 
 class threadEcoute(Thread):
-    def __init__(self, serie, debugLogs, generalLogs, realPosition, realSpeed, realConsignes, positionX, positionY
-                 , positionConsigne, orientationLabel, vitesseG, vitesseGConsigne, vitesseD, vitesseDConsigne):
+    def __init__(self, serie, debugLogs, generalLogs, realPosition, realSpeed, realConsignes, realUS, positionX, positionY,
+                positionConsigne, orientationLabel, vitesseG, vitesseGConsigne, vitesseD, vitesseDConsigne, avg, avd, arg, ard)
         Thread.__init__(self)
         self.serie = serie
         self.debugLogs = debugLogs
@@ -32,6 +35,11 @@ class threadEcoute(Thread):
         self.positionConsigne = positionConsigne
         self.vitesseGConsigne = vitesseGConsigne
         self.vitesseDConsigne = vitesseDConsigne
+        self.realUS = realUS
+        self.avg = avg
+        self.avd = avd
+        self.arg = arg
+        self.ard = ard
 
         print("--------------------------\n\n")
 
@@ -39,6 +47,7 @@ class threadEcoute(Thread):
         position = [0, 0, 0, 0, 0, 0, 0, 0]
         speed = [0, 0]
         consigne = [0, 0, 0]
+        us = [0, 0, 0, 0]
         timestamps = [0, 0, 0, 0, 0, 0, 0, 0]
 
         while (True):
@@ -60,6 +69,18 @@ class threadEcoute(Thread):
                 self.debugLogs.insert(END, a[2:-2]+"\n")
                 self.debugLogs.config(state=DISABLED)
                 self.debugLogs.see("end")
+            elif (a[0:2] == usHeader):
+
+                us.pop(0)
+                us.append(a[2:-2])
+                timestamps.pop(0)
+                timestamps.append(time())
+                if (max(timestamps)-min(timestamps)<0.005):
+                    self.realUS=us
+                    self.avg.config(text="Avant gauche : " + str(self.realUS[0]))
+                    self.avd.config(text="Avant droit : " + str(self.realUS[1]))
+                    self.arg.config(text="Arriere gauche : " + str(self.realUS[2]))
+                    self.ard.config(text="Arriere droit : " + str(self.realUS[3]))
 
             elif (a[0:2] == positionHeader):
                 position.pop(0)
@@ -73,7 +94,6 @@ class threadEcoute(Thread):
                 timestamps.append(time())
 
                 if (max(timestamps)-min(timestamps)<0.005): # Si les messages sont assez rapproches
-
                     self.realPosition = position
                     self.positionX.config(text="x : " + str(self.realPosition[0]))
                     self.positionY.config(text="y : " + str(self.realPosition[1]))

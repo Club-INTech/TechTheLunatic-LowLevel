@@ -265,7 +265,7 @@ void MotionControlSystem::control()
         rightSpeedSetpoint = previousRightSpeedSetpoint + maxAcceleration*rightCurveRatio;
     }
 
-    // Limitation de la décélération du moteur gauche
+    // Limitation de la décélération du moteur droit
     if(previousLeftSpeedSetpoint - leftSpeedSetpoint > maxDeceleration)
     {
         rightSpeedSetpoint = previousRightSpeedSetpoint - maxDeceleration*leftCurveRatio;

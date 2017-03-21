@@ -41,6 +41,7 @@ try:
     realPosition = [0, 0, 0]
     realSpeed = [0, 0]
     realConsignes = [0, 0, 0]
+    realUS = [0 ,0 ,0 ,0]
 
     positionX = Label(position, text="x : "+str(realPosition[0]))
     positionX.pack()
@@ -61,11 +62,15 @@ try:
     orientationLabel = Label(orientation, text=str(realPosition[2]) + " rad ")
     orientationLabel.pack()
 
-    Label(us, text="Avant gauche : ").pack()
-    Label(us, text="Avant droit : ").pack()
-    Label(us, text="Arriere gauche : ").pack()
-    Label(us, text="Arriere droit : ").pack()
-
+#Capteurs
+    avg = Label(us, text="Avant gauche : "+ str(realUS[0]))
+    avg.pack()
+    avd = Label(us, text="Avant droit : "+ str(realUS[1]))
+    avd.pack()
+    arg = Label(us, text="Arriere gauche : "+ str(realUS[2]))
+    arg.pack()
+    ard = Label(us, text="Arriere droit : "+ str(realUS[3]))
+    ard.pack()
 
 
     saisieBlock = PanedWindow(gauche, orient=HORIZONTAL, height=1)
@@ -111,8 +116,8 @@ try:
         return 1
 
 
-    ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition, realSpeed, realConsignes, positionX, positionY,
-                          positionConsigne, orientationLabel, vitesseG, vitesseGConsigne, vitesseD, vitesseDConsigne)
+    ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition, realSpeed, realConsignes, realUS, positionX, positionY,
+                          positionConsigne, orientationLabel, vitesseG, vitesseGConsigne, vitesseD, vitesseDConsigne, avg, avd, arg, ard)
     """
     MENU
     """
@@ -142,10 +147,10 @@ try:
     posGraphButton.pack(side=RIGHT)
     #resetGraphButton = Button(droite, text="Reset graphes", command=resetGraphs(T, G))
     #resetGraphButton.pack(side=LEFT)
-    ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition, realSpeed, realConsignes, positionX, positionY
-                 , positionConsigne, orientationLabel, vitesseG, vitesseGConsigne, vitesseD, vitesseDConsigne)
+   # ecoute = threadEcoute(serie, debugLogs, generalLogs, realPosition, realSpeed, realConsignes, positionX, positionY
+    #             , positionConsigne, orientationLabel, vitesseG, vitesseGConsigne, vitesseD, vitesseDConsigne)
 
-    ecoute.start()
+    #ecoute.start()
 
     fenetre.mainloop()
 

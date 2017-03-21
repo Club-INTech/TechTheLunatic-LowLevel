@@ -141,10 +141,10 @@ int main(void)
             else if(!strcmp("dts",order))       //définir le Delay To Stop (temps à l'arrêt avant de considérer un blocage)
             {
                 uint32_t delayToStop = 0;
-                serial.printfln("Delay to stop ? (ms)");
+                serial.printflnDebug("Delay to stop ? (ms)");
                 serial.read(delayToStop);
                 motionControlSystem->setDelayToStop(delayToStop);
-                serial.printfln("Delay to stop = %d", delayToStop);
+                serial.printflnDebug("Delay to stop = %d", delayToStop);
             }
 
 
@@ -203,7 +203,7 @@ int main(void)
                    {
                     autoUpdatePosition = !autoUpdatePosition; //active ou désactive l'envoi automatique de position au HL
                    }
-                else if(!strcmp("autous", order))
+                else if(!strcmp("sus", order))
                 {
                     autoUpdateUS=!autoUpdateUS;
                 }
@@ -217,32 +217,32 @@ int main(void)
 			else if(!strcmp("ct0",order))		//D�sactiver l'asservissement en translation
 			{
 				motionControlSystem->enableTranslationControl(false);
-                serial.printfln("non asservi en translation");
+                serial.printflnDebug("non asservi en translation");
 			}
 			else if(!strcmp("ct1",order))		//Activer l'asservissement en translation
 			{
 				motionControlSystem->enableTranslationControl(true);
-                serial.printfln("asservi en translation");
+                serial.printflnDebug("asservi en translation");
 			}
 			else if(!strcmp("cr0",order))		//D�sactiver l'asservissement en rotation
 			{
 				motionControlSystem->enableRotationControl(false);
-                serial.printfln("non asservi en rotation");
+                serial.printflnDebug("non asservi en rotation");
 			}
 			else if(!strcmp("cr1",order))		//Activer l'asservissement en rotation
 			{
 				motionControlSystem->enableRotationControl(true);
-                serial.printfln("asservi en rotation");
+                serial.printflnDebug("asservi en rotation");
 			}
 			else if(!strcmp("cv0",order))		//Désactiver l'asservissement en vitesse
 			{
 				motionControlSystem->enableSpeedControl(false);
-                serial.printfln("non asservi en vitesse");
+                serial.printflnDebug("non asservi en vitesse");
 			}
 			else if(!strcmp("cv1",order))		//Activer l'asservissement en vitesse
 			{
 				motionControlSystem->enableSpeedControl(true);
-                serial.printfln("asservi en vitesse");
+                serial.printflnDebug("asservi en vitesse");
 			}
 
 
@@ -300,9 +300,9 @@ int main(void)
             {
                 translation = !translation;   //Bascule entre le réglage d'asserv en translation et en rotation
                 if(translation)
-                    serial.printfln("reglage de la transation");
+                    serial.printflnDebug("reglage de la transation");
                 else
-                    serial.printfln("reglage de la rotation");
+                    serial.printflnDebug("reglage de la rotation");
             }
             else if(!strcmp("display",order)) //affiche les paramètres des PID des différentes asserv (translation, rotation, vitesse à droite, vitesse à gauche)
             {
@@ -315,10 +315,10 @@ int main(void)
                 motionControlSystem->getRotationTunings(kp_r, ki_r, kd_r);
                 motionControlSystem->getLeftSpeedTunings(kp_g, ki_g, kd_g);
                 motionControlSystem->getRightSpeedTunings(kp_d, ki_d, kd_d);
-                serial.printfln("trans : kp= %g ; ki= %g ; kd= %g", kp_t, ki_t, kd_t);
-                serial.printfln("rot   : kp= %g ; ki= %g ; kd= %g", kp_r, ki_r, kd_r);
-                serial.printfln("gauche: kp= %g ; ki= %g ; kd= %g", kp_g, ki_g, kd_g);
-                serial.printfln("droite: kp= %g ; ki= %g ; kd= %g", kp_d, ki_d, kd_d);
+                serial.printflnDebug("trans : kp= %g ; ki= %g ; kd= %g", kp_t, ki_t, kd_t);
+                serial.printflnDebug("rot   : kp= %g ; ki= %g ; kd= %g", kp_r, ki_r, kd_r);
+                serial.printflnDebug("gauche: kp= %g ; ki= %g ; kd= %g", kp_g, ki_g, kd_g);
+                serial.printflnDebug("droite: kp= %g ; ki= %g ; kd= %g", kp_d, ki_d, kd_d);
             }
                 /*else if(!strcmp("autoasserv" ,order))// Commande pour le programme d'autoasserv (python)
                 {
@@ -1061,38 +1061,33 @@ void EXTI1_IRQHandler(void) // interruptions sur pins
         		EXTI_ClearITPendingBit(EXTI_Line1);     // Clear interrupt flag : on passe de SET à RESET
         		                                        // le passge de RESET à SET est interne à la carte
  }
-
-void EXTI4_IRQHandler(void)
- {
-    static SensorMgr* sensorMgr = &SensorMgr::Instance();
-
-    if (EXTI_GetITStatus(EXTI_Line4) != RESET) {
- 		    	sensorMgr->sensorInterrupt(0);
-        		EXTI_ClearITPendingBit(EXTI_Line4);
- }
 */
+void EXTI0_IRQHandler(void) {
+    static SensorMgr *sensorMgr = &SensorMgr::Instance();
+
+    if (EXTI_GetITStatus(EXTI_Line0) != RESET) {
+        sensorMgr->sensorInterrupt(2);
+        EXTI_ClearITPendingBit(EXTI_Line0);
+    }
+}
+
 void EXTI15_10_IRQHandler(void) {
     static SensorMgr *sensorMgr = &SensorMgr::Instance();
 
     if (EXTI_GetITStatus(EXTI_Line13) != RESET) {
 
-        sensorMgr->sensorInterrupt(2);
+        sensorMgr->sensorInterrupt(0);
         EXTI_ClearITPendingBit(EXTI_Line13);
     }
     if (EXTI_GetITStatus(EXTI_Line15) != RESET) {
 
-        sensorMgr->sensorInterrupt(3);
+        sensorMgr->sensorInterrupt(1);
         EXTI_ClearITPendingBit(EXTI_Line15);
     }
     if (EXTI_GetITStatus(EXTI_Line12) != RESET) {
 
-        sensorMgr->sensorInterrupt(1);
+        sensorMgr->sensorInterrupt(3);
         EXTI_ClearITPendingBit(EXTI_Line12);
-    }
-    if (EXTI_GetITStatus(EXTI_Line11) != RESET) {
-
-        sensorMgr->sensorInterrupt(0);
-        EXTI_ClearITPendingBit(EXTI_Line11);
     }
 }
 
