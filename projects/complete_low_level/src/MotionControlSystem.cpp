@@ -55,9 +55,9 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     translationPID.setTunings(10
             , 0, 0);
     rotationPID.setTunings(17, 0, 0);
-    leftSpeedPID.setTunings(0.009, 0, 0.0001);
+    leftSpeedPID.setTunings(0.01, 0, 0.0001);
     //leftSpeedPID.setTunings(0.01, 0.000025, 0.0001); // ki 0.00001
-    rightSpeedPID.setTunings(0.007, 0, 0.0001);
+    rightSpeedPID.setTunings(0.01, 0, 0.0001);
     //rightSpeedPID.setTunings(0.01, 0.000025, 0.0001);
 
     distanceTest = 200;
@@ -266,7 +266,7 @@ void MotionControlSystem::control()
     }
 
     // Limitation de la décélération du moteur droit
-    if(previousLeftSpeedSetpoint - leftSpeedSetpoint > maxDeceleration)
+    if(previousRightSpeedSetpoint - rightSpeedSetpoint > maxDeceleration)
     {
         rightSpeedSetpoint = previousRightSpeedSetpoint - maxDeceleration*leftCurveRatio;
     }
