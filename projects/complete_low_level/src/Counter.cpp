@@ -83,7 +83,7 @@ Counter::Counter() {
 	 * Configuration encodeur MOTEUR sur TIMER 1 (16 bits)
 	 * Pins E9 et E11
 	 */
-
+/*
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
 
@@ -111,19 +111,19 @@ Counter::Counter() {
     TIM_Cmd(TIM1, ENABLE);
 
     TIM_SetCounter(TIM1, 32767);
-
+*/
 }
 
 int32_t Counter::getRightValue() {
 	//Translate to int32_t
-	return -(TIM_GetCounter(TIM5)-2147483647);  //Pins codeuses inversées sur la stm
+	return (-(TIM_GetCounter(TIM5)-2147483647));  //Pins codeuses inversées sur la stm
 }
 
 int32_t Counter::getLeftValue() {
 	//Translate to int16_t
-	return -(TIM_GetCounter(TIM3)-32767);       //Pins codeuses inversées sur la stm
+	return (-(TIM_GetCounter(TIM3)-32767));       //Pins codeuses inversées sur la stm
 }
 int32_t Counter::getMoteurValue() {
     //Translate to int16_t
-    return (TIM_GetCounter(TIM1)-32767);
+    return ((TIM_GetCounter(TIM1)-32767));
 }

@@ -54,7 +54,7 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
 
     translationPID.setTunings(10
             , 0, 0);
-    rotationPID.setTunings(17, 0, 0);
+    rotationPID.setTunings(35, 0, 0.1);
     leftSpeedPID.setTunings(0.01, 0, 0.0001);
     //leftSpeedPID.setTunings(0.01, 0.000025, 0.0001); // ki 0.00001
     rightSpeedPID.setTunings(0.01, 0, 0.0001);
@@ -183,10 +183,11 @@ void MotionControlSystem::control()
     int32_t leftTicks = rawLeftTicks + leftOverflow*65535;	//On calcule le nombre r�el de ticks
 
     /*
-     * Comptage des ticks de la roue gauche
+     * Comptage des ticks de la roue droite
      * ici on est sur un timer 32bit, pas de probl�me d'overflow sauf si on tente de parcourir plus de 446km... //TODO: C'est pas la codeuse droite qui est en 32bits? à vérifier sur la datasheet
      */
     int32_t rightTicks = Counter::getRightValue();
+
 
 
     currentLeftSpeed = (leftTicks - previousLeftTicks)*2000; // (nb-de-tick-passés)*(freq_asserv) (ticks/sec)
@@ -268,7 +269,7 @@ void MotionControlSystem::control()
     // Limitation de la décélération du moteur droit
     if(previousRightSpeedSetpoint - rightSpeedSetpoint > maxDeceleration)
     {
-        rightSpeedSetpoint = previousRightSpeedSetpoint - maxDeceleration*leftCurveRatio;
+        rightSpeedSetpoint = previousRightSpeedSetpoint - maxDeceleration*rightCurveRatio;
     }
 
 
@@ -281,6 +282,7 @@ void MotionControlSystem::control()
         leftSpeedPID.compute();		// Actualise la valeur de 'leftPWM'
     else
         leftPWM = 0;
+
     if(rightSpeedControlled)
         rightSpeedPID.compute();	// Actualise la valeur de 'rightPWM'
     else
@@ -482,8 +484,14 @@ void MotionControlSystem::orderTranslation(int32_t mmDistance) {
     }
     if ( mmDistance >= 0) {
         direction = FORWARD;
+        maxAcceleration = 8;
+        maxDeceleration = 8;
+        translationPID.setTunings(20, 0, 0);
     } else {
         direction = BACKWARD;
+        maxAcceleration = 20;
+        maxDeceleration = 4;
+        translationPID.setTunings(32, 0, 0.1);
     }
     moveAbnormal = false;
 }
@@ -929,12 +937,18 @@ float MotionControlSystem::getTranslationSetPoint()
 void MotionControlSystem::getData()
 {
     serial.printflnDebug("PWM:Gauche : %d __ Droit : %d ", this->leftPWM, this->rightPWM);
-    serial.printflnDebug("Erreur:    Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getError(), this->leftSpeedPID.getError(), this->rightSpeedPID.getError());
-    serial.printflnDebug("Intégrale: Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getIntegralErrol(), this->leftSpeedPID.getIntegralErrol(), this->rightSpeedPID.getIntegralErrol());
-    serial.printflnDebug("Dérivée:   Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getDerivativeError(), this->leftSpeedPID.getDerivativeError(), this->rightSpeedPID.getDerivativeError());
-    serial.printflnDebug("Input:     Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getInput(), this->leftSpeedPID.getInput(), this->rightSpeedPID.getInput());
-    serial.printflnDebug("Output:    Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getOutput(), this->leftSpeedPID.getOutput(), this->rightSpeedPID.getOutput());
-    serial.printflnDebug("SetPoint:  Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getSet(), this->leftSpeedPID.getSet(), this->rightSpeedPID.getSet());
+    serial.printflnDebug("Erreur:    Translation : %d __ PIDGauche : %d", this->translationPID.getError(), this->leftSpeedPID.getError());
+    serial.printflnDebug("PIDDroit : %d" , this->rightSpeedPID.getError());
+    serial.printflnDebug("Intégrale: Translation : %d __ PIDGauche : %d" ,this->translationPID.getIntegralErrol(), this->leftSpeedPID.getIntegralErrol());
+    serial.printflnDebug("PIDDroit : %d" , this->rightSpeedPID.getIntegralErrol());
+    serial.printflnDebug("Dérivée:   Translation : %d __ PIDGauche : %d " ,this->translationPID.getDerivativeError(), this->leftSpeedPID.getDerivativeError());
+    serial.printflnDebug("PIDDroit : %d" , this->rightSpeedPID.getDerivativeError());
+    serial.printflnDebug("Input:     Translation : %d __ PIDGauche : %d " ,this->translationPID.getInput(), this->leftSpeedPID.getInput());
+    serial.printflnDebug("PIDDroit : %d" , this->rightSpeedPID.getInput());
+    serial.printflnDebug("Output:    Translation : %d __ PIDGauche : %d " ,this->translationPID.getOutput(), this->leftSpeedPID.getOutput());
+    serial.printflnDebug("PIDDroit : %d" , this->rightSpeedPID.getOutput());
+    serial.printflnDebug("SetPoint:  Translation : %d __ PIDGauche : %d" ,this->translationPID.getSet(), this->leftSpeedPID.getSet());
+    serial.printflnDebug("PIDDroit : %d" , this->rightSpeedPID.getSet());
 }
 
 int16_t MotionControlSystem::getMotorPWM(int sens){

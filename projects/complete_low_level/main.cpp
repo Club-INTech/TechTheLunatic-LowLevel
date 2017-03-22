@@ -888,7 +888,7 @@ int main(void)
                                      (int) motionControlSystem->getTranslationSetPoint(),
                                      (int) motionControlSystem->getLeftSetPoint(),
                                      (int) motionControlSystem->getRightSetPoint());
-                serial.printflnDebug("codeuse gauche--droite: %d -- %d",
+                serial.printflnDebug("codeuse gauche--droite: %d --    %d",
                                      Counter::getLeftValue(),
                                      Counter::getRightValue());
                 motionControlSystem->getData();
