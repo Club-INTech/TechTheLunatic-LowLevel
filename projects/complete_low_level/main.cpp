@@ -807,14 +807,14 @@ int main(void)
                 elevatorMgr.setElevatorTunings(kp, ki, kd);
             }
              */
-
+/*
             else if(!strcmp("asdown", order))
             {
                 elevator.run(-4);
                 Delay(800);
                 elevator.stop();
-            }
-            else if(!strcmp("asup", order)) {
+            }*/
+            /*else if(!strcmp("asup", order)) {
 
                 elevator.run(4);
 
@@ -835,7 +835,7 @@ int main(void)
                     module=0;
                 }
                 elevator.stop();
-            }
+            }*/
 
 
 /*			 ________________________
@@ -843,7 +843,7 @@ int main(void)
  *		   *|COMMANDES/TESTS DE DEBUG|*
  *		   *|________________________|*
  */
-
+/*
             else if(!strcmp("rawpwm", order)) {
                 motionControlSystem->enable(false);
                 int16_t pwm;
@@ -893,7 +893,7 @@ int main(void)
                                      Counter::getRightValue());
                 motionControlSystem->getData();
 
-            }
+            }*/
 /*
             else if(!strcmp("ascdata", order)) TODO:enlever après correction ticks
             {

@@ -105,6 +105,10 @@ private:
 	//	Limitation d'acc�l�ration
 	volatile int32_t maxAcceleration;
 	volatile int32_t maxDeceleration;
+	volatile int32_t maxAccelAv;
+	volatile int32_t maxAccelAr;
+	volatile int32_t maxDecelAv;
+	volatile int32_t maxDecelAr;
 
 	//Les ratios de vitesse pour commander un d�placement courbe
 	volatile float leftCurveRatio;
@@ -330,6 +334,13 @@ public:
 	int16_t getMotorPWM(int sens);
 
 	void getSens(int sens);
+
+	int kptav;
+	int kptar;
+	int kitav;
+	int kitar;
+	int kdtav;
+	int kdtar;
 };
 
 #endif /* MOTION_CONTROL_H_ */

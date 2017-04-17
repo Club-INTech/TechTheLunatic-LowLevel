@@ -6,8 +6,7 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
                                             leftSpeedPID(&currentLeftSpeed, &leftPWM, &leftSpeedSetpoint),
                                             translationPID(&currentDistance, &translationSpeed, &translationSetpoint),
                                             rotationPID(&currentAngle, &rotationSpeed, &rotationSetpoint),
-                                            averageLeftSpeed(), averageRightSpeed()
-{
+                                            averageLeftSpeed(), averageRightSpeed() {
     translationControlled = true;
     rotationControlled = true;
     leftSpeedControlled = true;
@@ -28,41 +27,51 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     leftCurveRatio = 1.0;
     rightCurveRatio = 1.0;
 
-    leftSpeedPID.setOutputLimits(-255,255);
-    rightSpeedPID.setOutputLimits(-255,255);
+    leftSpeedPID.setOutputLimits(-10, 10);
+    rightSpeedPID.setOutputLimits(-10, 10);
 
     maxSpeed = 3000; // Vitesse maximum, des moteurs (avec une marge au cas o� on s'amuse � faire forcer un peu la bestiole).
     maxSpeedTranslation = 2000; // Consigne max envoy�e au PID
     maxSpeedRotation = 1400;
-    maxAcceleration = 12;
-    maxDeceleration = 6;
 
+
+    maxAccelAv = 8;
+    maxDecelAv = 7;
+    maxAccelAr = 12;
+    maxDecelAr = 3;
 
     // maxjerk = 1; // Valeur de jerk maxi(secousse d'acc�l�ration)
 
     delayToStop = 100; // temps � l'arr�t avant de consid�rer un blocage
     delayToStopCurve = 500; // pareil en courbe
-    toleranceTranslation = 30;
-    toleranceRotation = 50;
-    toleranceSpeed = 50;
+    toleranceTranslation = 20;
+    toleranceRotation = 40;
+    toleranceSpeed = 40;
     toleranceSpeedEstablished = 50; // Doit �tre la plus petite possible, sans bloquer les trajectoires courbes 50
-    delayToEstablish = 1000;
+    delayToEstablish = 800;
 
 
     toleranceCurveRatio = 0.9;
     toleranceDifferentielle = 500; // Pour les trajectoires "normales", v�rifie que les roues ne font pas nawak chacunes de leur cot�.
 
-    translationPID.setTunings(10
-            , 0, 0);
-    rotationPID.setTunings(35, 0, 0.1);
-    leftSpeedPID.setTunings(0.01, 0, 0.0001);
-    //leftSpeedPID.setTunings(0.01, 0.000025, 0.0001); // ki 0.00001
-    rightSpeedPID.setTunings(0.01, 0, 0.0001);
-    //rightSpeedPID.setTunings(0.01, 0.000025, 0.0001);
+    kptav=12;
+    kptar=12;
+
+    kitav=0;
+    kitar=0;
+
+    kdtav=200;
+    kdtar=200;
+
+    translationPID.setTunings(kptav, kitav, kdtav);
+    rotationPID.setTunings(16, 0, 200); //anciennemnt kpr=17 //anciennement 32,0,350 -> oscillations à la fin
+    leftSpeedPID.setTunings(0.0115, 0, 0.005); // ki 0.00001
+    rightSpeedPID.setTunings(0.011, 0, 0.005);
 
     distanceTest = 200;
 
-
+    maxAcceleration=maxAccelAv;
+    maxDeceleration=maxDecelAv;
 }
 
 void MotionControlSystem::init() {
@@ -72,16 +81,14 @@ void MotionControlSystem::init() {
     Motor::initPWM();
     Counter();
 
-
 /**
  * Initialisation de la boucle d'asservissement (TIMER 4)
  */
-
     NVIC_InitTypeDef NVIC_InitStructure;
     //Configuration et activation de l'interruption
     NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0xfe;
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0xfe;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0F;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0F;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
 
@@ -122,6 +129,7 @@ void MotionControlSystem::enableSpeedControl(bool enabled){
     leftSpeedControlled = enabled;
     rightSpeedControlled = enabled;
 }
+
 
 void MotionControlSystem::setRawPositiveTranslationSpeed(){
     translationSpeed = maxSpeedTranslation;
@@ -184,10 +192,9 @@ void MotionControlSystem::control()
 
     /*
      * Comptage des ticks de la roue droite
-     * ici on est sur un timer 32bit, pas de probl�me d'overflow sauf si on tente de parcourir plus de 446km... //TODO: C'est pas la codeuse droite qui est en 32bits? à vérifier sur la datasheet
+     * ici on est sur un timer 32bit, pas de probl�me d'overflow sauf si on tente de parcourir plus de 446km...
      */
     int32_t rightTicks = Counter::getRightValue();
-
 
 
     currentLeftSpeed = (leftTicks - previousLeftTicks)*2000; // (nb-de-tick-passés)*(freq_asserv) (ticks/sec)
@@ -244,32 +251,28 @@ void MotionControlSystem::control()
         rightSpeedSetpoint = maxSpeed;
     else if(rightSpeedSetpoint < -maxSpeed)
         rightSpeedSetpoint = -maxSpeed;
-    ;
+
 
     // Limitation de l'accélération du moteur gauche (permet de règler la pente du trapèze de vitesse)
     if(leftSpeedSetpoint - previousLeftSpeedSetpoint > maxAcceleration)
     {
-        leftSpeedSetpoint = previousLeftSpeedSetpoint + maxAcceleration*leftCurveRatio;
+        leftSpeedSetpoint = (int32_t) (previousLeftSpeedSetpoint + maxAcceleration * leftCurveRatio);
     }
 
-
-    // Limitation de la décélération du moteur gauche
-    if(previousLeftSpeedSetpoint - leftSpeedSetpoint > maxDeceleration)
-    {
-        leftSpeedSetpoint = previousLeftSpeedSetpoint - maxDeceleration*leftCurveRatio;
+        // Limitation de la décélération du moteur gauche
+    else if (previousLeftSpeedSetpoint - leftSpeedSetpoint > maxDeceleration) {
+        leftSpeedSetpoint = (int32_t) (previousLeftSpeedSetpoint - maxDeceleration * leftCurveRatio);
     }
 
 
     // Limitation de l'acc�l�ration du moteur droit
-    if(rightSpeedSetpoint - previousRightSpeedSetpoint > maxAcceleration)
-    {
-        rightSpeedSetpoint = previousRightSpeedSetpoint + maxAcceleration*rightCurveRatio;
+    if (rightSpeedSetpoint - previousRightSpeedSetpoint > maxAcceleration) {
+        rightSpeedSetpoint = (int32_t) (previousRightSpeedSetpoint + maxAcceleration * rightCurveRatio);
     }
 
-    // Limitation de la décélération du moteur droit
-    if(previousRightSpeedSetpoint - rightSpeedSetpoint > maxDeceleration)
-    {
-        rightSpeedSetpoint = previousRightSpeedSetpoint - maxDeceleration*rightCurveRatio;
+        // Limitation de la décélération du moteur droit
+    else if (previousRightSpeedSetpoint - rightSpeedSetpoint > maxDeceleration) {
+        rightSpeedSetpoint = (int32_t) (previousRightSpeedSetpoint - maxDeceleration * rightCurveRatio);
     }
 
 
@@ -282,7 +285,6 @@ void MotionControlSystem::control()
         leftSpeedPID.compute();		// Actualise la valeur de 'leftPWM'
     else
         leftPWM = 0;
-
     if(rightSpeedControlled)
         rightSpeedPID.compute();	// Actualise la valeur de 'rightPWM'
     else
@@ -322,7 +324,6 @@ void MotionControlSystem::manageStop()
     static uint32_t time2 = 0;
     static uint32_t time3 = 0;
     static uint32_t timeToEstablish = 0;
-    static uint32_t timeNotEstablished = 0;
     static bool isSpeedEstablished = false;
 
     if (moving&&
@@ -333,8 +334,6 @@ void MotionControlSystem::manageStop()
         rightSpeedPID.getError()<toleranceSpeed &&
 
         !forcedMovement){
-
-        timeNotEstablished=0;
 
         if(timeToEstablish==0){
             timeToEstablish=Millis();
@@ -355,7 +354,7 @@ void MotionControlSystem::manageStop()
 			}
 			else if(timeNotEstablished > maxTimeNotEstablished){
 				stop();
-				moveAbnormal = true;
+				isMovementAbnormal = true;
 				serial.printfln("la je me bloque");
 			}
 		}
@@ -374,15 +373,9 @@ void MotionControlSystem::manageStop()
         {
             if ((Millis() - time) >= delayToStop)
             { //Si arr�t� plus de 'delayToStop' ms
-                if (ABS((translationPID.getError()) <= toleranceTranslation) && ABS(rotationPID.getError()) <= toleranceRotation)
                 { //Stop� pour cause de fin de mouvement
                     stop();
-                    moveAbnormal = false;
-                }
-                else
-                { //Stopp� pour blocage
-                    stop();
-                    moveAbnormal = true;
+                    moveAbnormal = !(ABS((translationPID.getError()) <= toleranceTranslation) && ABS(rotationPID.getError()) <= toleranceRotation);
                 }
             }
         }
@@ -484,16 +477,17 @@ void MotionControlSystem::orderTranslation(int32_t mmDistance) {
     }
     if ( mmDistance >= 0) {
         direction = FORWARD;
-        maxAcceleration = 8;
-        maxDeceleration = 8;
-        translationPID.setTunings(20, 0, 0);
+        maxAcceleration = maxAccelAv;
+        maxDeceleration = maxDecelAv;
+        //translationPID.setTunings(this->kptav,this->kitav , this->kdtav);
     } else {
         direction = BACKWARD;
-        maxAcceleration = 20;
-        maxDeceleration = 4;
-        translationPID.setTunings(32, 0, 0.1);
+        maxAcceleration = maxAccelAr;
+        maxDeceleration = maxDecelAr;
+        //translationPID.setTunings(this->kptar,this->kitar , this->kdtar);
     }
     moveAbnormal = false;
+
 }
 
 void MotionControlSystem::orderRotation(float angleConsigneRadian, RotationWay rotationWay) {
@@ -720,9 +714,9 @@ void MotionControlSystem::testSpeed()
     rightSpeedControlled = true;
 
     resetTracking();
-    int testTime = (1000*distanceTest/TICK_TO_MM/maxSpeedTranslation);
+    double testTime = (1000 * distanceTest / TICK_TO_MM / maxSpeedTranslation);
     translationSpeed = maxSpeedTranslation;
-    Delay(testTime);
+    Delay((uint32_t) testTime);
     translationSpeed = 0;
     printTracking();
     serial.printf("endtest");
@@ -829,13 +823,13 @@ void MotionControlSystem::setRightSpeedTunings(float kp, float ki, float kd) {
 void MotionControlSystem::setTranslationSpeed(float raw_speed)
 {
     //Conversion de raw_speed de mm/s en ticks/s
-    int speed = raw_speed / TICK_TO_MM;
+    double speed = raw_speed / TICK_TO_MM;
 
     if (speed < 0){ // SINGEPROOF
         maxSpeedTranslation = 0;
     }
     else {
-        maxSpeedTranslation = speed;
+        maxSpeedTranslation = (int32_t) speed;
     }
 }
 /* Definit la vitesse de rotation du robot
@@ -851,11 +845,6 @@ void MotionControlSystem::setRotationSpeed(float raw_speed) // En Rad/s
         maxSpeedRotation = speed;
     }
 }
-
-
-
-
-
 
 /*
  * Getters/Setters des variables de position haut niveau
@@ -933,44 +922,66 @@ float MotionControlSystem::getTranslationSetPoint()
 {
     return this->translationSetpoint;
 }
-
+/*
 void MotionControlSystem::getData()
 {
     serial.printflnDebug("PWM:Gauche : %d __ Droit : %d ", this->leftPWM, this->rightPWM);
-    serial.printflnDebug("Erreur:    Translation : %d __ PIDGauche : %d", this->translationPID.getError(), this->leftSpeedPID.getError());
-    serial.printflnDebug("PIDDroit : %d" , this->rightSpeedPID.getError());
-    serial.printflnDebug("Intégrale: Translation : %d __ PIDGauche : %d" ,this->translationPID.getIntegralErrol(), this->leftSpeedPID.getIntegralErrol());
-    serial.printflnDebug("PIDDroit : %d" , this->rightSpeedPID.getIntegralErrol());
-    serial.printflnDebug("Dérivée:   Translation : %d __ PIDGauche : %d " ,this->translationPID.getDerivativeError(), this->leftSpeedPID.getDerivativeError());
-    serial.printflnDebug("PIDDroit : %d" , this->rightSpeedPID.getDerivativeError());
-    serial.printflnDebug("Input:     Translation : %d __ PIDGauche : %d " ,this->translationPID.getInput(), this->leftSpeedPID.getInput());
-    serial.printflnDebug("PIDDroit : %d" , this->rightSpeedPID.getInput());
-    serial.printflnDebug("Output:    Translation : %d __ PIDGauche : %d " ,this->translationPID.getOutput(), this->leftSpeedPID.getOutput());
-    serial.printflnDebug("PIDDroit : %d" , this->rightSpeedPID.getOutput());
-    serial.printflnDebug("SetPoint:  Translation : %d __ PIDGauche : %d" ,this->translationPID.getSet(), this->leftSpeedPID.getSet());
-    serial.printflnDebug("PIDDroit : %d" , this->rightSpeedPID.getSet());
+    serial.printflnDebug("Erreur:    Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getError(), this->leftSpeedPID.getError(), this->rightSpeedPID.getError());
+    serial.printflnDebug("Intégrale: Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,
+                         this->translationPID.getIntegralError(),
+                         this->leftSpeedPID.getIntegralError(),
+                         this->rightSpeedPID.getIntegralError());
+    serial.printflnDebug("Dérivée:   Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getDerivativeError(), this->leftSpeedPID.getDerivativeError(), this->rightSpeedPID.getDerivativeError());
+    serial.printflnDebug("Input:     Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getInput(), this->leftSpeedPID.getInput(), this->rightSpeedPID.getInput());
+    serial.printflnDebug("Output:    Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getOutput(), this->leftSpeedPID.getOutput(), this->rightSpeedPID.getOutput());
+    serial.printflnDebug("SetPoint:  Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getSet(), this->leftSpeedPID.getSet(), this->rightSpeedPID.getSet());
 }
 
-int16_t MotionControlSystem::getMotorPWM(int sens){
-    if (sens==0){
+void MotionControlSystem::setKav(){
+    serial.printflnDebug("entrer Kpav");
+    serial.read(this->kptav);
+    serial.printflnDebug("entrer Kiav");
+    serial.read(this->kitav);
+    serial.printflnDebug("entrer Kdav");
+    serial.read(this->kdtav);
+}
+void MotionControlSystem::setKar(){
+    serial.printflnDebug("entrer Kpar");
+    serial.read(this->kptar);
+    serial.printflnDebug("entrer Kiar");
+    serial.read(this->kitar);
+    serial.printflnDebug("entrer Kdar");
+    serial.read(this->kdtar);
+}*/
+/*
+int16_t MotionControlSystem::getMotorPWM(int i){
+    if(i==0){
         return this->leftMotor.getPWM();
     }
-    else if(sens==1){
+    else if(i==1){
         return this->rightMotor.getPWM();
     }
+    else {
+        return 0;
+    }
+}*/
+/*
+void MotionControlSystem::getOutputs() {
+    serial.printfln("%d", this->leftSpeedPID.getOutput());
+    serial.printfln("%d", this->rightSpeedPID.getOutput());
 }
 
-void MotionControlSystem::getSens(int sens){
-    if (sens==0){
-        serial.printflnDebug("Direction:");
-        serial.printflnDebug((const char *) this->leftMotor.getDir());
-        serial.printflnDebug("Side:");
-        serial.printflnDebug((const char *) this->leftMotor.getSide());
-    }
-    else if(sens==1){
-        serial.printflnDebug("Direction:");
-        serial.printflnDebug((const char *) this->rightMotor.getDir());
-        serial.printflnDebug("Side:");
-        serial.printflnDebug((const char *) this->rightMotor.getSide());
-    }
+void MotionControlSystem::setAccelAv() {
+    serial.printflnDebug("entrer accel avant(là : %d )", this->maxAccelAv);
+    serial.read(this->maxAccelAv);
+    serial.printflnDebug("entrer decel avant(là : %d )", this->maxDecelAv);
+    serial.read(this->maxDecelAv);
 }
+
+void MotionControlSystem::setAccelAr() {
+    serial.printflnDebug("entrer accel arrière(là : %d )", this->maxAccelAr);
+    serial.read(this->maxAccelAr);
+    serial.printflnDebug("entrer decel arrière(là : %d )", this->maxDecelAr);
+    serial.read(this->maxDecelAr);
+}
+*/
