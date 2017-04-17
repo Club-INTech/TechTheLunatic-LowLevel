@@ -44,8 +44,6 @@ int main(void)
 
 	bool translation = true; //permet de basculer entre les r�glages de cte d'asserv en translation et en rotation
 
-
-
 	while(1)
 	{
         //serial.printflnDebug("prerefresh");
@@ -54,12 +52,10 @@ int main(void)
         //serial.printflnDebug("postrefresh");
 		uint8_t tailleBuffer = serial.available(); //taille utilisée pour le passage des données dans le câble série
 
-
 		if (tailleBuffer && tailleBuffer < RX_BUFFER_SIZE - 1) //s'il reste de la place dans le câble série
 		{
 			serial.read(order);
 			serial.printfln("_");				//Acquittement
-
 
 /*			 __________________
  * 		   *|                  |*
@@ -569,7 +565,7 @@ int main(void)
 
             }
 
-            //actions ax12
+            //ax de test:
             else if (!strcmp("testax12",order)) {     //permet de faire bouger l'ax12 de test
                 uint16_t pos = 0;
                 serial.printfln("Entrez la position");
@@ -581,24 +577,6 @@ int main(void)
             {
                 actuatorsMgr->reanimation();
             }
-                /*
-            else if (!strcmp("testax12cacpos",order)) //ne marche pas et fait planter screen
-			{
-                uint16_t pos = 0;
-                serial.printfln("Entrez la position actuelle");
-                serial.read(pos);
-                bool resultat=actuatorsMgr->change_actualpos(pos);
-                if (resultat)
-                    serial.printfln("Done");
-                else
-                    serial.printfln("ça n'a pas marché");
-            }
-            else if (!strcmp("getpos",order))         //ne marche pas (obtenir la position)
-            {
-                int pos=actuatorsMgr->posdeax12();
-                serial.printfln("%d",pos);
-            }
-                */
 
 
 /*			 ____________________
@@ -780,6 +758,7 @@ int main(void)
 
 
             }
+            */
             else if(!strcmp("pfdebug", order))
             {
                 serial.printfln("%d", (int) Counter::getLeftValue());
@@ -809,13 +788,8 @@ int main(void)
                                      Counter::getRightValue());
                 motionControlSystem->getData();
 
-            }*/
-/*
-            else if(!strcmp("ascdata", order)) TODO:enlever après correction ticks
-            {
-                elevatorMgr.getData();
             }
-            */
+
             else if(!strcmp("rp",order))             //Reset position et angle du robot, et le stoppe
             {
                 motionControlSystem->resetPosition();
