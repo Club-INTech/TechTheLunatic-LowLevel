@@ -77,10 +77,10 @@ public:
 
 		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
 
-		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_10;
+		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-		GPIO_Init(GPIOA, &GPIO_InitStruct);
+		GPIO_Init(GPIOE, &GPIO_InitStruct);
 
 		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
 
@@ -151,7 +151,7 @@ public:
 		}
 		if(ADCValue >= voltage_echelon*3 + minimal_voltage )
 		{
-			GPIO_SetBits(GPIOA, GPIO_Pin_10);
+			GPIO_SetBits(GPIOE, GPIO_Pin_0);
 		}
 		if(ADCValue >= voltage_echelon*2 + minimal_voltage )
 		{
