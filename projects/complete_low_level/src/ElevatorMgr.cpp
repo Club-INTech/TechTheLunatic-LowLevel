@@ -1,145 +1,104 @@
 #include "../include/ElevatorMgr.h"
 
-
 /**
- * Gestion de l'asserv' de l'ascenseur
- *
- * Ticks/tour de la codeuse: 500
- * Longueur à monter:~136mm
- * diamètre poulie:20mm
- *
- * @author melanie
+ * Gestion de la position de l'ascenseur
+ * @author melanie, ug
  **/
 
 
-ElevatorMgr::ElevatorMgr(): elevatorPID(&currentPosition, &elevatorPWM, &positionSetpoint) //position réelle, PWM, consigne de position
-{   elevatorPWM = 0;
-    elevatorPID.setTunings(0.006, 0, 0); //on initialise kp (proportionnel), ki (intégral) et kd (dérivé) du PID
-    positionSetpoint = 0;
-
-    Position = DOWN;
-
+ElevatorMgr::ElevatorMgr()
+{
+    //Initialise tous les paramètres
+    elevatorPWM = 0;
+    position = DOWN;
     positionControlled=true;
-    elevatorMoving = false;
-    delayStop = 120; //temps à l'arrêt avant de considérer un blocage
-}
-void ElevatorMgr::elevatorInit(){
-    /*
-            * Initialisation moteurs et encodeurs
-    */
-    elevatorMotor.initialize();
-    Counter();
+    isElevatorMoving = false;
+    elevator.initialize();
     enableAsserv(true);
-    elevatorPID.setEpsilon(20);
-    positionSetpoint=LowTicks;
+    sensorMgr = &SensorMgr::Instance();
+    isUp=sensorMgr->isContactor1engaged();
+    isDown=sensorMgr->isContactor2engaged();
 }
+
 void ElevatorMgr::enableAsserv(bool enable) {
     if (enable) {
         positionControlled=true;
     } else {
         positionControlled=false;
-        elevatorStop();
+        stop();
     }
 }
 
-
-
-//orders
-void ElevatorMgr::moveTo(Sens setSens) {
-
-    if(!moving)
-    {
-        elevatorPID.resetErrors();
-        moving = true;
-    }
-    if (setSens == UP) {
-        positionSetpoint = HighTicks;   //Position qui bloque le module en haut
-    }
-    else if (setSens == DOWN){
-        positionSetpoint = LowTicks;    //Position de prise de modules
-    }
-    moveAbnormal = false;
-}
-
-
-
-void ElevatorMgr::elevatorControl(){
-
-    //Gestion du dépassement des ticks de codeuse(car timer en 16bits)
-    static int32_t previousTick=0;
-    static int overflow=0;
-    int32_t rawCurrentPosition = Counter::getMoteurValue();
-    if(previousTick-rawCurrentPosition > 32767)
-        overflow++;
-    else if(previousTick-rawCurrentPosition < -32768)
-        overflow--;
-    previousTick=rawCurrentPosition;
-    currentPosition=rawCurrentPosition+overflow*65535;
-
-    //contrôle
-    elevatorPID.compute();	// Actualise la valeur calculée par le PID
-    elevatorMotor.run(elevatorPWM);
-}
-
-void ElevatorMgr::elevatorStop(){
-    positionSetpoint = currentPosition;
-    elevatorMotor.run(elevatorPWM);
-    elevatorMoving = false;
-    elevatorPID.resetErrors();
-    elevatorMotor.stop();
-}
-
-/*
-* Getters/Setters des constantes d'asservissement en translation/rotation/vitesse
-*/
-
-void ElevatorMgr::getElevatorTunings(float &kp, float &ki, float &kd) const {
-    kp = elevatorPID.getKp();
-    ki = elevatorPID.getKi();
-    kd = elevatorPID.getKd();
-}
-void ElevatorMgr::setElevatorTunings(float kp, float ki, float kd) {
-    elevatorPID.setTunings(kp, ki, kd);
-}
-
-/*
- * Getters/Setters des variables de position haut niveau
+/**
+ * Fixe la position voulue pour l'ascenseur
+ * @param positionToGo une ElevatorMgr::Position
  */
+void ElevatorMgr::moveTo(Position positionToGo) {
+    if (!isElevatorMoving) {
+        isElevatorMoving = true;
+    }
+    positionSetpoint = positionToGo;
+    isMovementAbnormal = false;
+}
 
-void ElevatorMgr::setDelayStop(uint32_t delayToStop)
-{
-    this->delayStop = delayToStop;
+
+/**
+ * Methode de contrôle en interruption
+ */
+void ElevatorMgr::control(){
+    if(positionControlled) //Si l'ascenseur est asservi
+    {
+        //On met à jour l'état des contacteurs
+        isUp=sensorMgr->isContactor1engaged();
+        isDown=sensorMgr->isContactor2engaged();
+
+        if(positionSetpoint==UP){       //Si on a demandé à ce qu'on aille en haut
+            elevator.setSens(Elevator::UP); //Le moteur va vers le haut
+            if(!isUp){
+                elevator.run();         //Tant qu'il n'est pas en haut, l'ascenseur monte
+            }
+            else{
+                elevator.stop();        //Si il est en haut, il s'arrête
+                position=UP;
+            }
+        }
+        else if(positionSetpoint==DOWN){
+            elevator.setSens(Elevator::DOWN);
+            if(!isDown){
+                elevator.run();
+            }
+            else{
+                elevator.stop();
+                position=DOWN;
+            }
+        }
+    }
+}
+
+/**
+ * Arrête l'ascenseur à sa dernière position demandée
+ */
+void ElevatorMgr::stop(){
+    positionSetpoint = this->position;
+    elevator.stop();
 }
 
 bool ElevatorMgr::elevatorIsMoving() const{
-    return moving;
+    return isElevatorMoving;
 }
 
 bool ElevatorMgr::elevatorMoveAbnormal() const{
-    return moveAbnormal;
-}
-
-//fonctions de test codeuses/moteur
-void ElevatorMgr::run(int i)
-{
-    elevatorMotor.run(i);
+    return isMovementAbnormal;
 }
 
 void ElevatorMgr::getData()
 {
-    /*static int32_t previousTick=0;
-    static int overflow=0;
-    int32_t rawCurrentPosition = Counter::getMoteurValue();
-    if(previousTick-rawCurrentPosition > 32767)
-        overflow++;
-    else if(previousTick-rawCurrentPosition < -32768)
-        overflow--;
-    previousTick=rawCurrentPosition;
-    currentPosition=rawCurrentPosition+overflow*65535;*/
-
-    serial.printflnDebug("pos: X -- tick: %d", currentPosition);
-    serial.printflnDebug("Consigne: %d", positionSetpoint);
+    if(position==UP)
+    {
+        serial.printflnDebug("pos: UP");
+    }
+    else if(position==DOWN){
+        serial.printflnDebug("pos: DOWN");
+    }
     serial.printflnDebug("PWM: %d", elevatorPWM);
-    serial.printflnDebug("Erreur: %d", elevatorPID.getError());
-    serial.printflnDebug("Input: %d", elevatorPID.getInput());
 }

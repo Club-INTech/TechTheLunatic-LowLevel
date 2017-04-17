@@ -22,9 +22,7 @@
  **/
 
 
-Elevator::Elevator(void) {
-    sens = UP; // L'ascenseur est en bas au début
-}
+Elevator::Elevator(void) {}
 
 
 /*       __________________
@@ -119,39 +117,22 @@ void Elevator::initialize(void){
 // Change la direction dans le sens souhaité(UP ou DOWN)
 void Elevator::setSens(Sens sensToSet) {
     if (sensToSet==UP){
-        sens=UP;
         GPIO_SetBits(GPIOE, GPIO_Pin_13);   // On passe à 1 la valeur du bit de sens PE13 (sens trigo)
     }
     else if (sensToSet==DOWN){
-        sens=DOWN;
         GPIO_ResetBits(GPIOE, GPIO_Pin_13); // On passe à 0 la valeur du bit de sens PE13 (sens antitrigo)
     }
 }
 
 // Tourne dans le sens de sens (mouvement non asservi)
-void Elevator::run(int pwm) {
-    if(pwm>=0){
-        setSens(UP);
-        TIM12->CCR2=MIN(pwm,10);           // CCR2 prend la valeur minimale entre 255 et le pwm
-        // Cela met en marche le moteur
-    }
-    else{
-        setSens(DOWN);
-        TIM12->CCR2=MIN(-pwm,10);          // On convient qu'un pwm négatif correspond à l'autre sens de rotation
-    }
+void Elevator::run(void) {
+        TIM12->CCR2=5;           // CCR2 prend la valeur minimale entre 255 et le pwm
 }
 
 // Stoppe le mouvement de l'ascenseur
 void Elevator::stop(void){
-    //GPIO_ResetBits(GPIOB, GPIO_Pin_15);
-    TIM12->CCR2=0;                          // CCR2 prend la valeur 0
-    // Cela stoppe l'ascenseur
-    if(sens==UP){
-        setSens(DOWN);                      // L'ascenseur se prépare à descendre
-    }
-    else if(sens==DOWN){
-        setSens(UP);                        // L'ascenseur se prépare à monter
-    }
+    TIM12->CCR2=0;
+
 }
 
 

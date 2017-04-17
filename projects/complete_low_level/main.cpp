@@ -38,11 +38,7 @@ int main(void)
 	SensorMgr* sensorMgr = &SensorMgr::Instance(); //capteurs, contacteurs, jumper
 	Voltage_controller* voltage = &Voltage_controller::Instance();//contrôle batterie Lipos
 
-    ElevatorMgr & elevatorMgr = ElevatorMgr::Instance();
-    elevatorMgr.elevatorInit();
-
-    Elevator elevator=Elevator();
-    elevator.initialize();
+    ElevatorMgr* elevatorMgr = &ElevatorMgr::Instance();
 
 	char order[64]; //Permet le stockage du message re�u par la liaison s�rie
 
@@ -742,100 +738,20 @@ int main(void)
 *		   *|___________________|*
 */
 
-            /*
-
-                //Asensceur
-            else if(!strcmp("asc1", order))
+            else if(!strcmp("ascdown", order))
             {
-                elevatorMgr.enableAsserv(true);
+                elevatorMgr->moveTo(ElevatorMgr::DOWN);
             }
-            else if(!strcmp("asc0", order))
-            {
-                elevatorMgr.enableAsserv(false);
+            else if(!strcmp("ascup", order)) {
+                elevatorMgr->moveTo(ElevatorMgr::UP);
             }
-            else if (!strcmp("ascup", order))
-            {
-                elevatorMgr.moveTo(ElevatorMgr::UP);
+            else if(!strcmp("ascstop", order)){
+                elevatorMgr->stop();
             }
-            else if (!strcmp("ascdown", order))
+            else if(!strcmp("ascstatus", order))
             {
-                elevatorMgr.moveTo(ElevatorMgr::DOWN);
+                elevatorMgr->getData();
             }
-            else if(!strcmp("ascrun", order))
-            {
-                serial.printflnDebug("Entrer le sens(0=bas, 1=haut");
-                int sens;
-                serial.read(sens);
-                if(sens==0)
-                    elevatorMgr.run(-150);
-                else if(sens==1)
-                    elevatorMgr.run(150);
-            }
-            else if(!strcmp("getcod", order))
-            {
-                serial.printflnDebug("gauche:%d",Counter::getLeftValue());
-                serial.printflnDebug("droite:%d",Counter::getRightValue());
-            }
-            else if (!strcmp("ascdisplay", order))
-            {
-                float kp, ki, kd;
-                elevatorMgr.getElevatorTunings(kp, ki, kd);
-                serial.printflnDebug("kp=%f , ki=%f, kd=%f", kp, ki, kd);
-            }
-            else if(!strcmp("ascSetKp", order))
-            {
-                float kp, ki, kd;
-                elevatorMgr.getElevatorTunings(kp, ki, kd);
-                serial.printflnDebug("Entrer kp");
-                serial.read(kp);
-                elevatorMgr.setElevatorTunings(kp, ki, kd);
-            }
-            else if(!strcmp("ascSetKi", order))
-            {
-                float kp, ki, kd;
-                elevatorMgr.getElevatorTunings(kp, ki, kd);
-                serial.printflnDebug("Entrer ki");
-                serial.read(ki);
-                elevatorMgr.setElevatorTunings(kp, ki, kd);
-            }
-            else if(!strcmp("ascSetKd", order))
-            {
-                float kp, ki, kd;
-                elevatorMgr.getElevatorTunings(kp, ki, kd);
-                serial.printflnDebug("Entrer kd");
-                serial.read(kd);
-                elevatorMgr.setElevatorTunings(kp, ki, kd);
-            }
-             */
-/*
-            else if(!strcmp("asdown", order))
-            {
-                elevator.run(-4);
-                Delay(800);
-                elevator.stop();
-            }*/
-            /*else if(!strcmp("asup", order)) {
-
-                elevator.run(4);
-
-
-                if (module == 0)
-                {
-                    Delay(1080); // ~1.5tours à 10V
-                    module++;
-                }
-                else if(module==1)
-                {
-                    Delay(1110);
-                    module++;
-                }
-                else if(module==2)
-                {
-                    Delay(1160);
-                    module=0;
-                }
-                elevator.stop();
-            }*/
 
 
 /*			 ________________________
