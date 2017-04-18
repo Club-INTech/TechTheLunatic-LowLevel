@@ -9,8 +9,9 @@
 
 bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
 bool autoUpdateUS = false;
-/** Un main commenté !
- * (parce que le bas niveau c'est magnifique)
+
+/**Contient la boucle principale de gestion des entrées série du programme
+ *
  * @author caillou, sylvain, rémi, melanie, Ug
  **/
 
