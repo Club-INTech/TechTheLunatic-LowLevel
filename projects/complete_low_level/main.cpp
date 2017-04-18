@@ -956,6 +956,7 @@ void EXTI1_IRQHandler(void) // interruptions sur pins
         		                                        // le passge de RESET à SET est interne à la carte
  }
 */
+/*
 void EXTI0_IRQHandler(void) {
     static SensorMgr *sensorMgr = &SensorMgr::Instance();
 
@@ -963,7 +964,7 @@ void EXTI0_IRQHandler(void) {
         sensorMgr->sensorInterrupt(2);
         EXTI_ClearITPendingBit(EXTI_Line0);
     }
-}
+}*/
 
 void EXTI15_10_IRQHandler(void) {
     static SensorMgr *sensorMgr = &SensorMgr::Instance();
@@ -972,6 +973,11 @@ void EXTI15_10_IRQHandler(void) {
 
         sensorMgr->sensorInterrupt(0);
         EXTI_ClearITPendingBit(EXTI_Line13);
+    }
+    if (EXTI_GetITStatus(EXTI_Line11) != RESET) {
+
+        sensorMgr->sensorInterrupt(2);
+        EXTI_ClearITPendingBit(EXTI_Line11);
     }
     if (EXTI_GetITStatus(EXTI_Line15) != RESET) {
 

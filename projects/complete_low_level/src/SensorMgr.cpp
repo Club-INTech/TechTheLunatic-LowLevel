@@ -98,33 +98,33 @@ SensorMgr::SensorMgr():
 	 *| Initialisation des interruptions pour les capteurs US |*
 	 *|_______________________________________________________|*
 */
-    // Capteur US ARD : anciennement PC0
+    // Capteur US ARD : anciennement PC0, maintenant PD11
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE); // active l'horloge de SYSCFG (System Configuration)
 
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;              // mode input
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;            // le type en output est Push-Pull
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;                 // le canal des pins de numéro 6 est initialisé
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_11;                 // le canal des pins de numéro 6 est initialisé
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;            // si le signal est indéterminé, il sera de potentiel 0
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;        // fréquence maximale en output
-    GPIO_Init(GPIOC, &GPIO_InitStruct);                    // actualisation des paramètres du port GPIOA
+    GPIO_Init(GPIOD, &GPIO_InitStruct);                    // actualisation des paramètres du port GPIOA
 
-    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOC, EXTI_PinSource0); // définit le numéro de canal (6) par lequel le port A va lancer l'interruption
+    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOD, EXTI_PinSource11); // définit le numéro de canal (6) par lequel le port A va lancer l'interruption
 
-    EXTI_InitStruct.EXTI_Line = EXTI_Line0;                       // on connecte PA6 à l'EXTI_Line6
+    EXTI_InitStruct.EXTI_Line = EXTI_Line11;                       // on connecte PA6 à l'EXTI_Line6
     EXTI_InitStruct.EXTI_LineCmd = ENABLE;                        // autorise l'interruption
     EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;              // on passe dans le mode d'interruptions
     EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;           // l'interruption se déclenche pour un front montant reçu
     EXTI_Init(&EXTI_InitStruct);                                  // actualisation des paramètres de l'EXTI_Line
 
     // NVIC = Nested Vectored Interrupt Controller
-    NVIC_InitStruct.NVIC_IRQChannel = EXTI0_IRQn;               // vecteur d'interruption associé à l'EXTI_Line utilisée
+    NVIC_InitStruct.NVIC_IRQChannel = EXTI15_10_IRQn;               // vecteur d'interruption associé à l'EXTI_Line utilisée
     NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0xff;     // priorité de ce vecteur
     NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0xff;            // sous-priorité de ce vecteur (en cas de même priorité avec un autre vecteur)
     NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;                  // autorise l'interruption
     NVIC_Init(&NVIC_InitStruct);                                  // actualisation des paramètres de NVIC
 
-    ultrasonARD.init(GPIOC, GPIO_InitStruct, EXTI_InitStruct);    // on actualise le capteur US avec le port, la pin et le canal définis ci-dessus
+    ultrasonARD.init(GPIOD, GPIO_InitStruct, EXTI_InitStruct);    // on actualise le capteur US avec le port, la pin et le canal définis ci-dessus
 
     // Capteur US ARG : PB12
 
@@ -227,7 +227,7 @@ bool SensorMgr::isContactor2engaged() const{
     return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_12);
 }
 bool SensorMgr::isContactor3engaged() const{
-    return !GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_11);
+    return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_0);
 }
 
 
