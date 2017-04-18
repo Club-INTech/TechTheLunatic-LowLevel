@@ -216,18 +216,18 @@ SensorMgr::SensorMgr():
 */
 
 bool SensorMgr::isJumperOut() const{
-    return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_10);
+    return GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_10);
     // 0="en place", 1="retiré"
 }
 bool SensorMgr::isContactor1engaged() const{
-    return !GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12);
+    return GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12);
     // 0="non appuyé", 1="appuyé"
 }
 bool SensorMgr::isContactor2engaged() const{
-    return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_12);
+    return GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_12);
 }
 bool SensorMgr::isContactor3engaged() const{
-    return !GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_11);
+    return GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_11);
 }
 
 
