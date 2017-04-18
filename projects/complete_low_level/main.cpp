@@ -786,7 +786,7 @@ int main(void)
                 serial.printflnDebug("codeuse gauche--droite: %d --    %d",
                                      Counter::getLeftValue(),
                                      Counter::getRightValue());
-                motionControlSystem->getData();
+              //  motionControlSystem->getData();
 
             }
 
