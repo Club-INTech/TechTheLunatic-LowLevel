@@ -2,17 +2,13 @@
 #include "stm32f4xx.h"
 #include "safe_enum.hpp"
 #include "utils.h"
-#include "Uart.hpp"
 #include "stm32f4xx_gpio.h"
 #include "stm32f4xx_tim.h"
 #include "stm32f4xx_rcc.h"
-#include "stm32f4xx_usart.h"
 #include "stm32f4xx_adc.h"
-#include "MotionControlSystem.h"
-
 
 /**
- * Permet de mesurer la tension de la LiPO et l'affiche sur un indicateur à 10 LEDs
+ * Permet de mesurer la tension de la LiPO et l'affiche sur un indicateur ï¿½ 10 LEDs
  * @author discord & sa maman
  */
 class Voltage_controller : public Singleton<Voltage_controller>
@@ -33,70 +29,70 @@ public:
 		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
 
 		GPIO_InitTypeDef GPIO_InitStruct;
-		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
+		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par dï¿½faut
 
 		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6;
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 		GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
+		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par dï¿½faut
 
 		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_4;
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 		GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
+		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par dï¿½faut
 
 		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_2;
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 		GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
+		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par dï¿½faut
 
 		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 		GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
+		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par dï¿½faut
 
 		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_11;
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 		GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
+		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par dï¿½faut
 
 		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_15;
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 		GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
+		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par dï¿½faut
 
 		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 		GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
+		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par dï¿½faut
 
 		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8;
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 		GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
+		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par dï¿½faut
 
 		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9;
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 		GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par défaut
+		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par dï¿½faut
 
 		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_7;
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
@@ -190,10 +186,10 @@ public:
 	}
 private:
 
-	uint32_t voltage_echelon; //Cherches pas, y'a pas d'unité SI.
-	uint32_t minimal_voltage; //Là non plus.
+	uint32_t voltage_echelon; //Cherches pas, y'a pas d'unitï¿½ SI.
+	uint32_t minimal_voltage; //Lï¿½ non plus.
 	uint32_t usb_voltage;
-	int counter; //Là t'es con si t'en cherches une...
+	int counter; //Lï¿½ t'es con si t'en cherches une...
 	bool blink;
 
 

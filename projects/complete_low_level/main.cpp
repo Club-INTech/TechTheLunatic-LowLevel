@@ -3,9 +3,7 @@
 #include "library/Uart.hpp"
 #include "MotionControlSystem.h"
 #include "ActuatorsMgr.hpp"
-#include "SensorMgr.h"
 #include "library/voltage_controller.hpp"
-#include "Elevator.h"
 
 bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
 bool autoUpdateUS = false;
