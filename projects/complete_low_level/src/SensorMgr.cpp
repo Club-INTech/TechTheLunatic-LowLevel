@@ -12,15 +12,15 @@
  *
  * 	CONTACTEURS:
  * 		Jumper : PC10
- * 		Contacteur 1	: PB14
+ * 		Contacteur 1	: PB12
  * 		Contacteur 2	: PC12
  * 		Contacteur 3	: PD11
  *
  * 	ULTRASONS:
- * 		Avant Droit   (US4):	PC13
- * 		Avant Gauche  (US2):	PC15
- * 		Arri�re Droit (US3):	PC0
- * 		Arri�re Gauche (US1):	PB12
+ * 		Avant Droit   (US4):	PD8
+ * 		Avant Gauche  (US2):	PC0
+ * 		Arri�re Droit (US3):	PC13
+ * 		Arri�re Gauche (US1):	PC15
  */
 
 
@@ -71,8 +71,8 @@ SensorMgr::SensorMgr():
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz; // Fréquence maximale en output (100MHz est très élevé)
     GPIO_Init(GPIOC, &GPIO_InitStruct);             // on actualise les paramètres du port GPIOC
 
-    // Contacteur 1 (PB14)
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_14;
+    // Contacteur 1 (PB12)
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_12;
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
@@ -85,12 +85,12 @@ SensorMgr::SensorMgr():
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-    // Contacteur 3 (anciennement PD11, maintenant PC0)
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;
+    // Contacteur 3 (PD11)
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_11;
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-    GPIO_Init(GPIOC, &GPIO_InitStruct);
+    GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 
 /*     _______________________________________________________
@@ -98,20 +98,20 @@ SensorMgr::SensorMgr():
 	 *| Initialisation des interruptions pour les capteurs US |*
 	 *|_______________________________________________________|*
 */
-    // Capteur US ARD : anciennement PC0, maintenant PD11
+    // Capteur US ARD : PC13
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE); // active l'horloge de SYSCFG (System Configuration)
 
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;              // mode input
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;            // le type en output est Push-Pull
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_11;                 // le canal des pins de numéro 6 est initialisé
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_13;                 // le canal des pins de numéro 6 est initialisé
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;            // si le signal est indéterminé, il sera de potentiel 0
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;        // fréquence maximale en output
-    GPIO_Init(GPIOD, &GPIO_InitStruct);                    // actualisation des paramètres du port GPIOA
+    GPIO_Init(GPIOC, &GPIO_InitStruct);                    // actualisation des paramètres du port GPIOA
 
-    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOD, EXTI_PinSource11); // définit le numéro de canal (6) par lequel le port A va lancer l'interruption
+    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOC, EXTI_PinSource13); // définit le numéro de canal (6) par lequel le port A va lancer l'interruption
 
-    EXTI_InitStruct.EXTI_Line = EXTI_Line11;                       // on connecte PA6 à l'EXTI_Line6
+    EXTI_InitStruct.EXTI_Line = EXTI_Line13;                       // on connecte PA6 à l'EXTI_Line6
     EXTI_InitStruct.EXTI_LineCmd = ENABLE;                        // autorise l'interruption
     EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;              // on passe dans le mode d'interruptions
     EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;           // l'interruption se déclenche pour un front montant reçu
@@ -124,63 +124,9 @@ SensorMgr::SensorMgr():
     NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;                  // autorise l'interruption
     NVIC_Init(&NVIC_InitStruct);                                  // actualisation des paramètres de NVIC
 
-    ultrasonARD.init(GPIOD, GPIO_InitStruct, EXTI_InitStruct);    // on actualise le capteur US avec le port, la pin et le canal définis ci-dessus
+    ultrasonARD.init(GPIOC, GPIO_InitStruct, EXTI_InitStruct);    // on actualise le capteur US avec le port, la pin et le canal définis ci-dessus
 
-    // Capteur US ARG : PB12
-
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
-
-    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
-    GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_12;
-    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
-    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-    GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOB, EXTI_PinSource12);
-
-    EXTI_InitStruct.EXTI_Line = EXTI_Line12;
-    EXTI_InitStruct.EXTI_LineCmd = ENABLE;
-    EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
-    EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
-    EXTI_Init(&EXTI_InitStruct);
-
-    NVIC_InitStruct.NVIC_IRQChannel = EXTI15_10_IRQn;
-    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0xff;
-    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0xff;
-    NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init(&NVIC_InitStruct);
-
-    ultrasonARG.init(GPIOB, GPIO_InitStruct, EXTI_InitStruct);
-
-    // Capteur US AVD : PC13
-
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
-
-    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
-    GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_13;
-    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
-    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-    GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOC, EXTI_PinSource13);
-
-    EXTI_InitStruct.EXTI_Line = EXTI_Line13;
-    EXTI_InitStruct.EXTI_LineCmd = ENABLE;
-    EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
-    EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
-    EXTI_Init(&EXTI_InitStruct);
-
-    NVIC_InitStruct.NVIC_IRQChannel = EXTI15_10_IRQn;
-    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0xff;
-    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0xff;
-    NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init(&NVIC_InitStruct);
-
-    ultrasonAVD.init(GPIOC, GPIO_InitStruct, EXTI_InitStruct);
-
-    // Capteur US AVG : PC15
+    // Capteur US ARG : PC15
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 
@@ -205,6 +151,60 @@ SensorMgr::SensorMgr():
     NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStruct);
 
+    ultrasonARG.init(GPIOC, GPIO_InitStruct, EXTI_InitStruct);
+
+    // Capteur US AVD : PD8
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8;
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOD, EXTI_PinSource8);
+
+    EXTI_InitStruct.EXTI_Line = EXTI_Line8;
+    EXTI_InitStruct.EXTI_LineCmd = ENABLE;
+    EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
+    EXTI_Init(&EXTI_InitStruct);
+
+    NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
+    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0xff;
+    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0xff;
+    NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStruct);
+
+    ultrasonAVD.init(GPIOD, GPIO_InitStruct, EXTI_InitStruct);
+
+    // Capteur US AVG : PC0
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOC, EXTI_PinSource0);
+
+    EXTI_InitStruct.EXTI_Line = EXTI_Line0;
+    EXTI_InitStruct.EXTI_LineCmd = ENABLE;
+    EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
+    EXTI_Init(&EXTI_InitStruct);
+
+    NVIC_InitStruct.NVIC_IRQChannel = EXTI0_IRQn;
+    NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0xff;
+    NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0xff;
+    NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStruct);
+
     ultrasonAVG.init(GPIOC, GPIO_InitStruct, EXTI_InitStruct);
 }
 
@@ -220,14 +220,14 @@ bool SensorMgr::isJumperOut() const{
     // 0="en place", 1="retiré"
 }
 bool SensorMgr::isContactor1engaged() const{
-    return !GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_14);
+    return !GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12);
     // 0="non appuyé", 1="appuyé"
 }
 bool SensorMgr::isContactor2engaged() const{
     return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_12);
 }
 bool SensorMgr::isContactor3engaged() const{
-    return !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_0);
+    return !GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_11);
 }
 
 

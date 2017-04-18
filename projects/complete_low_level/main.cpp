@@ -17,7 +17,6 @@ bool autoUpdateUS = false;
 int main(void)
 {
 
-	int module=0; //nombre de modules dans la soute, entre 0 et 2(retour à 0 à 3)
 	Delay_Init(); //on initialise le système de minuterie de la STM32 (SysTick)
 	//SysTicks compte à l'envers depuis la valeur qu'on lui donne dans SysTick_Config() jusqu'à 0
     //cela permet d'avoir des interruptions (ici toutes les us)
@@ -957,52 +956,38 @@ void EXTI1_IRQHandler(void) // interruptions sur pins
         		                                        // le passge de RESET à SET est interne à la carte
  }
 */
-/*
-void EXTI0_IRQHandler(void) {
-    static SensorMgr *sensorMgr = &SensorMgr::Instance();
 
-    if (EXTI_GetITStatus(EXTI_Line0) != RESET) {
-        sensorMgr->sensorInterrupt(2);
+
+void EXTI0_IRQHandler(void){
+    static SensorMgr *sensorMgr = &SensorMgr::Instance();
+    if (EXTI_GetITStatus(EXTI_Line0) != RESET){
+        sensorMgr->sensorInterrupt(1);          //AVG
         EXTI_ClearITPendingBit(EXTI_Line0);
     }
-}*/
+}
 
+void EXTI9_5_IRQHandler(void){
+    static SensorMgr *sensorMgr = &SensorMgr::Instance();
+    if(EXTI_GetITStatus(EXTI_Line8) != RESET){
+        sensorMgr->sensorInterrupt(0);          //AVD
+    }
+}
 void EXTI15_10_IRQHandler(void) {
     static SensorMgr *sensorMgr = &SensorMgr::Instance();
 
     if (EXTI_GetITStatus(EXTI_Line13) != RESET) {
 
-        sensorMgr->sensorInterrupt(0);
+        sensorMgr->sensorInterrupt(2);          //ARD
         EXTI_ClearITPendingBit(EXTI_Line13);
-    }
-    if (EXTI_GetITStatus(EXTI_Line11) != RESET) {
-
-        sensorMgr->sensorInterrupt(2);
-        EXTI_ClearITPendingBit(EXTI_Line11);
     }
     if (EXTI_GetITStatus(EXTI_Line15) != RESET) {
 
-        sensorMgr->sensorInterrupt(1);
+        sensorMgr->sensorInterrupt(3);          //ARG
         EXTI_ClearITPendingBit(EXTI_Line15);
     }
-    if (EXTI_GetITStatus(EXTI_Line12) != RESET) {
-
-        sensorMgr->sensorInterrupt(3);
-        EXTI_ClearITPendingBit(EXTI_Line12);
-    }
 }
 
-/*void EXTI0_IRQHandler(void){
-    static SensorMgr *sensorMgr = &SensorMgr::Instance();
 
-    if (EXTI_GetITStatus(EXTI_Line0) != RESET){
-        //serial.printflnDebug("main interruption start");
-        sensorMgr->sensorInterrupt(0);
-        EXTI_ClearITPendingBit(EXTI_Line0);
-        //serial.printflnDebug("main interruption end");
-    }
-}
-*/
 }
 
 
