@@ -704,6 +704,10 @@ int main(void)
 			{
 				actuatorsMgr->larguePousse(); //position devant (largue les modules)
 			}
+            else if(!strcmp("lmfl",order))
+            {
+                actuatorsMgr->larguePousselent(); //position devant (largue les modules)
+            }
 			else if(!strcmp("lmreasserv", order))
 			{
 				actuatorsMgr->lmReasserv();
