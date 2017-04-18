@@ -93,7 +93,6 @@ public:
         }
     }
 
-
 	/** Fonction appell�e par l'interruption. S'occupe d'enregistrer la valeur de la longueur
 	 *  de l'impulsion retourn�e par le capteur, et de la convertir en une distance en mm.
 	 */

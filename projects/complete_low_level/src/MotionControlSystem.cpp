@@ -354,7 +354,7 @@ void MotionControlSystem::manageStop()
 			}
 			else if(timeNotEstablished > maxTimeNotEstablished){
 				stop();
-				isMovementAbnormal = true;
+				moveAbnormal = true;
 				serial.printfln("la je me bloque");
 			}
 		}
@@ -922,37 +922,17 @@ float MotionControlSystem::getTranslationSetPoint()
 {
     return this->translationSetpoint;
 }
-/*
+
 void MotionControlSystem::getData()
 {
     serial.printflnDebug("PWM:Gauche : %d __ Droit : %d ", this->leftPWM, this->rightPWM);
     serial.printflnDebug("Erreur:    Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getError(), this->leftSpeedPID.getError(), this->rightSpeedPID.getError());
-    serial.printflnDebug("Intégrale: Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,
-                         this->translationPID.getIntegralError(),
-                         this->leftSpeedPID.getIntegralError(),
-                         this->rightSpeedPID.getIntegralError());
     serial.printflnDebug("Dérivée:   Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getDerivativeError(), this->leftSpeedPID.getDerivativeError(), this->rightSpeedPID.getDerivativeError());
     serial.printflnDebug("Input:     Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getInput(), this->leftSpeedPID.getInput(), this->rightSpeedPID.getInput());
     serial.printflnDebug("Output:    Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getOutput(), this->leftSpeedPID.getOutput(), this->rightSpeedPID.getOutput());
     serial.printflnDebug("SetPoint:  Translation : %d __ PIDGauche : %d __ PIDDroit : %d" ,this->translationPID.getSet(), this->leftSpeedPID.getSet(), this->rightSpeedPID.getSet());
 }
 
-void MotionControlSystem::setKav(){
-    serial.printflnDebug("entrer Kpav");
-    serial.read(this->kptav);
-    serial.printflnDebug("entrer Kiav");
-    serial.read(this->kitav);
-    serial.printflnDebug("entrer Kdav");
-    serial.read(this->kdtav);
-}
-void MotionControlSystem::setKar(){
-    serial.printflnDebug("entrer Kpar");
-    serial.read(this->kptar);
-    serial.printflnDebug("entrer Kiar");
-    serial.read(this->kitar);
-    serial.printflnDebug("entrer Kdar");
-    serial.read(this->kdtar);
-}*/
 /*
 int16_t MotionControlSystem::getMotorPWM(int i){
     if(i==0){
@@ -970,7 +950,7 @@ void MotionControlSystem::getOutputs() {
     serial.printfln("%d", this->leftSpeedPID.getOutput());
     serial.printfln("%d", this->rightSpeedPID.getOutput());
 }
-
+*/
 void MotionControlSystem::setAccelAv() {
     serial.printflnDebug("entrer accel avant(là : %d )", this->maxAccelAv);
     serial.read(this->maxAccelAv);
@@ -984,4 +964,3 @@ void MotionControlSystem::setAccelAr() {
     serial.printflnDebug("entrer decel arrière(là : %d )", this->maxDecelAr);
     serial.read(this->maxDecelAr);
 }
-*/

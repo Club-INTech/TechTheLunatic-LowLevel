@@ -12,7 +12,7 @@ ElevatorMgr::ElevatorMgr()
     elevatorPWM = 0;
     position = DOWN;
     positionControlled=true;
-    isElevatorMoving = false;
+    moving = false;
     elevator.initialize();
     enableAsserv(true);
     sensorMgr = &SensorMgr::Instance();
@@ -34,11 +34,11 @@ void ElevatorMgr::enableAsserv(bool enable) {
  * @param positionToGo une ElevatorMgr::Position
  */
 void ElevatorMgr::moveTo(Position positionToGo) {
-    if (!isElevatorMoving) {
-        isElevatorMoving = true;
+    if (!moving) {
+        moving = true;
     }
     positionSetpoint = positionToGo;
-    isMovementAbnormal = false;
+    moveAbnormal = false;
 }
 
 
@@ -54,20 +54,20 @@ void ElevatorMgr::control(){
 
         if(positionSetpoint==UP){       //Si on a demandé à ce qu'on aille en haut
             elevator.setSens(Elevator::UP); //Le moteur va vers le haut
-            if(!isUp){
-                elevator.run();         //Tant qu'il n'est pas en haut, l'ascenseur monte
+            if(!isUp && !moving){
+                elevator.run();         //si il n'est pas arrivé , et ne bouge pas, il démarre
             }
-            else{
-                elevator.stop();        //Si il est en haut, il s'arrête
+            else if(isUp && moving){
+                elevator.stop();        //Si il est en haut et qu'il n'est pas arrété, il s'arrête
                 position=UP;
             }
         }
         else if(positionSetpoint==DOWN){
             elevator.setSens(Elevator::DOWN);
-            if(!isDown){
+            if(!isDown && moving){
                 elevator.run();
             }
-            else{
+            else if(isDown && moving){
                 elevator.stop();
                 position=DOWN;
             }
@@ -81,14 +81,15 @@ void ElevatorMgr::control(){
 void ElevatorMgr::stop(){
     positionSetpoint = this->position;
     elevator.stop();
+    moving=false;
 }
 
-bool ElevatorMgr::elevatorIsMoving() const{
-    return isElevatorMoving;
+bool ElevatorMgr::isElevatorMoving() const{
+    return moving;
 }
 
 bool ElevatorMgr::elevatorMoveAbnormal() const{
-    return isMovementAbnormal;
+    return moveAbnormal;
 }
 
 void ElevatorMgr::getData()

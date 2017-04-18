@@ -884,6 +884,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
     static MotionControlSystem *motionControlSystem = &MotionControlSystem::Instance();
     static Voltage_controller *voltage = &Voltage_controller::Instance();
     static SensorMgr *sensorMgr = &SensorMgr::Instance();
+    static ElevatorMgr *elevatorMgr = &ElevatorMgr::Instance();
     //static ElevatorMgr &elevatorMgr = ElevatorMgr::Instance();
 
     if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) { //arbalète
@@ -911,7 +912,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
         }
 
         if (l >= 200) {
-            //elevatorMgr.elevatorControl();
+            elevatorMgr->control();
             if (autoUpdatePosition && !serial.available()) {
                 //si l'envoi automatique de position au HL est activé et que la série a de la place diponible
                 //on affiche la position et l'angle du robot

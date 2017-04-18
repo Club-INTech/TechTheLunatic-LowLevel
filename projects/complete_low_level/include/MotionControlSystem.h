@@ -341,6 +341,10 @@ public:
 	int kitar;
 	int kdtav;
 	int kdtar;
+
+	void setAccelAv();
+
+	void setAccelAr();
 };
 
 #endif /* MOTION_CONTROL_H_ */

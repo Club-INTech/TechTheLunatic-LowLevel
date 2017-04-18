@@ -22,13 +22,13 @@ public:
 
     void enableAsserv(bool);
 
-    bool elevatorIsMoving() const;
     bool elevatorMoveAbnormal() const;
+    bool isElevatorMoving() const;
 
     void getData();
 
     Position positionSetpoint;
-    bool isMovementAbnormal;
+    bool moveAbnormal;
 
 private:
     Elevator elevator;
@@ -36,7 +36,7 @@ private:
     volatile int32_t elevatorPWM;
 
     volatile bool positionControlled;
-    volatile bool isElevatorMoving;
+    volatile bool moving;
     Position position;
     bool isUp;
     bool isDown;

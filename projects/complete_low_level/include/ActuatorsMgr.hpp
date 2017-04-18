@@ -113,7 +113,7 @@ public:
         LM = new AX<serial_ax>(7,0,1023);
         LM->init();
     }
-
+//suuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuus - xavier
     ~ActuatorsMgr()
     {
         delete(ax12test);

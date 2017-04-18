@@ -35,15 +35,6 @@ public:
 	void refresh(MOVING_DIRECTION);
 
 	void sensorInterrupt(int);
-
-
-	void ARDInterrupt();
-    void ARGInterrupt();
-    void AVDInterrupt();
-    void AVGInterrupt();
-
-
-
 private:
 	CapteurSRF ultrasonARD;
     CapteurSRF ultrasonARG;
