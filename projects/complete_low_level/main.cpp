@@ -48,6 +48,14 @@ int main(void)
 		sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
                                                                         // et ils se préparent à recevoir un front montant
         //serial.printflnDebug("postrefresh");
+
+        if(autoUpdateUS) {
+                serial.printflnUS("%d", sensorMgr->getSensorDistanceAVG());
+                serial.printflnUS("%d", sensorMgr->getSensorDistanceAVD());
+                serial.printflnUS("%d", sensorMgr->getSensorDistanceARG());
+                serial.printflnUS("%d", sensorMgr->getSensorDistanceARD());
+            }
+
 		uint8_t tailleBuffer = serial.available(); //taille utilisée pour le passage des données dans le câble série
 
 		if (tailleBuffer && tailleBuffer < RX_BUFFER_SIZE - 1) //s'il reste de la place dans le câble série
@@ -926,12 +934,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
                 serial.printflnDebug("Serie occupee !!!");
                 serial.printflnDebug("available = %d", serial.available());
             }
-            if(autoUpdateUS) {
-                serial.printflnUS("%d", sensorMgr->getSensorDistanceAVG());
-                serial.printflnUS("%d", sensorMgr->getSensorDistanceAVD());
-                serial.printflnUS("%d", sensorMgr->getSensorDistanceARG());
-                serial.printflnUS("%d", sensorMgr->getSensorDistanceARD());
-            }
+
 
             l = 0;
         }
