@@ -22,7 +22,7 @@ public:
 	void initPWM(void);
 	void initPins(void);
 	void setSens(Sens);
-	void run(void);
+	void run(int8_t);
 	void stop(void);
 	void initialize(void);
 };

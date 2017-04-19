@@ -240,7 +240,6 @@ bool SensorMgr::isContactor3engaged() const{
 void SensorMgr::refresh(MOVING_DIRECTION direction) // les capteurs envoient un signal de durée 10 ms devant eux
 {
     currentTime = Millis(); // current time (en s)
-
     if(currentTime - lastRefreshTime >= refreshDelay && direction == FORWARD) // actualisation toutes les 13ms
     {
         ultrasonAVD.refresh();
@@ -259,7 +258,6 @@ void SensorMgr::refresh(MOVING_DIRECTION direction) // les capteurs envoient un 
         ultrasonARD.refresh();
         ultrasonARG.refresh();
     }
-
 }
 
 

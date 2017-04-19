@@ -37,7 +37,7 @@ void Elevator::initTimer()
     // donc le PWM change toutes les ms
 
     timTimeBaseInitTypeDef.TIM_Period=10;                     // répétition du motif
-    // NB: le PWM a pour valeur x<255 et on peut déduire un taux d'occupation sur la période
+    // NB: le PWM a pour valeur x<10 et on peut déduire un taux d'occupation sur la période
     timTimeBaseInitTypeDef.TIM_ClockDivision=0;                // on divise par 1 dans la formule (cf Motor.cpp)
 
     timTimeBaseInitTypeDef.TIM_Prescaler=prescaler;            // cf. Motor.cpp
@@ -119,8 +119,8 @@ void Elevator::setSens(Sens sensToSet) {
 }
 
 // Tourne dans le sens de sens (mouvement non asservi)
-void Elevator::run(void) {
-        TIM12->CCR2=5;           // CCR2 prend la valeur minimale entre 255 et le pwm
+void Elevator::run(int8_t pwm) {
+        TIM12->CCR2=pwm;           // CCR2 prend la valeur minimale entre 255 et le pwm
 }
 
 // Stoppe le mouvement de l'ascenseur
