@@ -9,7 +9,7 @@
 ElevatorMgr::ElevatorMgr()
 {
     //Initialise tous les paramètres
-    elevatorPWM = 5; //€[|0,10|]
+    elevatorPWM = 4; //€[|0,10|]
     position = DOWN;
     positionSetpoint = position;
     positionControlled = true;
