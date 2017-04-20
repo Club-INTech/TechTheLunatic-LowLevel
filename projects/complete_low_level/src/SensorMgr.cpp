@@ -17,7 +17,7 @@
  * 		Contacteur 3	: PD11
  *
  * 	ULTRASONS:
- * 		Avant Droit   (US4):	PD8
+ * 		Avant Droit   (US4):	avant,PD8, maintenant, PB14
  * 		Avant Gauche  (US2):	PC0
  * 		Arri�re Droit (US3):	PC13
  * 		Arri�re Gauche (US1):	PC15
@@ -153,32 +153,32 @@ SensorMgr::SensorMgr():
 
     ultrasonARG.init(GPIOC, GPIO_InitStruct, EXTI_InitStruct);
 
-    // Capteur US AVD : PD8
+    // Capteur US AVD : avant, PD8, maitenant PB14
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_14;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-    GPIO_Init(GPIOD, &GPIO_InitStruct);
+    GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOD, EXTI_PinSource8);
+    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOB, EXTI_PinSource14);
 
-    EXTI_InitStruct.EXTI_Line = EXTI_Line8;
+    EXTI_InitStruct.EXTI_Line = EXTI_Line14;
     EXTI_InitStruct.EXTI_LineCmd = ENABLE;
     EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
     EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
     EXTI_Init(&EXTI_InitStruct);
 
-    NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
+    NVIC_InitStruct.NVIC_IRQChannel = EXTI15_10_IRQn;
     NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0xff;
     NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0xff;
     NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStruct);
 
-    ultrasonAVD.init(GPIOD, GPIO_InitStruct, EXTI_InitStruct);
+    ultrasonAVD.init(GPIOB, GPIO_InitStruct, EXTI_InitStruct);
 
     // Capteur US AVG : PC0
 
