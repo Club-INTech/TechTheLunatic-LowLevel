@@ -978,12 +978,6 @@ void EXTI0_IRQHandler(void){
     }
 }
 
-void EXTI9_5_IRQHandler(void){
-    static SensorMgr *sensorMgr = &SensorMgr::Instance();
-    if(EXTI_GetITStatus(EXTI_Line8) != RESET){
-        sensorMgr->sensorInterrupt(0);          //AVD
-    }
-}
 void EXTI15_10_IRQHandler(void) {
     static SensorMgr *sensorMgr = &SensorMgr::Instance();
 
@@ -991,6 +985,9 @@ void EXTI15_10_IRQHandler(void) {
 
         sensorMgr->sensorInterrupt(2);          //ARD
         EXTI_ClearITPendingBit(EXTI_Line13);
+    }
+    if(EXTI_GetITStatus(EXTI_Line14) != RESET){
+        sensorMgr->sensorInterrupt(0);          //AVD
     }
     if (EXTI_GetITStatus(EXTI_Line15) != RESET) {
 

@@ -235,8 +235,8 @@ public:
     void pelleInit()
     {
         serial.printflnDebug("Pelle va au début");
-        ax12pelG->changeSpeed(10);
-        ax12pelD->changeSpeed(10);
+        ax12pelG->changeSpeed(50);
+        ax12pelD->changeSpeed(50);
         ax12pelG->goTo(pospelinitG);
         ax12pelD->goTo(pospelinitD);
         serial.printflnDebug("done");
