@@ -31,7 +31,7 @@ extern Uart<1> serial;
 
 //Pour la Pelleteusatron 3000
 
-#define brapeldep 120
+#define brapeldep 127
 #define brapelmoit 160
 #define brapelrel 175
 #define pospelinitG 300
@@ -211,7 +211,7 @@ public:
     void braPelReleve() //relève les bras de la pelle
     {
         serial.printflnDebug("Leve les bras");
-        ax12brapel->changeSpeed(25);
+        ax12brapel->changeSpeed(10);
         ax12brapel->goTo(brapelrel);
         serial.printflnDebug("done");
     }
@@ -219,7 +219,7 @@ public:
     void braPelDeplie() // déplie les bras de la pelle
     {
         serial.printflnDebug("Baisse les bras");
-        ax12brapel->changeSpeed(16);
+        ax12brapel->changeSpeed(10);
         ax12brapel->goTo(brapeldep);
         serial.printflnDebug("done");
     }
@@ -235,8 +235,8 @@ public:
     void pelleInit()
     {
         serial.printflnDebug("Pelle va au début");
-        ax12pelG->changeSpeed(50);
-        ax12pelD->changeSpeed(50);
+        ax12pelG->changeSpeed(10);
+        ax12pelD->changeSpeed(10);
         ax12pelG->goTo(pospelinitG);
         ax12pelD->goTo(pospelinitD);
         serial.printflnDebug("done");
@@ -245,8 +245,8 @@ public:
     void pelleMoit()
     {
         serial.printflnDebug("Pelle tient boules");
-        ax12pelG->changeSpeed(20);
-        ax12pelD->changeSpeed(20);
+        ax12pelG->changeSpeed(50);
+        ax12pelD->changeSpeed(50);
         ax12pelG->goTo(pospelmoitG);
         ax12pelD->goTo(pospelmoitD);
         serial.printflnDebug("done");
@@ -254,8 +254,8 @@ public:
 
     void pelleTient(){
         serial.printflnDebug("pos de maintient des boules");
-        ax12pelG->changeSpeed(20);
-        ax12pelD->changeSpeed(20);
+        ax12pelG->changeSpeed(40);
+        ax12pelD->changeSpeed(40);
         ax12pelG->goTo(pospeltientG);
         ax12pelD->goTo(pospeltientD);
         serial.printflnDebug("done");
