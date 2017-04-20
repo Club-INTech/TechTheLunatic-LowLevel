@@ -7,7 +7,7 @@
 
 bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
 bool autoUpdateUS = false;
-
+//Je suis une patate douce
 /**Contient la boucle principale de gestion des entrées série du programme
  *
  * @author caillou, sylvain, rémi, melanie, Ug
@@ -15,7 +15,7 @@ bool autoUpdateUS = false;
 
 int main(void)
 {
-
+// Suce mon gigantesque chibre
 	Delay_Init(); //on initialise le système de minuterie de la STM32 (SysTick)
 	//SysTicks compte à l'envers depuis la valeur qu'on lui donne dans SysTick_Config() jusqu'à 0
     //cela permet d'avoir des interruptions (ici toutes les us)
@@ -527,7 +527,7 @@ int main(void)
  */
 
 			/* --- AX12 ---*/
-
+            /* --- SUUS ---*/
 				//Gestion des ID des AX12
 			else if(!strcmp("setallid",order))         //permet de donner les ids définis aux ax12
 			{
@@ -746,7 +746,7 @@ int main(void)
  * 		   *|                        |*
  *		   *|COMMANDES/TESTS DE DEBUG|*
  *		   *|________________________|*
- */
+ */             // B I T E
 /*
             else if(!strcmp("rawpwm", order)) {
                 motionControlSystem->enable(false);
@@ -991,7 +991,53 @@ void EXTI15_10_IRQHandler(void) {
 
 
 }
-
+/*
+ *
+ * 　　　　　　　　　　　　　　,.. -- .....,,,,__,.r-''"￣~"丶.,
+　　　　　　　　　　　 ,.r'"　　　　　　　　　~"''　　　 "ヽ─-.,
+　　　　　　　　　　,.r",..r　　　　　　　　　　　　　　　 　＼、 'i- .,
+　　　　　　,,,.. - '''"~　　　　　　　　　　　　　　　　　　　　　　　 'i_
+　　　　　,."　　　　　　　　　　　　　　　　　　　　　　　　　　　　　"i
+　　　　　i　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　/ヽ
+　　　　　i　 ﾉ　　　　　　　　　　　　　　　　　　　　　　　　　　　　 ~'i.,,
+　　　　　i .r'"　 ./　　　　　　　　　　　　　　　　　　　　 ＼　　　　ヽ　i
+　　　　,r"　　　,."　./　　　　　　　　　　　　　ヽ"~ヽ、　　 ヽ　　　　 ''ヽ
+　　　i'　　　　 /　　i `i　　　　　　　i'- ..,,_　　　 丶、 ＼　　'i,　　　 ＼/
+　　 .ヽ、　　 .i　　　i　＼　　　　　i ヽ.-'''""' ──-'＼　ヽ　 i　　　　 ヽ
+　　　　ヽ　　 i　　　.i-'''"ヽ、　　　＼＼　　_,.. ---　　ヽi　　 i　　ヽ　丿
+　　　　 ./.　　ヽ、　ゝ,. -- ''-.,,,　　ヽ、r",,.-""~"i''".i　　　　　　.i／
+　　　　 i /i　/　　ヽ i　,.r'"i"''ヽ　￣"'''" '" ヽ;;;;;;;;/　 /　　　　　　.i
+　　　　 i/ i, i i　　　ヽ＼　　ヽ;;;i　　　　　　　---''" ./　　　　　　　i
+　　　　　　ヽi ヽ、 'i"　 'i .~''''"　ﾉ　　　　　///// ./ノ　　　　　　./
+　　　　　　　　　 .i　/　 i,///　 　　　　　　　　　／　　　　　　 /
+　　　　　　　　　 i　 i　　　ヽ .,　　　ヽ⊃　　　　／____,,,. -─ ''"~
+　　　　　　　　　 i　.i　 ,. -r''"~`' - .,,_　　_,.. r'""~i- ,,,,,,,＿＿＿＿
+　　　　　　　　　 ヽ i i"　　　 ,.... -─-~i"　　　　 .i,.-─- .,_::::／　 "''ヽ
+　　　　　　　　　　　``　　 ／r'"::::;.r"~　　　　 .／::::／　　"ヽ　　　　　＼
+　　　　　　　　　　　　,. -<''~:::,.r'"　　　　　　／::::／　　　　　.i"''''' ─- ,, .i
+　　　　　　　　　　　,i　　　`／　　　　　　　/::::::::/　　　　　　 i￣~"'''''' - .i
+　　　　　　　　　　 ,i　　　 /　　　　　　,.r'''''ヽ ,,,iヽ　　　　　　.i￣i"''''i''' -..i
+　　　　　　　　　　　i　＿ io　　　　　 .i /　　　　　ヽ　　　　　i:::::i::::::::i::::::i i
+　　　　　　　　　　　ヽi::::::i　　　　　　　i　　　　 　　i l　　　　 .i::::i::::::::i:::::i: i
+　　　　　　　　　　 /　i:::::i　　　　　　　ヽ　　　　　　',i　　　 .　i:::i::::::::i::::::i i
+　　　　　　　　　 /　　 i:::i　　　　　　　　`''' --ヽ　　 ',　　　　 i::i::::::::i::::::i i
+　　　　　　　　 /　　　.ヾi　　　　　　　　　　',::::::::',　　 ＼　　　i:i::::::::i::::::i i
+　　　　　　　　.i　　　　 /　　　　　　　　　　 .',:::::::',　　　 ＼　 i:i::::::::i::::::i i
+　　　　　　　　ヽ　　　./　　　　　　　　　　　　',::::::',　　　 　ヽ i:i::::::::i::::::i i
+　　　　　　　　　`- "/　　　　　ｿ　　　　　　 　i:::::::',　　　　　〕:i::::::::i::::::i i
+　　　　　　　　　　 ./　　　　　　　　　　　　　　 ヾ- ヽ　　　 ./::i:::::::i:::::::i i
+　　　　　　　　　　/　　　　　　　　　　　　　　　　ヽ　 `'' --"-==)-'"""~
+　　　　　　　　　/.　　　　　　　　　　　　　　　　　 ',
+　　　　　　　　 ,i.　　ヽ　　　　　　　　　　　　　　　 ',
+　　　　　　　　,i　　　　　　　　　　　　　　　　　　　 i
+　　　　　　　　i　　　　　　　　　　　　　　　　　　　　i
+　　　　　　　 .i.　　　　　　　　　 　 　　　　　　　　　i
+　　　　　　　 i　　　　　　　＼　i　/　　　　　　　　　.i
+ *
+ *
+ *
+ *
+ */
 
 
 
