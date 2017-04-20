@@ -65,7 +65,7 @@ public:
 	}
 
 	void refresh() {
-        if (Millis() - dernierPing > 25) {
+        if (Millis() - dernierPing > 30) {
             EXTI_sensor.EXTI_LineCmd = DISABLE;
             EXTI_Init(&EXTI_sensor);
             // On met la pin en output
