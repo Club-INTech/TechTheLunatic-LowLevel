@@ -9,7 +9,7 @@
 ElevatorMgr::ElevatorMgr()
 {
     //Initialise tous les paramètres
-    elevatorPWM = 4; //€[|0,10|]
+    elevatorPWM = 5; //€[|0,10|]
     position = DOWN;
     positionSetpoint = position;
     positionControlled = true;
@@ -62,11 +62,11 @@ void ElevatorMgr::control()
         if(positionSetpoint==UP)
         {       //Si on a demandé à ce qu'on aille en haut
             elevator.setSens(Elevator::UP); //Le moteur va vers le haut
-            if(!isUp && !moving)
+            if(!isUp && position!=UP)
             {
                 elevator.run(elevatorPWM);         //si il n'est pas arrivé , et ne bouge pas, il démarre
             }
-            else if(isUp && moving)
+            else if(isUp)
             {
                 position=UP;
                 stop();        //Si il est en haut et qu'il n'est pas arrété, il s'arrête
@@ -75,11 +75,11 @@ void ElevatorMgr::control()
         else if(positionSetpoint==DOWN)
         {
             elevator.setSens(Elevator::DOWN);
-            if(!isDown && !moving)
+            if(!isDown && position!=DOWN)
             {
                 elevator.run(elevatorPWM);
             }
-            else if(isDown && moving)
+            else if(isDown)
             {
                 position=DOWN;
                 stop();
