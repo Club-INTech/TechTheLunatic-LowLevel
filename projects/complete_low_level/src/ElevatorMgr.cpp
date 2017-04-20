@@ -9,9 +9,9 @@
 ElevatorMgr::ElevatorMgr()
 {
     //Initialise tous les paramètres
-    elevatorPWM = 5; //€[|0,10|]
-    position = DOWN;
-    positionSetpoint = position;
+    elevatorPWM = 160; //€[|0,255|]
+    position = UP;
+    positionSetpoint = DOWN;    //Pour toujours aller en bas au début
     positionControlled = true;
     moving = false;
     elevator.initialize();
@@ -119,4 +119,8 @@ void ElevatorMgr::getData()
         serial.printflnDebug("pos: DOWN");
     }
     serial.printflnDebug("PWM: %d", elevatorPWM);
+}
+
+void ElevatorMgr::setPWM(int pwm){
+    this->elevatorPWM=pwm;
 }

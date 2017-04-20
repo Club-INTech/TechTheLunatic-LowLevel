@@ -730,11 +730,21 @@ int main(void)
             {
                 elevatorMgr->moveTo(ElevatorMgr::DOWN);
             }
-            else if(!strcmp("ascup", order)) {
+            else if(!strcmp("ascup", order))
+            {
                 elevatorMgr->moveTo(ElevatorMgr::UP);
             }
-            else if(!strcmp("ascstop", order)){
+            else if(!strcmp("ascstop", order))
+            {
                 elevatorMgr->stop();
+            }
+            else if(!strcmp("ascpwm", order))
+            {
+                int pwm=0;
+                serial.printflnDebug("Entrez le pwm à utiliser");
+                serial.read(pwm);
+                elevatorMgr->setPWM(pwm);
+                serial.printflnDebug("done");
             }
             else if(!strcmp("ascstatus", order))
             {

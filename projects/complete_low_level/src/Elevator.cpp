@@ -36,7 +36,7 @@ void Elevator::initTimer()
     uint16_t prescaler = (uint16_t)((SystemCoreClock / 2) / 100000) - 1; // on associe une fréquence de 1KHz au PWM
     // donc le PWM change toutes les ms
 
-    timTimeBaseInitTypeDef.TIM_Period=10;                     // répétition du motif
+    timTimeBaseInitTypeDef.TIM_Period=255;                     // répétition du motif
     // NB: le PWM a pour valeur x<10 et on peut déduire un taux d'occupation sur la période
     timTimeBaseInitTypeDef.TIM_ClockDivision=0;                // on divise par 1 dans la formule (cf Motor.cpp)
 
