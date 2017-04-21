@@ -34,6 +34,7 @@ int main(void)
     motionControlSystem->init(); //initialise asservissement, PWM et counters
 	ActuatorsMgr* actuatorsMgr = &ActuatorsMgr::Instance(); //ax12
 	SensorMgr* sensorMgr = &SensorMgr::Instance(); //capteurs, contacteurs, jumper
+    int32_t usSendDelay=Millis();
 	Voltage_controller* voltage = &Voltage_controller::Instance();//contrôle batterie Lipos
 
     ElevatorMgr* elevatorMgr = &ElevatorMgr::Instance();
@@ -41,19 +42,18 @@ int main(void)
 	char order[64]; //Permet le stockage du message re�u par la liaison s�rie
 
 	bool translation = true; //permet de basculer entre les r�glages de cte d'asserv en translation et en rotation
-
-	while(1)
+    while(1)
 	{
         //serial.printflnDebug("prerefresh");
 		sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
-                                                                        // et ils se préparent à recevoir un front montant
+                                                                          // et ils se préparent à recevoir un front montant
         //serial.printflnDebug("postrefresh");
-
-        if(autoUpdateUS) {
+        if(autoUpdateUS && Millis()-usSendDelay > 100) {
                 serial.printflnUS("%d", sensorMgr->getSensorDistanceAVG());
                 serial.printflnUS("%d", sensorMgr->getSensorDistanceAVD());
                 serial.printflnUS("%d", sensorMgr->getSensorDistanceARG());
                 serial.printflnUS("%d", sensorMgr->getSensorDistanceARD());
+                usSendDelay=Millis();
             }
 
 		uint8_t tailleBuffer = serial.available(); //taille utilisée pour le passage des données dans le câble série
