@@ -7,7 +7,6 @@
 
 bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
 bool autoUpdateUS = false;
-//Je suis une patate douce
 /**Contient la boucle principale de gestion des entrées série du programme
  *
  * @author caillou, sylvain, rémi, melanie, Ug
@@ -15,7 +14,6 @@ bool autoUpdateUS = false;
 
 int main(void)
 {
-// Suce mon gigantesque chibre
 	Delay_Init(); //on initialise le système de minuterie de la STM32 (SysTick)
 	//SysTicks compte à l'envers depuis la valeur qu'on lui donne dans SysTick_Config() jusqu'à 0
     //cela permet d'avoir des interruptions (ici toutes les us)
@@ -527,7 +525,6 @@ int main(void)
  */
 
 			/* --- AX12 ---*/
-            /* --- SUUS ---*/
 				//Gestion des ID des AX12
 			else if(!strcmp("setallid",order))         //permet de donner les ids définis aux ax12
 			{
@@ -756,7 +753,7 @@ int main(void)
  * 		   *|                        |*
  *		   *|COMMANDES/TESTS DE DEBUG|*
  *		   *|________________________|*
- */             // B I T E
+*/
 /*
             else if(!strcmp("rawpwm", order)) {
                 motionControlSystem->enable(false);
