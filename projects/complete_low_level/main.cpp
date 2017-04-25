@@ -754,7 +754,6 @@ int main(void)
                 elevatorMgr->getData();
             }
 
-
 /*			 ________________________
  * 		   *|                        |*
  *		   *|COMMANDES/TESTS DE DEBUG|*
@@ -807,8 +806,7 @@ int main(void)
                                      (int) motionControlSystem->getLeftSetPoint(),
                                      (int) motionControlSystem->getRightSetPoint());
                 serial.printflnDebug("codeuse gauche--droite: %d --    %d",
-                                     Counter::getLeftValue(),
-                                     Counter::getRightValue());
+                                     motionControlSystem->leftTicks, motionControlSystem->rightTicks);
               //  motionControlSystem->getData();
 
             }

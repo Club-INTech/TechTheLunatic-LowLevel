@@ -345,6 +345,9 @@ public:
 	void setAccelAv();
 
 	void setAccelAr();
+
+    int32_t leftTicks;
+	int32_t rightTicks;
 };
 
 #endif /* MOTION_CONTROL_H_ */
