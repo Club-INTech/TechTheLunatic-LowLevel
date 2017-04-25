@@ -31,7 +31,9 @@ extern Uart<1> serial;
 
 //Pour la Pelleteusatron 3000
 
-#define brapeldep 127
+#define brapeldep 130
+#define brapelram 125
+
 #define brapelmoit 160
 #define brapelrel 175
 #define pospelinitG 300
@@ -221,6 +223,13 @@ public:
         serial.printflnDebug("Baisse les bras");
         ax12brapel->changeSpeed(10);
         ax12brapel->goTo(brapeldep);
+        serial.printflnDebug("done");
+    }
+    void braPelRam() // déplie les bras de la pelle
+    {
+        serial.printflnDebug("Baisse les bras");
+        ax12brapel->changeSpeed(10);
+        ax12brapel->goTo(brapelram);
         serial.printflnDebug("done");
     }
 

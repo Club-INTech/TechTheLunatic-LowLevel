@@ -50,10 +50,10 @@ int main(void)
         //serial.printflnDebug("postrefresh");
 
         if(autoUpdateUS) {
-                serial.printflnUS("%d", sensorMgr->getSensorDistanceAVG());
-                serial.printflnUS("%d", sensorMgr->getSensorDistanceAVD());
-                serial.printflnUS("%d", sensorMgr->getSensorDistanceARG());
-                serial.printflnUS("%d", sensorMgr->getSensorDistanceARD());
+            serial.printfln("AVG %d", sensorMgr->getSensorDistanceAVG());//en mm
+            serial.printfln("AVD %d", sensorMgr->getSensorDistanceAVD());//en mm
+            serial.printfln("ARG %d", sensorMgr->getSensorDistanceARG());//en mm
+            serial.printfln("ARD %d", sensorMgr->getSensorDistanceARD());//en mm
             }
 
 		uint8_t tailleBuffer = serial.available(); //taille utilisée pour le passage des données dans le câble série
@@ -598,6 +598,10 @@ int main(void)
             else if (!strcmp("bpd",order)) //(abaisse le bras de la pelleteuse)
             {
                 actuatorsMgr->braPelDeplie();
+            }
+            else if (!strcmp("bpra",order)) //(abaisse le bras de la pelleteuse)
+            {
+                actuatorsMgr->braPelRam();
             }
             else if (!strcmp("bpm", order)) // (position intermédiaire des bras de pelleteuse)
             {
