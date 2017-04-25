@@ -35,7 +35,7 @@ extern Uart<1> serial;
 #define brapelram 113
 
 #define brapelmoit 170
-#define brapelrel 300
+#define brapelrel 177
 #define pospelinitG 300
 #define pospeltientG 116
 #define pospelmoitG 150
