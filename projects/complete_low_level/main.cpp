@@ -7,7 +7,6 @@
 
 bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
 bool autoUpdateUS = false;
-//Je suis une patate douce
 /**Contient la boucle principale de gestion des entrées série du programme
  *
  * @author caillou, sylvain, rémi, melanie, Ug
@@ -15,7 +14,6 @@ bool autoUpdateUS = false;
 
 int main(void)
 {
-// Suce mon gigantesque chibre
 	Delay_Init(); //on initialise le système de minuterie de la STM32 (SysTick)
 	//SysTicks compte à l'envers depuis la valeur qu'on lui donne dans SysTick_Config() jusqu'à 0
     //cela permet d'avoir des interruptions (ici toutes les us)
@@ -34,6 +32,7 @@ int main(void)
     motionControlSystem->init(); //initialise asservissement, PWM et counters
 	ActuatorsMgr* actuatorsMgr = &ActuatorsMgr::Instance(); //ax12
 	SensorMgr* sensorMgr = &SensorMgr::Instance(); //capteurs, contacteurs, jumper
+    int32_t usSendDelay=Millis();
 	Voltage_controller* voltage = &Voltage_controller::Instance();//contrôle batterie Lipos
 
     ElevatorMgr* elevatorMgr = &ElevatorMgr::Instance();
@@ -41,19 +40,20 @@ int main(void)
 	char order[64]; //Permet le stockage du message re�u par la liaison s�rie
 
 	bool translation = true; //permet de basculer entre les r�glages de cte d'asserv en translation et en rotation
-
-	while(1)
+    while(1)
 	{
         //serial.printflnDebug("prerefresh");
 		sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
-                                                                        // et ils se préparent à recevoir un front montant
+                                                                          // et ils se préparent à recevoir un front montant
         //serial.printflnDebug("postrefresh");
 
-        if(autoUpdateUS) {
-            serial.printfln("AVG %d", sensorMgr->getSensorDistanceAVG());//en mm
-            serial.printfln("AVD %d", sensorMgr->getSensorDistanceAVD());//en mm
-            serial.printfln("ARG %d", sensorMgr->getSensorDistanceARG());//en mm
-            serial.printfln("ARD %d", sensorMgr->getSensorDistanceARD());//en mm
+        if(autoUpdateUS && Millis()-usSendDelay > 100) {
+                serial.printflnUS("%d", sensorMgr->getSensorDistanceAVG());
+                serial.printflnUS("%d", sensorMgr->getSensorDistanceAVD());
+                serial.printflnUS("%d", sensorMgr->getSensorDistanceARG());
+                serial.printflnUS("%d", sensorMgr->getSensorDistanceARD());
+                usSendDelay=Millis();
+
             }
 
 		uint8_t tailleBuffer = serial.available(); //taille utilisée pour le passage des données dans le câble série
@@ -527,7 +527,6 @@ int main(void)
  */
 
 			/* --- AX12 ---*/
-            /* --- SUUS ---*/
 				//Gestion des ID des AX12
 			else if(!strcmp("setallid",order))         //permet de donner les ids définis aux ax12
 			{
@@ -734,11 +733,21 @@ int main(void)
             {
                 elevatorMgr->moveTo(ElevatorMgr::DOWN);
             }
-            else if(!strcmp("ascup", order)) {
+            else if(!strcmp("ascup", order))
+            {
                 elevatorMgr->moveTo(ElevatorMgr::UP);
             }
-            else if(!strcmp("ascstop", order)){
+            else if(!strcmp("ascstop", order))
+            {
                 elevatorMgr->stop();
+            }
+            else if(!strcmp("ascpwm", order))
+            {
+                int pwm=0;
+                serial.printflnDebug("Entrez le pwm à utiliser");
+                serial.read(pwm);
+                elevatorMgr->setPWM(pwm);
+                serial.printflnDebug("done");
             }
             else if(!strcmp("ascstatus", order))
             {
@@ -750,7 +759,7 @@ int main(void)
  * 		   *|                        |*
  *		   *|COMMANDES/TESTS DE DEBUG|*
  *		   *|________________________|*
- */             // B I T E
+*/
 /*
             else if(!strcmp("rawpwm", order)) {
                 motionControlSystem->enable(false);

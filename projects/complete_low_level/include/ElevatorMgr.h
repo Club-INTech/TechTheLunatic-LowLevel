@@ -29,6 +29,7 @@ public:
 
     Position positionSetpoint;
     bool moveAbnormal;
+    void setPWM(int pwm);
 
 private:
     Elevator elevator;
