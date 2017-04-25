@@ -598,7 +598,7 @@ int main(void)
             {
                 actuatorsMgr->braPelDeplie();
             }
-            else if (!strcmp("bpra",order)) //(abaisse le bras de la pelleteuse)
+            else if (!strcmp("bpra",order)) //(abaisse un peu plus le bras de la pelleteuse)
             {
                 actuatorsMgr->braPelRam();
             }

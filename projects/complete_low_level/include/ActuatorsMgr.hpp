@@ -31,11 +31,11 @@ extern Uart<1> serial;
 
 //Pour la Pelleteusatron 3000
 
-#define brapeldep 130
-#define brapelram 125
+#define brapeldep 127
+#define brapelram 113
 
-#define brapelmoit 160
-#define brapelrel 175
+#define brapelmoit 170
+#define brapelrel 300
 #define pospelinitG 300
 #define pospeltientG 116
 #define pospelmoitG 150
@@ -254,8 +254,8 @@ public:
     void pelleMoit()
     {
         serial.printflnDebug("Pelle tient boules");
-        ax12pelG->changeSpeed(50);
-        ax12pelD->changeSpeed(50);
+        ax12pelG->changeSpeed(40);
+        ax12pelD->changeSpeed(40);
         ax12pelG->goTo(pospelmoitG);
         ax12pelD->goTo(pospelmoitD);
         serial.printflnDebug("done");
