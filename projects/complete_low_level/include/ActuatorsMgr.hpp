@@ -56,7 +56,7 @@ extern Uart<1> serial;
 
 //Les cale-modules
 #define CaleHautG 120
-#define CaleReposG 200
+#define CaleReposG 195
 #define CaleBasG 235
 #define CaleHautD 200
 #define CaleReposD 135
