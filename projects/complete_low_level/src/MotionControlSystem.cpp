@@ -64,8 +64,8 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     kdtar=200;
 
     translationPID.setTunings(kptav, kitav, kdtav);
-    rotationPID.setTunings(16, 0, 200); //anciennemnt kpr=17 //anciennement 32,0,350 -> oscillations à la fin
-    leftSpeedPID.setTunings(0.0115, 0, 0.005); // ki 0.00001
+    rotationPID.setTunings(18, 0, 200); //anciennemnt kpr=17 //anciennement 32,0,350 -> oscillations à la fin
+    leftSpeedPID.setTunings(0.011, 0, 0.005); // ki 0.00001
     rightSpeedPID.setTunings(0.011, 0, 0.005);
 
     distanceTest = 200;

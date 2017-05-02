@@ -33,7 +33,8 @@ void Elevator::initTimer()
     TIM_TimeBaseInitTypeDef timTimeBaseInitTypeDef;            // On définit la variable qu'on va utiliser
     TIM_TimeBaseStructInit(&timTimeBaseInitTypeDef);           // Initialise avec les valeurs par défaut
 
-    uint16_t prescaler = (uint16_t)((SystemCoreClock / 2) / 100000) - 1; // on associe une fréquence de 1KHz au PWM
+    uint16_t prescaler = (uint16_t)((SystemCoreClock / 2) / 100000) - 1; // on associe une fr
+    // équence de 1KHz au PWM
     // donc le PWM change toutes les ms
 
     timTimeBaseInitTypeDef.TIM_Period=255;                     // répétition du motif

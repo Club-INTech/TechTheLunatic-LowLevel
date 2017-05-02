@@ -9,7 +9,7 @@
 ElevatorMgr::ElevatorMgr()
 {
     //Initialise tous les paramètres
-    elevatorPWM = 160; //€[|0,255|]
+    elevatorPWM = 122; //€[|0,255|]
     position = UP;
     positionSetpoint = DOWN;    //Pour toujours aller en bas au début
     positionControlled = true;
@@ -19,6 +19,9 @@ ElevatorMgr::ElevatorMgr()
     sensorMgr = &SensorMgr::Instance();
     isUp = sensorMgr->isContactor1engaged();
     isDown = sensorMgr->isContactor2engaged();
+    delayToStop=500;
+    timeSinceMoveTo=Millis();
+    moveToPing=Millis();
 }
 
 void ElevatorMgr::enableAsserv(bool enable)
@@ -39,12 +42,14 @@ void ElevatorMgr::enableAsserv(bool enable)
  */
 void ElevatorMgr::moveTo(Position positionToGo)
 {
+    enableAsserv(true);
     if (!moving)
     {
         moving = true;
     }
     positionSetpoint = positionToGo;
     moveAbnormal = false;
+    moveToPing=Millis();
 }
 
 
@@ -62,11 +67,12 @@ void ElevatorMgr::control()
         if(positionSetpoint==UP)
         {       //Si on a demandé à ce qu'on aille en haut
             elevator.setSens(Elevator::UP); //Le moteur va vers le haut
-            if(!isUp && position!=UP)
-            {
-                elevator.run(elevatorPWM);         //si il n'est pas arrivé , et ne bouge pas, il démarre
+            if(!isUp && position!=UP) {
+                if (Millis() - moveToPing < delayToStop) {
+                    elevator.run(elevatorPWM);         //si il n'est pas arrivé , et si ça fait pas trop longtemps qu'on a envoyé l'ordre de bouger
+                }
             }
-            else if(isUp)
+            else if(isUp || (Millis()-moveToPing>delayToStop))
             {
                 position=UP;
                 stop();        //Si il est en haut et qu'il n'est pas arrété, il s'arrête
@@ -77,9 +83,11 @@ void ElevatorMgr::control()
             elevator.setSens(Elevator::DOWN);
             if(!isDown && position!=DOWN)
             {
-                elevator.run(elevatorPWM);
+                if (Millis() - moveToPing < delayToStop) {
+                    elevator.run(elevatorPWM);
+                }
             }
-            else if(isDown)
+            else if(isDown || (Millis()-moveToPing>delayToStop))
             {
                 position=DOWN;
                 stop();
@@ -96,6 +104,7 @@ void ElevatorMgr::stop()
     positionSetpoint = this->position;
     elevator.stop();
     moving=false;
+    enableAsserv(false);
 }
 
 bool ElevatorMgr::isElevatorMoving() const

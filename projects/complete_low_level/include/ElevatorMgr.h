@@ -41,6 +41,9 @@ private:
     Position position;
     bool isUp;
     bool isDown;
+    uint32_t delayToStop;
+    uint32_t timeSinceMoveTo;
+    uint32_t moveToPing;
 };
 
 #endif //ARM_ELEVATORMGR_H
