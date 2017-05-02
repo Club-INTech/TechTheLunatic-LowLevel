@@ -48,7 +48,7 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     toleranceRotation = 40;
     toleranceSpeed = 40;
     toleranceSpeedEstablished = 50; // Doit �tre la plus petite possible, sans bloquer les trajectoires courbes 50
-    delayToEstablish = 800;
+    delayToEstablish = 100;
 
 
     toleranceCurveRatio = 0.9;
