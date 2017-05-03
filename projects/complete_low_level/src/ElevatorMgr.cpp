@@ -64,29 +64,29 @@ void ElevatorMgr::control()
         isUp=sensorMgr->isContactor1engaged();
         isDown=sensorMgr->isContactor2engaged();
 
-        if(positionSetpoint==UP)
+        if(positionSetpoint==Position::UP)
         {       //Si on a demandé à ce qu'on aille en haut
             elevator.setSens(Elevator::UP); //Le moteur va vers le haut
-            if(!isUp && position!=UP) {
+            if(!isUp && position!=Position::UP) {
                 elevator.run(elevatorPWM);         //si il n'est pas arrivé , et si ça fait pas trop longtemps qu'on a envoyé l'ordre de bouger
             }
             else if(isUp)
             {
-                position=UP;
+                position=Position::UP;
                 stop();
-                moveTo(DOWN);
+                moveTo(Position::DOWN);
             }
         }
-        else if(positionSetpoint==DOWN)
+        else if(positionSetpoint==Position::DOWN)
         {
             elevator.setSens(Elevator::DOWN);
-            if(!isDown && position!=DOWN)
+            if(!isDown && position!=Position::DOWN)
             {
                 elevator.run(elevatorPWM);
             }
             else if(isDown)
             {
-                position=DOWN;
+                position=Position::DOWN;
                 stop();
             }
         }
@@ -121,11 +121,11 @@ bool ElevatorMgr::isElevatorMoving() const
 
 void ElevatorMgr::getData()
 {
-    if(position==UP)
+    if(position==Position::UP)
     {
         serial.printflnDebug("pos: UP");
     }
-    else if(position==DOWN)
+    else if(position==Position::DOWN)
     {
         serial.printflnDebug("pos: DOWN");
     }
