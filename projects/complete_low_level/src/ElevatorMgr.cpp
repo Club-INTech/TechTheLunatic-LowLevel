@@ -9,7 +9,7 @@
 ElevatorMgr::ElevatorMgr()
 {
     //Initialise tous les paramètres
-    elevatorPWM = 122; //€[|0,255|]
+    elevatorPWM = 100; //€[|0,255|]
     position = UP;
     positionSetpoint = DOWN;    //Pour toujours aller en bas au début
     positionControlled = true;
@@ -19,9 +19,6 @@ ElevatorMgr::ElevatorMgr()
     sensorMgr = &SensorMgr::Instance();
     isUp = sensorMgr->isContactor1engaged();
     isDown = sensorMgr->isContactor2engaged();
-    delayToStop=500;
-    timeSinceMoveTo=Millis();
-    moveToPing=Millis();
 }
 
 void ElevatorMgr::enableAsserv(bool enable)
@@ -49,7 +46,6 @@ void ElevatorMgr::moveTo(Position positionToGo)
     }
     positionSetpoint = positionToGo;
     moveAbnormal = false;
-    moveToPing=Millis();
 }
 
 
@@ -68,11 +64,9 @@ void ElevatorMgr::control()
         {       //Si on a demandé à ce qu'on aille en haut
             elevator.setSens(Elevator::UP); //Le moteur va vers le haut
             if(!isUp && position!=UP) {
-                if (Millis() - moveToPing < delayToStop) {
-                    elevator.run(elevatorPWM);         //si il n'est pas arrivé , et si ça fait pas trop longtemps qu'on a envoyé l'ordre de bouger
-                }
+                elevator.run(elevatorPWM);         //si il n'est pas arrivé , et si ça fait pas trop longtemps qu'on a envoyé l'ordre de bouger
             }
-            else if(isUp || (Millis()-moveToPing>delayToStop))
+            else if(isUp)
             {
                 position=UP;
                 stop();        //Si il est en haut et qu'il n'est pas arrété, il s'arrête
@@ -83,11 +77,9 @@ void ElevatorMgr::control()
             elevator.setSens(Elevator::DOWN);
             if(!isDown && position!=DOWN)
             {
-                if (Millis() - moveToPing < delayToStop) {
-                    elevator.run(elevatorPWM);
-                }
+                elevator.run(elevatorPWM);
             }
-            else if(isDown || (Millis()-moveToPing>delayToStop))
+            else if(isDown)
             {
                 position=DOWN;
                 stop();
@@ -112,11 +104,6 @@ bool ElevatorMgr::isElevatorMoving() const
     return moving;
 }
 
-bool ElevatorMgr::elevatorMoveAbnormal() const
-{
-    return moveAbnormal;
-}
-
 void ElevatorMgr::getData()
 {
     if(position==UP)
@@ -130,6 +117,6 @@ void ElevatorMgr::getData()
     serial.printflnDebug("PWM: %d", elevatorPWM);
 }
 
-void ElevatorMgr::setPWM(int pwm){
+void ElevatorMgr::setPWM(uint8_t pwm){
     this->elevatorPWM=pwm;
 }

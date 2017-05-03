@@ -331,10 +331,6 @@ public:
 
     void getData();
 
-	int16_t getMotorPWM(int sens);
-
-	void getSens(int sens);
-
 	int kptav;
 	int kptar;
 	int kitav;

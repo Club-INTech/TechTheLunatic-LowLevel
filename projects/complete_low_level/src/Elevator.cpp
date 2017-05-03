@@ -111,10 +111,10 @@ void Elevator::initialize(void){
 
 // Change la direction dans le sens souhaité(UP ou DOWN)
 void Elevator::setSens(Sens sensToSet) {
-    if (sensToSet==UP){
+    if (sensToSet==DOWN){
         GPIO_ResetBits(GPIOE, GPIO_Pin_13);   // On passe à 1 la valeur du bit de sens PE13 (sens trigo)
     }
-    else if (sensToSet==DOWN){
+    else if (sensToSet==UP){
         GPIO_SetBits(GPIOE, GPIO_Pin_13); // On passe à 0 la valeur du bit de sens PE13 (sens antitrigo)
     }
 }

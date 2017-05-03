@@ -75,9 +75,9 @@ class ActuatorsMgr : public Singleton<ActuatorsMgr>
 private:
     typedef Uart<2> serial_ax;  // On utilise le port série 2 de la stm32
     AX<serial_ax>* ax12test;    // ax12 de test
-    AX<serial_ax>* ax12brapel;  //objet gérant les deux AX12 des bras
-    AX<serial_ax>* ax12pelG;     //ax12 pour la pelle de la pelleteuse
-    AX<serial_ax>* ax12pelD;
+    AX<serial_ax>* PB;  //objet gérant les deux AX12 des bras de la pelle
+    AX<serial_ax>* PG;     //ax12 pour la pelle de la pelleteuse
+    AX<serial_ax>* PD;
 
     //AX12 de l'attrape module gauche et droit:
     AX<serial_ax>* AMG;
@@ -95,12 +95,12 @@ public:
     {
         ax12test = new AX<serial_ax>(0,0,1023); // (ID, Angle_min, Angle_Max)
         ax12test->init();
-        ax12brapel = new AX<serial_ax>(1,0,1023); // (ID, Angle_min, Angle_Max)
-        ax12brapel->init();
-        ax12pelG = new AX<serial_ax>(2,0,1023);
-        ax12pelG->init();
-        ax12pelD = new AX<serial_ax>(8,0,1023);
-        ax12pelD->init();
+        PB = new AX<serial_ax>(1,0,1023); // (ID, Angle_min, Angle_Max)
+        PB->init();
+        PG = new AX<serial_ax>(2,0,1023);
+        PG->init();
+        PD = new AX<serial_ax>(8,0,1023);
+        PD->init();
 
         AMG = new AX<serial_ax>(3,0,1023);
         AMG->init();
@@ -119,9 +119,9 @@ public:
     ~ActuatorsMgr()
     {
         delete(ax12test);
-        delete(ax12brapel);
-        delete(ax12pelG);
-        delete(ax12pelD);
+        delete(PB);
+        delete(PG);
+        delete(PD);
         delete(AMD);
         delete(AMG);
         delete(CMD);
@@ -146,18 +146,18 @@ public:
         serial.printfln("Reglage de l'ID des AX12 de la pelle");
         serial.printfln("Brancher brancher les deux AX12 des bras de la pelleteuse");
         serial.read(i);
-        ax12brapel->initIDB(1);
-        ax12brapel->init();
+        PB->initIDB(1);
+        PB->init();
         serial.printfln("done");
 
         serial.printfln("Brancher l'AX12 gauche de la pelle");
         serial.read(i);
-        ax12pelG->initIDB(2);
-        ax12pelG->init();
+        PG->initIDB(2);
+        PG->init();
         serial.printfln("Brancher l'AX12 droit de la pelle");
         serial.read(i);
-        ax12pelD->initIDB(8);
-        ax12pelD->init();
+        PD->initIDB(8);
+        PD->init();
         serial.printfln("done");
     }
 
@@ -213,73 +213,79 @@ public:
     void braPelReleve() //relève les bras de la pelle
     {
         serial.printflnDebug("Leve les bras");
-        ax12brapel->changeSpeed(10);
-        ax12brapel->goTo(brapelrel);
+        PB->changeSpeed(10);
+        PB->goTo(brapelrel);
         serial.printflnDebug("done");
     }
 
     void braPelDeplie() // déplie les bras de la pelle
     {
         serial.printflnDebug("Baisse les bras");
-        ax12brapel->changeSpeed(10);
-        ax12brapel->goTo(brapeldep);
+        PB->changeSpeed(10);
+        PB->goTo(brapeldep);
         serial.printflnDebug("done");
     }
     void braPelRam() // déplie les bras de la pelle
     {
         serial.printflnDebug("Baisse les bras");
-        ax12brapel->changeSpeed(10);
-        ax12brapel->goTo(brapelram);
+        PB->changeSpeed(10);
+        PB->goTo(brapelram);
         serial.printflnDebug("done");
     }
 
     void braPelMoit()
     {
         serial.printflnDebug("Leve les bras mais pas trop");
-        ax12brapel->changeSpeed(20);
-        ax12brapel->goTo(brapelmoit);
+        PB->changeSpeed(20);
+        PB->goTo(brapelmoit);
         serial.printflnDebug("done");
     }
 
     void pelleInit()
     {
         serial.printflnDebug("Pelle va au début");
-        ax12pelG->changeSpeed(50);
-        ax12pelD->changeSpeed(50);
-        ax12pelG->goTo(pospelinitG);
-        ax12pelD->goTo(pospelinitD);
+        PG->changeSpeed(50);
+        PD->changeSpeed(50);
+        PG->goTo(pospelinitG);
+        PD->goTo(pospelinitD);
         serial.printflnDebug("done");
     }
 
     void pelleMoit()
     {
         serial.printflnDebug("Pelle tient boules");
-        ax12pelG->changeSpeed(40);
-        ax12pelD->changeSpeed(40);
-        ax12pelG->goTo(pospelmoitG);
-        ax12pelD->goTo(pospelmoitD);
+        PG->changeSpeed(40);
+        PD->changeSpeed(40);
+        PG->goTo(pospelmoitG);
+        PD->goTo(pospelmoitD);
         serial.printflnDebug("done");
     }
 
     void pelleTient(){
         serial.printflnDebug("pos de maintient des boules");
-        ax12pelG->changeSpeed(40);
-        ax12pelD->changeSpeed(40);
-        ax12pelG->goTo(pospeltientG);
-        ax12pelD->goTo(pospeltientD);
+        PG->changeSpeed(40);
+        PD->changeSpeed(40);
+        PG->goTo(pospeltientG);
+        PD->goTo(pospeltientD);
         serial.printflnDebug("done");
     }
 
     void pelleLib()
     {
         serial.printflnDebug("Pelle jete boules");
-        ax12pelG->changeSpeed(50);
-        ax12pelD->changeSpeed(50);
-        ax12pelG->goTo(pospeldeliG);
-        ax12pelD->goTo(pospeldeliD);
+        PG->changeSpeed(50);
+        PD->changeSpeed(50);
+        PG->goTo(pospeldeliG);
+        PD->goTo(pospeldeliD);
         serial.printflnDebug("done");
     }
 
+    void pelleReasserv(){
+        PG->unasserv();
+        PG->asserv();
+        PD->unasserv();
+        PD->asserv();
+    }
 /*			 ___________________
  * 		   *|                   |*
  *		   *|  Attrappe Module  |*
@@ -382,10 +388,7 @@ public:
         LM->changeSpeed(12);
         LM->goTo(LarguePousse);
     }
-    void lmReasserv(){
-        LM->unasserv();
-        LM->asserv();
-    }
+
 
     // Voilà.
 
@@ -418,7 +421,7 @@ public:
     }
 
     void pelreasserv(){
-        ax12brapel->init();
+        PB->init();
     }
     void setPunch(){
         uint16_t punchL=32;
@@ -441,12 +444,12 @@ public:
 /*
     void testSync1(){
         serial.printflnDebug("sync 1");
-        ax12pelG->syncWrite(2,8,0,300);
+        PG->syncWrite(2,8,0,300);
         serial.printflnDebug("done");
     }
     void testSync2(){
         serial.printflnDebug("sync 2");
-        ax12pelG->syncWrite(2,8,300,0);
+        PG->syncWrite(2,8,300,0);
         serial.printflnDebug("done");
     }
     */

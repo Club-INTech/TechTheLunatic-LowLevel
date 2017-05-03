@@ -622,10 +622,10 @@ int main(void)
             {
                 actuatorsMgr->pelleLib();   //position de livraison de boules de la pelle
             }
-			else if(!strcmp("asserpel", order))
-			{
-				actuatorsMgr->pelreasserv();
-			}
+            else if(!strcmp("pelreasserv", order))
+            {
+                actuatorsMgr->pelleReasserv();
+            }
 
 
 /*			 _____________________
@@ -717,10 +717,7 @@ int main(void)
             {
                 actuatorsMgr->larguePousselent(); //position devant (largue les modules)
             }
-			else if(!strcmp("lmreasserv", order))
-			{
-				actuatorsMgr->lmReasserv();
-			}
+
 
 
 /*		     ___________________
@@ -807,7 +804,7 @@ int main(void)
                                      (int) motionControlSystem->getRightSetPoint());
                 serial.printflnDebug("codeuse gauche--droite: %d --    %d",
                                      motionControlSystem->leftTicks, motionControlSystem->rightTicks);
-              //  motionControlSystem->getData();
+                motionControlSystem->getData();
 
             }
 
@@ -897,10 +894,9 @@ int main(void)
 extern "C" { //indique au compilateur que les fonctions créées sont en C et non en C++
 //Interruptions sur le TIMER4
 void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
-    volatile static uint32_t i = 0, j = 0, k = 0, l = 0; //compteurs pour lancer des méthodes à différents moments
+    volatile static uint32_t i = 0, j = 0, k = 0, l = 0, m=0; //compteurs pour lancer des méthodes à différents moments
     static MotionControlSystem *motionControlSystem = &MotionControlSystem::Instance();
     static Voltage_controller *voltage = &Voltage_controller::Instance();
-    static SensorMgr *sensorMgr = &SensorMgr::Instance();
     static ElevatorMgr *elevatorMgr = &ElevatorMgr::Instance();
     //static ElevatorMgr &elevatorMgr = ElevatorMgr::Instance();
 
@@ -928,8 +924,11 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
             k = 0;
         }
 
-        if (l >= 200) {
+        if(m >= 100){
             elevatorMgr->control();
+            m=0;
+        }
+        if (l >= 200) {
             if (autoUpdatePosition && !serial.available()) {
                 //si l'envoi automatique de position au HL est activé et que la série a de la place diponible
                 //on affiche la position et l'angle du robot
@@ -954,6 +953,7 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
         i++;
         j++;
         l++;
+        m++;
     }
 }
 
