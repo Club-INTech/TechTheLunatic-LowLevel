@@ -19,6 +19,9 @@ ElevatorMgr::ElevatorMgr()
     sensorMgr = &SensorMgr::Instance();
     isUp = sensorMgr->isContactor1engaged();
     isDown = sensorMgr->isContactor2engaged();
+
+    delayToStop=1500;
+    moveToOrderPing=Millis();
 }
 
 void ElevatorMgr::enableAsserv(bool enable)
@@ -46,6 +49,7 @@ void ElevatorMgr::moveTo(Position positionToGo)
     }
     positionSetpoint = positionToGo;
     moveAbnormal = false;
+    moveToOrderPing=Millis();
 }
 
 
@@ -98,6 +102,16 @@ void ElevatorMgr::stop()
     elevator.stop();
     moving=false;
     enableAsserv(false);
+}
+
+void ElevatorMgr::manageStop()
+{
+    static uint32_t time = Millis();
+    if(moving && time-moveToOrderPing>delayToStop){
+        enableAsserv(false);
+        position=positionSetpoint;
+        stop();
+    }
 }
 
 bool ElevatorMgr::isElevatorMoving() const

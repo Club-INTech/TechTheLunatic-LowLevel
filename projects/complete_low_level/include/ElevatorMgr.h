@@ -37,8 +37,13 @@ private:
     volatile bool positionControlled;
     volatile bool moving;
     Position position;
-    bool isUp;
-    bool isDown;
+    volatile bool isUp;
+    volatile bool isDown;
+
+    void manageStop();
+
+    volatile uint32_t moveToOrderPing;
+    volatile uint32_t delayToStop;
 };
 
 #endif //ARM_ELEVATORMGR_H
