@@ -9,7 +9,7 @@
 ElevatorMgr::ElevatorMgr()
 {
     //Initialise tous les paramètres
-    elevatorPWM = 100; //€[|0,255|]
+    elevatorPWM = 110; //€[|0,255|]
     position = UP;
     positionSetpoint = DOWN;    //Pour toujours aller en bas au début
     positionControlled = true;
@@ -69,7 +69,8 @@ void ElevatorMgr::control()
             else if(isUp)
             {
                 position=UP;
-                stop();        //Si il est en haut et qu'il n'est pas arrété, il s'arrête
+                stop();
+                moveTo(DOWN);
             }
         }
         else if(positionSetpoint==DOWN)
