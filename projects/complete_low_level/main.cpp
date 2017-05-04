@@ -740,7 +740,7 @@ int main(void)
             else if(!strcmp("ascpwm", order))
             {
                 int pwm=0;
-                serial.printflnDebug("Entrez le pwm à utiliser");
+                serial.printflnDebug("Entrez le pwm à utiliser( [0;10]");
                 serial.read(pwm);
                 elevatorMgr->setPWM(pwm);
                 serial.printflnDebug("done");

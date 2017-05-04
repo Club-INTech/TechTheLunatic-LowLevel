@@ -43,6 +43,8 @@ private:
 
     volatile uint32_t moveToOrderPing;
     volatile uint32_t delayToStop;
+    uint32_t timeSinceMoveTo;
+    uint32_t moveToPing;
 };
 
 #endif //ARM_ELEVATORMGR_H
