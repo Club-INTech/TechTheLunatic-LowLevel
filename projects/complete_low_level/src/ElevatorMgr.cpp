@@ -9,7 +9,7 @@
 ElevatorMgr::ElevatorMgr()
 {
     //Initialise tous les paramètres
-    elevatorPWM = 110; //€[|0,255|]
+    elevatorPWM = 160; //€[|0,255|]
     position = UP;
     positionSetpoint = DOWN;    //Pour toujours aller en bas au début
     positionControlled = true;
@@ -19,9 +19,6 @@ ElevatorMgr::ElevatorMgr()
     sensorMgr = &SensorMgr::Instance();
     isUp = sensorMgr->isContactor1engaged();
     isDown = sensorMgr->isContactor2engaged();
-
-    delayToStop=1500;
-    moveToOrderPing=Millis();
 }
 
 void ElevatorMgr::enableAsserv(bool enable)
@@ -42,14 +39,12 @@ void ElevatorMgr::enableAsserv(bool enable)
  */
 void ElevatorMgr::moveTo(Position positionToGo)
 {
-    enableAsserv(true);
     if (!moving)
     {
         moving = true;
     }
     positionSetpoint = positionToGo;
     moveAbnormal = false;
-    moveToOrderPing=Millis();
 }
 
 
@@ -64,29 +59,28 @@ void ElevatorMgr::control()
         isUp=sensorMgr->isContactor1engaged();
         isDown=sensorMgr->isContactor2engaged();
 
-        if(positionSetpoint==Position::UP)
+        if(positionSetpoint==UP)
         {       //Si on a demandé à ce qu'on aille en haut
             elevator.setSens(Elevator::UP); //Le moteur va vers le haut
-            if(!isUp && position!=Position::UP) {
+            if(!isUp && position!=UP) {
                 elevator.run(elevatorPWM);         //si il n'est pas arrivé , et si ça fait pas trop longtemps qu'on a envoyé l'ordre de bouger
             }
             else if(isUp)
             {
-                position=Position::UP;
+                serial.printflnDebug("Est arrive en haut");
                 stop();
-                moveTo(Position::DOWN);
             }
         }
-        else if(positionSetpoint==Position::DOWN)
+        else if(positionSetpoint==DOWN)
         {
             elevator.setSens(Elevator::DOWN);
-            if(!isDown && position!=Position::DOWN)
+            if(!isDown && position!=DOWN)
             {
                 elevator.run(elevatorPWM);
             }
             else if(isDown)
             {
-                position=Position::DOWN;
+                serial.printflnDebug("Est arrive en bas");
                 stop();
             }
         }
@@ -104,16 +98,6 @@ void ElevatorMgr::stop()
     enableAsserv(false);
 }
 
-void ElevatorMgr::manageStop()
-{
-    static uint32_t time = Millis();
-    if(moving && time-moveToOrderPing>delayToStop){
-        enableAsserv(false);
-        position=positionSetpoint;
-        stop();
-    }
-}
-
 bool ElevatorMgr::isElevatorMoving() const
 {
     return moving;
@@ -121,11 +105,11 @@ bool ElevatorMgr::isElevatorMoving() const
 
 void ElevatorMgr::getData()
 {
-    if(position==Position::UP)
+    if(position==UP)
     {
         serial.printflnDebug("pos: UP");
     }
-    else if(position==Position::DOWN)
+    else if(position==DOWN)
     {
         serial.printflnDebug("pos: DOWN");
     }
