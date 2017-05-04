@@ -70,7 +70,7 @@ void ElevatorMgr::control()
                 if (Millis() - moveToPing < delayToStop) {
                     elevator.run(elevatorPWM);         //si il n'est pas arrivé , et si ça fait pas trop longtemps qu'on a envoyé l'ordre de bouger
                 } else{
-                    serial.printflnDebug("delay depassé");
+                    position=DOWN;                      //Si non, on considère qu'on s'est bloqué et donc qu'on est toujours en Haut, et on arrête d'essayer de bouger
                     enableAsserv(false);
                 }
             }
@@ -91,7 +91,7 @@ void ElevatorMgr::control()
                     elevator.run(elevatorPWM);
                 }
                 else{
-                    serial.printflnDebug("delay depassé bas");
+                    position=UP;
                     enableAsserv(false);
                 }
             }
