@@ -31,18 +31,21 @@ extern Uart<1> serial;
 
 //Pour la Pelleteusatron 3000
 
-#define brapeldep 127
+#define brapeldep 122
 #define brapelram 113
 
-#define brapelmoit 170
-#define brapelrel 177
+#define brapelmoit 160
+#define brapelrel 200
+
 #define pospelinitG 300
-#define pospeltientG 116
-#define pospelmoitG 150
+#define pospeldeplG 180
+#define pospelmoitG 155
+#define pospeltientG 121
 #define pospeldeliG 0
 #define pospelinitD 0
-#define pospeltientD 184
-#define pospelmoitD 150
+#define pospeldeplD 120
+#define pospelmoitD 145
+#define pospeltientD 179
 #define pospeldeliD 300
 
 //Pour les attrape-modules
@@ -213,7 +216,7 @@ public:
     void braPelReleve() //relève les bras de la pelle
     {
         serial.printflnDebug("Leve les bras");
-        PB->changeSpeed(10);
+        PB->changeSpeed(20);
         PB->goTo(brapelrel);
         serial.printflnDebug("done");
     }
@@ -453,6 +456,11 @@ public:
         serial.printflnDebug("done");
     }
     */
+    void pellePosDeplacement()
+    {
+        PG->goTo(pospeldeplG);
+        PD->goTo(pospeldeplD);
+    }
 };
 
 #endif /* ACTUATORSMGR_HPP */

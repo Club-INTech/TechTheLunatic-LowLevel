@@ -37,6 +37,15 @@ int main(void)
 
     ElevatorMgr* elevatorMgr = &ElevatorMgr::Instance();
 
+    //INITIALISATION DES ACTIONNEURS:
+    actuatorsMgr->braPelReleve();
+    actuatorsMgr->pellePosDeplacement();
+    actuatorsMgr->largueRepos();
+    actuatorsMgr->moduleMid(0);
+    actuatorsMgr->moduleMid(1);
+    actuatorsMgr->caleMidD();
+    actuatorsMgr->caleMidG();
+
     char order[64]; //Permet le stockage du message re�u par la liaison s�rie
 
     bool translation = true; //permet de basculer entre les r�glages de cte d'asserv en translation et en rotation
@@ -90,7 +99,10 @@ int main(void)
                 int deplacement = 0;
                 serial.read(deplacement);
                 serial.printfln("_");           //Acquittement
+                serial.printflnDebug("Translation %d", deplacement);
                 motionControlSystem->orderTranslation(deplacement);
+                serial.printflnDebug("Translation commencée");
+
             }
                 /*
             else if(!strcmp("dtest",order))
@@ -105,7 +117,9 @@ int main(void)
                 float angle = motionControlSystem->getAngleRadian();
                 serial.read(angle);
                 serial.printfln("_");           //Acquittement
-                motionControlSystem->orderRotation(angle, MotionControlSystem::FREE);  //TODO voir comment corriger ça
+                serial.printflnDebug("Rotation vers %d", angle);
+                motionControlSystem->orderRotation(angle, MotionControlSystem::FREE);
+                serial.printflnDebug("Rotation commencée");
             }
             else if(!strcmp("t3", order))		//Ordre de rotation via un angle relatif (en radians)
             {
@@ -119,7 +133,7 @@ int main(void)
                 float angle_actuel = motionControlSystem->getAngleRadian()*180/PI, delta_angle = 0;
                 serial.read(delta_angle);
                 serial.printfln("_");
-                motionControlSystem->orderRotation((angle_actuel + delta_angle)*PI/180, MotionControlSystem::FREE); //TODO voir comment corriger ça
+                motionControlSystem->orderRotation((angle_actuel + delta_angle)*PI/180, MotionControlSystem::FREE);
             }
                 /*else if(!strcmp("dc", order)) //Rotation + translation = trajectoire courbe !
                 {
@@ -626,6 +640,10 @@ int main(void)
             {
                 actuatorsMgr->pelreasserv();
             }
+            else if(!strcmp("pb", order))
+            {
+                actuatorsMgr->pellePosDeplacement();
+            }
 
 
 /*			 _____________________
@@ -896,7 +914,6 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
     volatile static uint32_t i = 0, j = 0, k = 0, l = 0; //compteurs pour lancer des méthodes à différents moments
     static MotionControlSystem *motionControlSystem = &MotionControlSystem::Instance();
     static Voltage_controller *voltage = &Voltage_controller::Instance();
-    static SensorMgr *sensorMgr = &SensorMgr::Instance();
     static ElevatorMgr *elevatorMgr = &ElevatorMgr::Instance();
     //static ElevatorMgr &elevatorMgr = ElevatorMgr::Instance();
 

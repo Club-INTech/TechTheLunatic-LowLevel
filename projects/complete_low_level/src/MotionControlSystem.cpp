@@ -222,13 +222,11 @@ void MotionControlSystem::control()
     if(rotationControlled)
         rotationPID.compute();		// Actualise la valeur de 'rotationSpeed'
 
-
     // Limitation de la consigne de vitesse en translation
     if(translationSpeed > maxSpeedTranslation)
         translationSpeed = maxSpeedTranslation;
     else if(translationSpeed < -maxSpeedTranslation)
         translationSpeed = -maxSpeedTranslation;
-
 
     // Limitation de la consigne de vitesse en rotation
     if(rotationSpeed > maxSpeedRotation)
@@ -239,9 +237,6 @@ void MotionControlSystem::control()
     leftSpeedSetpoint = (int32_t) (translationSpeed * leftCurveRatio - rotationSpeed);
     rightSpeedSetpoint = (int32_t) (translationSpeed * rightCurveRatio + rotationSpeed);
 
-
-
-
     // Limitation de la vitesse
     if(leftSpeedSetpoint > maxSpeed)
         leftSpeedSetpoint = maxSpeed;
@@ -251,7 +246,6 @@ void MotionControlSystem::control()
         rightSpeedSetpoint = maxSpeed;
     else if(rightSpeedSetpoint < -maxSpeed)
         rightSpeedSetpoint = -maxSpeed;
-
 
     // Limitation de l'accélération du moteur gauche (permet de règler la pente du trapèze de vitesse)
     if(leftSpeedSetpoint - previousLeftSpeedSetpoint > maxAcceleration)
