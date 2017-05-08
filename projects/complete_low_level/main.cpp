@@ -5,8 +5,10 @@
 #include "ActuatorsMgr.hpp"
 #include "library/voltage_controller.hpp"
 
+#define READ_TIMEOUT_MS (uint16_t)0
+
 bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
-bool autoUpdateUS = false;
+
 /**Contient la boucle principale de gestion des entrées série du programme
  *
  * @author caillou, sylvain, rémi, melanie, Ug
@@ -32,7 +34,6 @@ int main(void)
     motionControlSystem->init(); //initialise asservissement, PWM et counters
     ActuatorsMgr* actuatorsMgr = &ActuatorsMgr::Instance(); //ax12
     SensorMgr* sensorMgr = &SensorMgr::Instance(); //capteurs, contacteurs, jumper
-    int32_t usSendDelay=Millis();
     Voltage_controller* voltage = &Voltage_controller::Instance();//contrôle batterie Lipos
 
     ElevatorMgr* elevatorMgr = &ElevatorMgr::Instance();
@@ -46,16 +47,20 @@ int main(void)
     actuatorsMgr->caleMidD();
     actuatorsMgr->caleMidG();
 
+    volatile int32_t usSendDelay=Millis();
+
     char order[64]; //Permet le stockage du message re�u par la liaison s�rie
 
-    bool translation = true; //permet de basculer entre les r�glages de cte d'asserv en translation et en rotation
+    bool translation = true;        //permet de basculer entre les r�glages de cte d'asserv en translation et en rotation
+    bool verificationOrder= false;  //A mettre à true pour gérer le timeout de la com' haut niveau(bloque screen, sauf si vous êtes très rapide)
+    bool autoUpdateUS = false;      //Envoie les valeurs des capteurs au HL après les avoir mises à jour
     while(1)
     {
         //serial.printflnDebug("prerefresh");
-        sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
         // et ils se préparent à recevoir un front montant
         //serial.printflnDebug("postrefresh");
 
+        sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
         if(autoUpdateUS && Millis()-usSendDelay > 100) {
             serial.printflnUS("%d", sensorMgr->getSensorDistanceAVG());
             serial.printflnUS("%d", sensorMgr->getSensorDistanceAVD());
@@ -69,7 +74,11 @@ int main(void)
 
         if (tailleBuffer && tailleBuffer < RX_BUFFER_SIZE - 1) //s'il reste de la place dans le câble série
         {
-            serial.read(order);
+
+            if(!serial.read(order, READ_TIMEOUT_MS)){
+                continue;
+            }
+
             serial.printfln("_");				//Acquittement
 
 /*			 __________________
@@ -218,6 +227,9 @@ int main(void)
             else if(!strcmp("sus", order))
             {
                 autoUpdateUS=!autoUpdateUS;
+            }
+            else if(!strcmp("read0", order)){
+                verificationOrder=!verificationOrder;
             }
 
 /*			 _____________________

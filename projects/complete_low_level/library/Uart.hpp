@@ -349,8 +349,9 @@ public:
 		uint8_t j = 0;
 
 		// Hack for timeout
-		if (timeout > 0)
+		/*if (timeout > 0)
 			timeout *= 26;
+		*/
 
 		while (!available()) {
 			if (timeout > 0) {
@@ -549,9 +550,9 @@ public:
 		uint8_t i = 0;
 
 		do {
-			if (read_char(buffer, timeout) == READ_TIMEOUT)
+			if (read_char(buffer, timeout) == READ_TIMEOUT){
 				return READ_TIMEOUT;
-
+			}
 			if (i == 0 && buffer == '\r') {
 				return READ_SUCCESS;
 			}
