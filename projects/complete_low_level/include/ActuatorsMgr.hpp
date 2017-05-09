@@ -67,7 +67,7 @@ extern Uart<1> serial;
 
 //Largue modules
 #define LargueRepos 132
-#define LarguePousse 175
+#define LarguePousse 185
 
 /**
  * Classe de gestionnaire d'AX12, comporte toutes les fonctions relatives aux actions effectuées par les ax12 ou groupes d'ax12
@@ -388,7 +388,7 @@ public:
         LM->goTo(LarguePousse);
     }
     void larguePousselent(){
-        LM->changeSpeed(12);
+        LM->changeSpeed(5);
         LM->goTo(LarguePousse);
     }
 
