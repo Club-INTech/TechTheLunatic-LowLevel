@@ -423,9 +423,13 @@ public:
         ax12test->reanimationMode(9600);
     }
 
-    void pelreasserv(){
+    void pelreasserv()
+    {
+        PD->init();
+        PG->init();
         PB->init();
     }
+
     void setPunch(){
         uint16_t punchL=32;
         uint16_t punchH=0;
