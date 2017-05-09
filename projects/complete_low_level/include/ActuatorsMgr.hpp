@@ -235,6 +235,13 @@ public:
         PB->goTo(brapelram);
         serial.printflnDebug("done");
     }
+    void pellePosDeplacement()
+    {
+        serial.printflnDebug("Leve au max les bras");
+        PG->goTo(pospeldeplG);
+        PD->goTo(pospeldeplD);
+        serial.printflnDebug("done");
+    }
 
     void braPelMoit()
     {
@@ -284,10 +291,13 @@ public:
     }
 
     void pelleReasserv(){
+        serial.printflnDebug("Reasservis la pelle");
         PG->unasserv();
         PG->asserv();
         PD->unasserv();
         PD->asserv();
+        serial.printflnDebug("done");
+
     }
 /*			 ___________________
  * 		   *|                   |*
@@ -380,16 +390,23 @@ public:
  *		   *|___________________|*
  */
     void largueRepos(){
+        serial.printflnDebug("Initialisation du largue modules");
         LM->changeSpeed(50);
         LM->goTo(LargueRepos);
+        serial.printflnDebug("done");
+
     }
     void larguePousse(){
+        serial.printflnDebug("Largue un module");
         LM->changeSpeed(18);
         LM->goTo(LarguePousse);
+        serial.printflnDebug("done");
     }
     void larguePousselent(){
+        serial.printflnDebug("Largue lentement un module");
         LM->changeSpeed(5);
         LM->goTo(LarguePousse);
+        serial.printflnDebug("done");
     }
 
 
@@ -460,11 +477,7 @@ public:
         serial.printflnDebug("done");
     }
     */
-    void pellePosDeplacement()
-    {
-        PG->goTo(pospeldeplG);
-        PD->goTo(pospeldeplD);
-    }
+
 };
 
 #endif /* ACTUATORSMGR_HPP */

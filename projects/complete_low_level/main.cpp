@@ -1,7 +1,5 @@
 #include <stm32f4xx_gpio.h>
 #include <ElevatorMgr.h>
-#include "library/Uart.hpp"
-#include "MotionControlSystem.h"
 #include "ActuatorsMgr.hpp"
 #include "library/voltage_controller.hpp"
 
@@ -51,9 +49,10 @@ int main(void)
 
     char order[64]; //Permet le stockage du message re�u par la liaison s�rie
 
-    bool translation = true;        //permet de basculer entre les r�glages de cte d'asserv en translation et en rotation
-    bool verificationOrder= false;  //A mettre à true pour gérer le timeout de la com' haut niveau(bloque screen, sauf si vous êtes très rapide)
-    bool autoUpdateUS = false;      //Envoie les valeurs des capteurs au HL après les avoir mises à jour
+    volatile bool translation = true;        //permet de basculer entre les r�glages de cte d'asserv en translation et en rotation
+    volatile bool verificationOrder= false;  //A mettre à true pour gérer le timeout de la com' haut niveau(bloque screen, sauf si vous êtes très rapide)
+    volatile bool autoUpdateUS = false;      //Envoie les valeurs des capteurs au HL après les avoir mises à jour
+    volatile bool isTimeout=false;
     while(1)
     {
         //serial.printflnDebug("prerefresh");
@@ -74,9 +73,11 @@ int main(void)
 
         if (tailleBuffer && tailleBuffer < RX_BUFFER_SIZE - 1) //s'il reste de la place dans le câble série
         {
-
-            if(!serial.read(order, READ_TIMEOUT_MS)){
-                continue;
+            isTimeout=serial.read(order, READ_TIMEOUT_MS);
+            if(!verificationOrder){
+                if(!isTimeout){
+                    continue;
+                }
             }
 
             serial.printfln("_");				//Acquittement
@@ -648,7 +649,7 @@ int main(void)
             {
                 actuatorsMgr->pelleLib();   //position de livraison de boules de la pelle
             }
-            else if(!strcmp("asserpel", order))
+            else if(!strcmp("pelreasserv", order))
             {
                 actuatorsMgr->pelreasserv();
             }
