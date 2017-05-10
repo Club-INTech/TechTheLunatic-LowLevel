@@ -50,9 +50,9 @@ extern Uart<1> serial;
 
 //Pour les attrape-modules
 
-#define AMdebG 185
-#define AMmidG 135
-#define AMfinG 59
+#define AMdebG 180
+#define AMmidG 130
+#define AMfinG 54
 #define AMdebD 115
 #define AMmidD 170
 #define AMfinD 257 //avant: 232
@@ -67,7 +67,7 @@ extern Uart<1> serial;
 
 //Largue modules
 #define LargueRepos 132
-#define LarguePousse 175
+#define LarguePousse 170
 
 /**
  * Classe de gestionnaire d'AX12, comporte toutes les fonctions relatives aux actions effectuées par les ax12 ou groupes d'ax12

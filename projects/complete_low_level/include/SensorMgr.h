@@ -36,10 +36,11 @@ public:
 
 	void sensorInterrupt(int);
 private:
-	CapteurSRF ultrasonARD;
-    CapteurSRF ultrasonARG;
     CapteurSRF ultrasonAVD;
     CapteurSRF ultrasonAVG;
+	CapteurSRF ultrasonARD;
+    CapteurSRF ultrasonARG;
+
 
 	unsigned int refreshDelay;
 	unsigned int currentTime;
