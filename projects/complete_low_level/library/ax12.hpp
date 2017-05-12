@@ -116,7 +116,6 @@ private:
         Serial_AX12::send_char(~checksum);
         /* Lignes désactivées pour voir si c'est pas ça qui bloque les ax12
         Serial_AX12::disable_tx();
-        Serial_AX12::disable_tx();        //d�sactiver la s�rie sortante
         Serial_AX12::enable_rx();            //activer la s�rie entrante
         Delay(10);
         Serial_AX12::disable_rx();        //d�sactiver la s�rie entrante
@@ -216,6 +215,7 @@ private:
         {
             data[2] = (value & 0xFF00) >> 8;
         }
+        serial.printflnDebug("Packet to send: %d", (int)value);
         sendPacket(reglength + 1, AX_WRITE_DATA, data);
     }
     void static writeDataB(uint8_t regstart, uint8_t reglength, uint16_t value)
@@ -365,6 +365,7 @@ public:
     {
         writeData(AX_GOAL_POSITION_L, 2,
                 (uint16_t) (((uint32_t) 1023 * angle) / 300));
+        serial.printflnDebug("Packet goTo sent");
     }
 
     void static goToB(uint16_t angle)
@@ -544,6 +545,19 @@ public:
         writeData(AX_PUNCH_L,1,punchL);
     }
 
+    static void syncGoTo(uint8_t id1, uint8_t id2, uint16_t pos1, uint16_t pos2){
+        Serial_AX12::enable_tx();
+        Serial_AX12::send_char(0xFF);
+        Serial_AX12::send_char(0xFF);
+        Serial_AX12::send_char(AX_BROADCAST);
+        Serial_AX12::send_char(10); //10=(2 bytes+1)*2 ax + 4 bytes
+        Serial_AX12::send_char(AX_SYNC_WRITE);
+        Serial_AX12::send_char(AX_GOAL_POSITION_L);
+        Serial_AX12::send_char(id1);
+        Serial_AX12::send_char(pos1);
+        Serial_AX12::send_char(id2);
+        Serial_AX12::send_char(pos2);
+    }
 };
 
 #endif

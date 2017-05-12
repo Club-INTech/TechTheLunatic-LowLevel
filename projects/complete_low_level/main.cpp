@@ -3,8 +3,6 @@
 #include "ActuatorsMgr.hpp"
 #include "library/voltage_controller.hpp"
 
-#define READ_TIMEOUT_MS (uint16_t)0
-
 bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
 
 /**Contient la boucle principale de gestion des entrées série du programme
@@ -55,33 +53,27 @@ int main(void)
     volatile bool isTimeout=false;
     while(1)
     {
-        //serial.printflnDebug("prerefresh");
-        // et ils se préparent à recevoir un front montant
-        //serial.printflnDebug("postrefresh");
-
-        sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
         if(autoUpdateUS && Millis()-usSendDelay > 100) {
+            sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
             serial.printflnUS("%d", sensorMgr->getSensorDistanceAVG());
             serial.printflnUS("%d", sensorMgr->getSensorDistanceAVD());
             serial.printflnUS("%d", sensorMgr->getSensorDistanceARG());
             serial.printflnUS("%d", sensorMgr->getSensorDistanceARD());
             usSendDelay=Millis();
-
         }
 
         uint8_t tailleBuffer = serial.available(); //taille utilisée pour le passage des données dans le câble série
 
         if (tailleBuffer && tailleBuffer < RX_BUFFER_SIZE - 1) //s'il reste de la place dans le câble série
         {
-            isTimeout=serial.read(order, READ_TIMEOUT_MS);
-            if(!verificationOrder){
-                if(!isTimeout){
-                    continue;
-                }
+            isTimeout=serial.read(order);
+            if(!isTimeout){
+                continue;
             }
 
             serial.printfln("_");				//Acquittement
 
+            serial.printflnDebug("Ordre reçu et acquitté: %s", order);
 /*			 __________________
  * 		   *|                  |*
  *		   *|  TESTS DE BASE   |*
@@ -127,7 +119,7 @@ int main(void)
                 float angle = motionControlSystem->getAngleRadian();
                 serial.read(angle);
                 serial.printfln("_");           //Acquittement
-                serial.printflnDebug("Rotation vers %d", angle);
+                serial.printflnDebug("Rotation vers %f", angle);
                 motionControlSystem->orderRotation(angle, MotionControlSystem::FREE);
                 serial.printflnDebug("Rotation commencée");
             }
@@ -608,6 +600,10 @@ int main(void)
             else if (!strcmp("reanimation",order))    //permet de réanimer certains ax12
             {
                 actuatorsMgr->reanimation();
+            }
+
+            else if(!strcmp("synctest", order)){
+                actuatorsMgr->testSync1();
             }
 
 

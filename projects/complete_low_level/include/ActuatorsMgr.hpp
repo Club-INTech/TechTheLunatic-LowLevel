@@ -465,18 +465,17 @@ public:
         serial.read(ccwSlope);
         ax12test->setSlopes(cwSlope,ccwSlope);
     }
-/*
+
     void testSync1(){
         serial.printflnDebug("sync 1");
-        PG->syncWrite(2,8,0,300);
+        PB->syncGoTo(2,8,180,120);
         serial.printflnDebug("done");
     }
     void testSync2(){
         serial.printflnDebug("sync 2");
-        PG->syncWrite(2,8,300,0);
         serial.printflnDebug("done");
     }
-    */
+
 
 };
 

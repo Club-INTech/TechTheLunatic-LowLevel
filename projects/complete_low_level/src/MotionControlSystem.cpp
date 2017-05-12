@@ -286,7 +286,6 @@ void MotionControlSystem::control()
 
     leftMotor.run(leftPWM);
     rightMotor.run(rightPWM);
-
 }
 
 
@@ -317,7 +316,7 @@ void MotionControlSystem::manageStop()
     static uint32_t time = 0;
     static uint32_t time2 = 0;
     static uint32_t time3 = 0;
-    static uint32_t timeToEstablish = 0;
+    static int32_t timeToEstablish = 0;
     static bool isSpeedEstablished = false;
 
     if (moving&&
@@ -481,7 +480,6 @@ void MotionControlSystem::orderTranslation(int32_t mmDistance) {
         //translationPID.setTunings(this->kptar,this->kitar , this->kdtar);
     }
     moveAbnormal = false;
-
 }
 
 void MotionControlSystem::orderRotation(float angleConsigneRadian, RotationWay rotationWay) {
