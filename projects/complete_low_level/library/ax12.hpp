@@ -546,6 +546,10 @@ public:
     }
 
     static void syncGoTo(uint8_t id1, uint8_t id2, uint16_t pos1, uint16_t pos2){
+
+        serial.printflnDebug("Sending sync packets : ax-pos:\n");
+        serial.printflnDebug("%d - %d", id1, pos1);
+        serial.printflnDebug("%d - %d", id2, pos2);
         Serial_AX12::enable_tx();
         Serial_AX12::send_char(0xFF);
         Serial_AX12::send_char(0xFF);
@@ -557,6 +561,7 @@ public:
         Serial_AX12::send_char(pos1);
         Serial_AX12::send_char(id2);
         Serial_AX12::send_char(pos2);
+        serial.printflnDebug("sync packets sent");
     }
 };
 

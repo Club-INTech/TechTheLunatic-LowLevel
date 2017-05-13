@@ -467,15 +467,10 @@ public:
     }
 
     void testSync1(){
-        serial.printflnDebug("sync 1");
+        serial.printflnDebug("Test sync (");
         PB->syncGoTo(2,8,180,120);
         serial.printflnDebug("done");
     }
-    void testSync2(){
-        serial.printflnDebug("sync 2");
-        serial.printflnDebug("done");
-    }
-
 
 };
 

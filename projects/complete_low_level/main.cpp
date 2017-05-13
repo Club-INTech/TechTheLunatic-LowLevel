@@ -602,7 +602,8 @@ int main(void)
                 actuatorsMgr->reanimation();
             }
 
-            else if(!strcmp("synctest", order)){
+            else if(!strcmp("synctest", order))
+            {
                 actuatorsMgr->testSync1();
             }
 
