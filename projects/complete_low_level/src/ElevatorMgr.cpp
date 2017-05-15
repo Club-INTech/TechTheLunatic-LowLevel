@@ -19,20 +19,14 @@ ElevatorMgr::ElevatorMgr()
     sensorMgr = &SensorMgr::Instance();
     isUp = sensorMgr->isContactor1engaged();
     isDown = sensorMgr->isContactor2engaged();
-    delayToStop=850;
+    delayToStop=1500;
     timeSinceMoveTo=Millis();
     moveToPing=Millis();
 }
 
 void ElevatorMgr::enableAsserv(bool enable)
 {
-    if (enable)
-    {
-        positionControlled=true;
-    } else
-    {
-        positionControlled=false;
-    }
+    positionControlled= enable;
 }
 
 /**
@@ -56,7 +50,7 @@ void ElevatorMgr::moveTo(Position positionToGo)
  * Methode de contrôle en interruption
  */
 void ElevatorMgr::control()
-{    //TODO: pouvoir redonner un ordre "bas" après un délais dépassé
+{
     if(positionControlled) //Si l'ascenseur est asservi
     {
         //On met à jour l'état des contacteurs
@@ -70,11 +64,13 @@ void ElevatorMgr::control()
                 if (Millis() - moveToPing < delayToStop) {
                     elevator.run(elevatorPWM);         //si il n'est pas arrivé , et si ça fait pas trop longtemps qu'on a envoyé l'ordre de bouger
                 } else{
-                    position=DOWN;                      //Si non, on considère qu'on s'est bloqué et donc qu'on est toujours en Haut, et on arrête d'essayer de bouger
-                    enableAsserv(false);
+                    serial.printflnDebug("Timeout asc: going down");
+                    position=UP;                      //Si non, on considère qu'on s'est bloqué et donc qu'on est en haut et qu'on doit redescendre
+                    moveTo(DOWN);
                 }
             }
-            else if(isUp || (Millis()-moveToPing>delayToStop)) {
+            else if(isUp) {
+                serial.printflnDebug("asc down, going up");
                 position = UP;
                 if (moving) {
                     stop();        //Si il est en haut et qu'il n'est pas arrété, il s'arrête
@@ -91,12 +87,14 @@ void ElevatorMgr::control()
                     elevator.run(elevatorPWM);
                 }
                 else{
-                    position=UP;
-                    enableAsserv(false);
+                    serial.printflnDebug("Timeout asc: going up");
+                    position=DOWN;
+                    moveTo(DOWN);
                 }
             }
             else if(isDown)
             {
+                serial.printflnDebug("asc down");
                 position=DOWN;
                     stop();
             }
