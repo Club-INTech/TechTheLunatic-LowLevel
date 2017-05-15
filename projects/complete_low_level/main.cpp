@@ -53,8 +53,9 @@ int main(void)
     volatile bool isTimeout=false;
     while(1)
     {
+        sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
+
         if(autoUpdateUS && Millis()-usSendDelay > 100) {
-            sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
             serial.printflnUS("%d", sensorMgr->getSensorDistanceAVG());
             serial.printflnUS("%d", sensorMgr->getSensorDistanceAVD());
             serial.printflnUS("%d", sensorMgr->getSensorDistanceARG());
