@@ -50,21 +50,11 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     toleranceSpeedEstablished = 50; // Doit �tre la plus petite possible, sans bloquer les trajectoires courbes 50
     delayToEstablish = 100;
 
-
     toleranceCurveRatio = 0.9;
     toleranceDifferentielle = 500; // Pour les trajectoires "normales", v�rifie que les roues ne font pas nawak chacunes de leur cot�.
 
-    kptav=12;
-    kptar=12;
-
-    kitav=0;
-    kitar=0;
-
-    kdtav=200;
-    kdtar=200;
-
-    translationPID.setTunings(kptav, kitav, kdtav);
-    rotationPID.setTunings(18, 0, 200); //anciennemnt kpr=17 //anciennement 32,0,350 -> oscillations à la fin
+    translationPID.setTunings(12, 0, 200);
+    rotationPID.setTunings(18, 0, 200);
     leftSpeedPID.setTunings(0.011, 0, 0.005); // ki 0.00001
     rightSpeedPID.setTunings(0.011, 0, 0.005);
 
@@ -367,8 +357,11 @@ void MotionControlSystem::manageStop()
             if ((Millis() - time) >= delayToStop)
             { //Si arr�t� plus de 'delayToStop' ms
                 { //Stop� pour cause de fin de mouvement
+                    serial.printflnDebug("avant affectation moveAbnormal=%d", moveAbnormal);
+                    serial.printflnDebug("transl error: %d, rot error: %d", translationPID.getError(), rotationPID.getError());
+                    moveAbnormal=!(ABS((translationPID.getError()) <= toleranceTranslation) && ABS(rotationPID.getError()) <= toleranceRotation);
+                    serial.printflnDebug("moveAbnormal=%d", moveAbnormal);
                     stop();
-                    moveAbnormal = !(ABS((translationPID.getError()) <= toleranceTranslation) && ABS(rotationPID.getError()) <= toleranceRotation);
                 }
             }
         }

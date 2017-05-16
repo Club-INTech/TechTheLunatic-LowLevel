@@ -19,7 +19,7 @@ ElevatorMgr::ElevatorMgr()
     sensorMgr = &SensorMgr::Instance();
     isUp = sensorMgr->isContactor1engaged();
     isDown = sensorMgr->isContactor2engaged();
-    delayToStop=1500;
+    delayToStop=430;
     timeSinceMoveTo=Millis();
     moveToPing=Millis();
 }
@@ -45,16 +45,17 @@ void ElevatorMgr::moveTo(Position positionToGo)
     moveToPing=Millis();
 }
 
-
 /**
  * Methode de contrôle en interruption
  */
+
+//TODO: parfois pas de timeout alors que si (vers le bas)
 void ElevatorMgr::control()
 {
     if(positionControlled) //Si l'ascenseur est asservi
     {
         //On met à jour l'état des contacteurs
-        isUp=sensorMgr->isContactor1engaged();
+        isUp=!sensorMgr->isContactor1engaged();
         isDown=sensorMgr->isContactor2engaged();
 
         if(positionSetpoint==UP)
@@ -102,6 +103,7 @@ void ElevatorMgr::control()
     }
     else{
         stop();
+
     }
 }
 

@@ -832,7 +832,7 @@ int main(void)
                                      (int) motionControlSystem->getRightSetPoint());
                 serial.printflnDebug("codeuse gauche--droite: %d --    %d",
                                      motionControlSystem->leftTicks, motionControlSystem->rightTicks);
-                //  motionControlSystem->getData();
+                motionControlSystem->getData();
 
             }
 
