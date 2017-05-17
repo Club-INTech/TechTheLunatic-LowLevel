@@ -3,6 +3,8 @@
 #include "ActuatorsMgr.hpp"
 #include "library/voltage_controller.hpp"
 
+#define RX_TIMEOUT 0
+
 bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
 
 /**Contient la boucle principale de gestion des entrées série du programme
@@ -48,7 +50,7 @@ int main(void)
     char order[64]; //Permet le stockage du message re�u par la liaison s�rie
 
     volatile bool translation = true;        //permet de basculer entre les r�glages de cte d'asserv en translation et en rotation
-    volatile bool verificationOrder= false;  //A mettre à true pour gérer le timeout de la com' haut niveau(bloque screen, sauf si vous êtes très rapide)
+    volatile bool verificationOrder= false;  //A mettre à true pour gérer le timeout de la com' haut niveau(true bloque screen, sauf si vous êtes très rapide)
     volatile bool autoUpdateUS = false;      //Envoie les valeurs des capteurs au HL après les avoir mises à jour
     volatile bool isTimeout=false;
     while(1)
@@ -67,10 +69,12 @@ int main(void)
 
         if (tailleBuffer && tailleBuffer < RX_BUFFER_SIZE - 1) //s'il reste de la place dans le câble série
         {
-            isTimeout=serial.read(order);
-            if(!isTimeout){
-                continue;
-            }
+            isTimeout=!serial.read(order, RX_TIMEOUT); //read renvoie 1 si il la lecture a été effectuée sans problème, 0 sinon
+          //  if(verificationOrder) {
+                if (isTimeout) {
+                    continue;
+                }
+           // }
 
             serial.printfln("_");				//Acquittement
 

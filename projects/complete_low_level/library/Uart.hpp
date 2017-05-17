@@ -349,8 +349,8 @@ public:
 		uint8_t j = 0;
 
 		// Hack for timeout
-		if (timeout > 0)
-			timeout *= 26;
+		//if (timeout > 0)
+	//		timeout *= 26;
 
 
 		while (!available()) {
