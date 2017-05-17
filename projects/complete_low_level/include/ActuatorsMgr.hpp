@@ -32,6 +32,7 @@ extern Uart<1> serial;
 //Pour la Pelleteusatron 3000
 
 #define brapeldep 122
+#define brapeldepmibas 145
 #define brapelram 113
 
 #define brapelmoit 160
@@ -226,6 +227,13 @@ public:
         serial.printflnDebug("Baisse les bras");
         PB->changeSpeed(10);
         PB->goTo(brapeldep);
+        serial.printflnDebug("done");
+    }
+    void braPelDeplieMiBas() // déplie les bras de la pelle
+    {
+        serial.printflnDebug("Baisse les bras un peu moins que l'autre ordre");
+        PB->changeSpeed(10);
+        PB->goTo(brapeldepmibas);
         serial.printflnDebug("done");
     }
     void braPelRam() // déplie les bras de la pelle

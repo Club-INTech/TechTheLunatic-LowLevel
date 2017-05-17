@@ -620,6 +620,10 @@ int main(void)
             {
                 actuatorsMgr->braPelDeplie();
             }
+            else if (!strcmp("bpdm",order)) //(abaisse le bras de la pelleteuse pour livrer les boules à la fin)
+            {
+                actuatorsMgr->braPelDeplieMiBas();
+            }
             else if (!strcmp("bpra",order)) //(abaisse un peu plus le bras de la pelleteuse)
             {
                 actuatorsMgr->braPelRam();
