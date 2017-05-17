@@ -215,7 +215,6 @@ private:
         {
             data[2] = (value & 0xFF00) >> 8;
         }
-        serial.printflnDebug("Packet to send: %d", (int)value);
         sendPacket(reglength + 1, AX_WRITE_DATA, data);
     }
     void static writeDataB(uint8_t regstart, uint8_t reglength, uint16_t value)
@@ -365,7 +364,7 @@ public:
     {
         writeData(AX_GOAL_POSITION_L, 2,
                 (uint16_t) (((uint32_t) 1023 * angle) / 300));
-        serial.printflnDebug("Packet goTo sent");
+        serial.printflnDebug("Packet goTo %d sent", angle);
     }
 
     void static goToB(uint16_t angle)

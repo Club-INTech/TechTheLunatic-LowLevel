@@ -55,7 +55,7 @@ void ElevatorMgr::control()
     if(positionControlled) //Si l'ascenseur est asservi
     {
         //On met à jour l'état des contacteurs
-        isUp=!sensorMgr->isContactor1engaged();
+        isUp=false;
         isDown=sensorMgr->isContactor2engaged();
 
         if(positionSetpoint==UP)
@@ -65,13 +65,12 @@ void ElevatorMgr::control()
                 if (Millis() - moveToPing < delayToStop) {
                     elevator.run(elevatorPWM);         //si il n'est pas arrivé , et si ça fait pas trop longtemps qu'on a envoyé l'ordre de bouger
                 } else{
-                    serial.printflnDebug("Timeout asc: going down");
-                    position=UP;                      //Si non, on considère qu'on s'est bloqué et donc qu'on est en haut et qu'on doit redescendre
+                    stop();
+                    //Si non, on considère qu'on s'est bloqué ouqu'on est en haut, donc qu'on doit redescendre
                     moveTo(DOWN);
                 }
             }
             else if(isUp) {
-                serial.printflnDebug("asc down, going up");
                 position = UP;
                 if (moving) {
                     stop();        //Si il est en haut et qu'il n'est pas arrété, il s'arrête
@@ -88,14 +87,13 @@ void ElevatorMgr::control()
                     elevator.run(elevatorPWM);
                 }
                 else{
-                    serial.printflnDebug("Timeout asc: going up");
                     position=DOWN;
-                    moveTo(DOWN);
+                    //moveTo(UP); TODO:quand on aura un contacteur en haut
+                    stop();
                 }
             }
             else if(isDown)
             {
-                serial.printflnDebug("asc down");
                 position=DOWN;
                     stop();
             }

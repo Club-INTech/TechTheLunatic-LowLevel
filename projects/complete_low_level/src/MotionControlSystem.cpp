@@ -42,7 +42,7 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
 
     // maxjerk = 1; // Valeur de jerk maxi(secousse d'acc�l�ration)
 
-    delayToStop = 100; // temps � l'arr�t avant de consid�rer un blocage
+    delayToStop = 150; // temps � l'arr�t avant de consid�rer un blocage
     delayToStopCurve = 500; // pareil en courbe
     toleranceTranslation = 20;
     toleranceRotation = 40;
@@ -357,10 +357,7 @@ void MotionControlSystem::manageStop()
             if ((Millis() - time) >= delayToStop)
             { //Si arr�t� plus de 'delayToStop' ms
                 { //Stop� pour cause de fin de mouvement
-                    serial.printflnDebug("avant affectation moveAbnormal=%d", moveAbnormal);
-                    serial.printflnDebug("transl error: %d, rot error: %d", translationPID.getError(), rotationPID.getError());
                     moveAbnormal=!(ABS((translationPID.getError()) <= toleranceTranslation) && ABS(rotationPID.getError()) <= toleranceRotation);
-                    serial.printflnDebug("moveAbnormal=%d", moveAbnormal);
                     stop();
                 }
             }

@@ -3,8 +3,6 @@
 #include "ActuatorsMgr.hpp"
 #include "library/voltage_controller.hpp"
 
-#define RX_TIMEOUT 0
-
 bool autoUpdatePosition = false; // active le mode d'envoi automatique de position au haut niveau
 
 /**Contient la boucle principale de gestion des entrées série du programme
@@ -35,7 +33,6 @@ int main(void)
     Voltage_controller* voltage = &Voltage_controller::Instance();//contrôle batterie Lipos
 
     ElevatorMgr* elevatorMgr = &ElevatorMgr::Instance();
-
     //INITIALISATION DES ACTIONNEURS:
     actuatorsMgr->braPelReleve();
     actuatorsMgr->pellePosDeplacement();
@@ -47,12 +44,13 @@ int main(void)
 
     volatile int32_t usSendDelay=Millis();
 
+    uint16_t rx_timeout = 0;              //Si non nul, le timeout est trop court pour communiquer avec screen
+
     char order[64]; //Permet le stockage du message re�u par la liaison s�rie
 
     volatile bool translation = true;        //permet de basculer entre les r�glages de cte d'asserv en translation et en rotation
-    volatile bool verificationOrder= false;  //A mettre à true pour gérer le timeout de la com' haut niveau(true bloque screen, sauf si vous êtes très rapide)
     volatile bool autoUpdateUS = false;      //Envoie les valeurs des capteurs au HL après les avoir mises à jour
-    volatile bool isTimeout=false;
+    volatile bool isTimeout;
     while(1)
     {
         sensorMgr->refresh(motionControlSystem->getMovingDirection()); //les capteurs envoient un signal de durée 10 ms devant eux
@@ -69,16 +67,12 @@ int main(void)
 
         if (tailleBuffer && tailleBuffer < RX_BUFFER_SIZE - 1) //s'il reste de la place dans le câble série
         {
-            isTimeout=!serial.read(order, RX_TIMEOUT); //read renvoie 1 si il la lecture a été effectuée sans problème, 0 sinon
-          //  if(verificationOrder) {
-                if (isTimeout) {
+            isTimeout=!serial.read(order, rx_timeout); //read renvoie 1 si il la lecture a été effectuée sans problème, 0 sinon
+            if(isTimeout) {
                     continue;
-                }
-           // }
+            }
 
             serial.printfln("_");				//Acquittement
-
-            serial.printflnDebug("Ordre reçu et acquitté: %s", order);
 /*			 __________________
  * 		   *|                  |*
  *		   *|  TESTS DE BASE   |*
@@ -88,7 +82,6 @@ int main(void)
             if(!strcmp("?",order))				//Ping
             {
                 serial.printfln("0");
-                serial.printflnDebug("PING");
             }
             else if(!strcmp("f",order))			//Indiquer l'�tat du mouvement du robot
             {
@@ -106,10 +99,7 @@ int main(void)
                 int deplacement = 0;
                 serial.read(deplacement);
                 serial.printfln("_");           //Acquittement
-                serial.printflnDebug("Translation %d", deplacement);
                 motionControlSystem->orderTranslation(deplacement);
-                serial.printflnDebug("Translation commencée");
-
             }
                 /*
             else if(!strcmp("dtest",order))
@@ -124,9 +114,7 @@ int main(void)
                 float angle = motionControlSystem->getAngleRadian();
                 serial.read(angle);
                 serial.printfln("_");           //Acquittement
-                serial.printflnDebug("Rotation vers %f", angle);
                 motionControlSystem->orderRotation(angle, MotionControlSystem::FREE);
-                serial.printflnDebug("Rotation commencée");
             }
             else if(!strcmp("t3", order))		//Ordre de rotation via un angle relatif (en radians)
             {
@@ -226,8 +214,13 @@ int main(void)
             {
                 autoUpdateUS=!autoUpdateUS;
             }
-            else if(!strcmp("read0", order)){
-                verificationOrder=!verificationOrder;
+            else if(!strcmp("switchscreen", order)){
+                if(rx_timeout==150){
+                    rx_timeout=0;
+                }
+                else{
+                    rx_timeout=150;
+                }
             }
 
 /*			 _____________________
@@ -926,7 +919,7 @@ int main(void)
 extern "C" { //indique au compilateur que les fonctions créées sont en C et non en C++
 //Interruptions sur le TIMER4
 void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
-    volatile static uint32_t i = 0, j = 0, k = 0, l = 0; //compteurs pour lancer des méthodes à différents moments
+    volatile static uint32_t i = 0, j = 0, l = 0; //compteurs pour lancer des méthodes à différents moments
     static MotionControlSystem *motionControlSystem = &MotionControlSystem::Instance();
     static Voltage_controller *voltage = &Voltage_controller::Instance();
     static ElevatorMgr *elevatorMgr = &ElevatorMgr::Instance();
@@ -940,23 +933,21 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
         //Asservissement et mise à jour de la position
         motionControlSystem->control();
         motionControlSystem->updatePosition();
-        //elevatorMgr.elevatorControl();
 
-
-        if (j >= 5) { //0.5ms x 5 = 2.5ms
-            motionControlSystem->track(); //stocke les valeurs de débug
+        if (i >= 5) { //0.5ms x 5 = 2.5ms
+           // motionControlSystem->track(); //stocke les valeurs de débug
             motionControlSystem->manageStop(); //regarde si le robot bouge normalement
 
+            i = 0;
+        }
+
+        if (j >= 2000) {
+
+            voltage->measure(); //regarde la batterie des Lipos
             j = 0;
         }
 
-        if (k >= 2000) {
-
-            voltage->measure(); //regarde la batterie des Lipos
-            k = 0;
-        }
-
-        if (l >= 200) {
+        if (l >= 100) {
             elevatorMgr->control();
             if (autoUpdatePosition && !serial.available()) {
                 //si l'envoi automatique de position au HL est activé et que la série a de la place diponible
@@ -978,9 +969,8 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
             l = 0;
         }
 
-        k++;
-        i++;
         j++;
+        i++;
         l++;
     }
 }
