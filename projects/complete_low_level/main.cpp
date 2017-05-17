@@ -679,6 +679,7 @@ int main(void)
                 actuatorsMgr->moduleFin(0); //ramène le module
             }
 
+
                 //Côté gauche
             else if (!strcmp("amdg", order))
             {
@@ -712,6 +713,11 @@ int main(void)
             else if(!strcmp("cmfd",order))
             {
                 actuatorsMgr->caleBasD();  //pour pousser le module
+            }
+            else if (!strcmp("cmfdm", order))
+            {
+                actuatorsMgr->caleBasDMinus(); //position un peu moins avancée que l'ordre précédent
+                //pour éviter que les cales modules forcent l'un contre l'autre avec le module au milieu
             }
 
                 //gauche

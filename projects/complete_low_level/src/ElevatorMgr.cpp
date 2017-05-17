@@ -19,7 +19,7 @@ ElevatorMgr::ElevatorMgr()
     sensorMgr = &SensorMgr::Instance();
     isUp = sensorMgr->isContactor1engaged();
     isDown = sensorMgr->isContactor2engaged();
-    delayToStop=460;
+    delayToStop=510;
     timeSinceMoveTo=Millis();
     moveToPing=Millis();
 }

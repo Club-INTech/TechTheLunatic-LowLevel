@@ -65,6 +65,7 @@ extern Uart<1> serial;
 #define CaleHautD 200
 #define CaleReposD 135
 #define CaleBasD    90
+#define CaleBasDMinus  96
 
 //Largue modules
 #define LargueRepos 132
@@ -350,11 +351,11 @@ public:
         AMG->changeSpeed(20);
         AMD->changeSpeed(20);
         serial.printflnDebug("Prise de modules");
-        if (cote)
+        if (cote==0)
         {
             AMG->goTo(AMfinG); //Si le coté est gauche (cote = 1)
         }
-        else
+        else if (cote==1)
         {
             AMD->goTo(AMfinD);  //Si le côté est droit (cote = 0)
         }
@@ -378,6 +379,10 @@ public:
     void caleBasD(){
         CMD->changeSpeed(vCaleDesc);
         CMD->goTo(CaleBasD);
+    }
+    void caleBasDMinus(){
+        CMD->changeSpeed(vCaleDesc);
+        CMD->goTo(CaleBasDMinus);
     }
 
     void caleHautG(){
