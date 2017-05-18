@@ -314,53 +314,56 @@ public:
  *		   *|___________________|*
  */
 
-    void moduleDeb(int cote)
+    void moduleDebGauche()
     {
         AMG->changeSpeed(40);
+        serial.printflnDebug("Attrappe module Gauche position initiale");
+        AMG->goTo(AMdebG);
+        serial.printflnDebug("done");
+    }
+
+    void moduleDebDroite()
+    {
         AMD->changeSpeed(40);
-        serial.printflnDebug("Initialisation de l'attrape module");
-        if (cote)
-        {
-            AMG->goTo(AMdebG); //Si le coté est gauche (cote = 1)
-        }
-        else
-        {
-            AMD->goTo(AMdebD);  //Si le côté est droit (cote = 0)
-        }
+        serial.printflnDebug("Attrappe module Droit position initiale");
+        AMD->goTo(AMdebD);
         serial.printflnDebug("done");
     }
 
-    void moduleMid(int cote)
+    void moduleMidGauche()
     {
         AMG->changeSpeed(20);
-        AMD->changeSpeed(20);
-        serial.printflnDebug("Medium de l'attrape module");
-        if (cote)
-        {
-            AMG->goTo(AMmidG); //Si le coté est gauche (cote = 1)
-        }
-        else
-        {
-            AMD->goTo(AMmidD);  //Si le côté est droit (cote = 0)
-        }
+        serial.printflnDebug("Attrape module gauche position medium");
+        AMG->goTo(AMmidG);
         serial.printflnDebug("done");
     }
 
-    void moduleFin(int cote)
+    void moduleMidDroite()
     {
-        AMG->changeSpeed(20);
         AMD->changeSpeed(20);
-        serial.printflnDebug("Prise de modules");
-        if (cote==1)
-        {
-            AMG->goTo(AMfinG); //Si le coté est gauche (cote = 1)
-        }
-        else if (cote==0)
-        {
-            AMD->goTo(AMfinD);  //Si le côté est droit (cote = 0)
-        }
+        serial.printflnDebug("Attrape module droit position medium");
+        AMD->goTo(AMmidD);
         serial.printflnDebug("done");
     }
+
+
+
+    void moduleFinDroite()
+    {
+        AMD->changeSpeed(20);
+        serial.printflnDebug("Attrape module droit position fin");
+        AMD->goTo(AMfinD);  //Si le côté est droit (cote = 0)
+        serial.printflnDebug("done");
+    }
+
+    void moduleFinGauche()
+    {
+        AMG->changeSpeed(20);
+        serial.printflnDebug("Attrape module gauche position fin");
+        AMG->goTo(AMfinG);
+        serial.printflnDebug("done");
+    }
+
 
 /*			 ___________________
  * 		   *|                   |*
@@ -368,33 +371,40 @@ public:
  *		   *|___________________|*
  */
 
-    void caleHautD(){
+    void caleHautDroite(){
         CMD->changeSpeed(vCaleUp);
+        serial.printflnDebug("Cale droit remonte");
         CMD->goTo(CaleHautD);
     }
-    void caleMidD(){
+    void caleMidDroite(){
         CMD->changeSpeed(vCaleUp);
+        serial.printflnDebug("Cale droit medium");
         CMD->goTo(CaleReposD);
     }
-    void caleBasD(){
+    void caleBasDroite(){
         CMD->changeSpeed(vCaleDesc);
+        serial.printflnDebug("Cale droit bas");
         CMD->goTo(CaleBasD);
     }
     void caleBasDMinus(){
         CMD->changeSpeed(vCaleDesc);
+        serial.printflnDebug("Cale droit bas mais pas trop");
         CMD->goTo(CaleBasDMinus);
     }
 
-    void caleHautG(){
+    void caleHautGauche(){
         CMG->changeSpeed(vCaleUp);
+        serial.printflnDebug("Cale gauche remonte");
         CMG->goTo(CaleHautG);
     }
-    void caleMidG(){
+    void caleMidGauche(){
         CMG->changeSpeed(vCaleUp);
+        serial.printflnDebug("Cale gauche medium");
         CMG->goTo(CaleReposG);
     }
-    void caleBasG(){
+    void caleBasGauche(){
         CMG->changeSpeed(vCaleDesc);
+        serial.printflnDebug("Cale gauche bas");
         CMG->goTo(CaleBasG);
     }
 /*			 ___________________

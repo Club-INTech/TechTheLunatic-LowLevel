@@ -37,10 +37,10 @@ int main(void)
     actuatorsMgr->braPelReleve();
     actuatorsMgr->pellePosDeplacement();
     actuatorsMgr->largueRepos();
-    actuatorsMgr->moduleMid(0);
-    actuatorsMgr->moduleMid(1);
-    actuatorsMgr->caleMidD();
-    actuatorsMgr->caleMidG();
+    actuatorsMgr->moduleMidGauche();
+    actuatorsMgr->moduleMidDroite();
+    actuatorsMgr->caleMidDroite();
+    actuatorsMgr->caleMidGauche();
 
     volatile int32_t usSendDelay=Millis();
 
@@ -668,30 +668,30 @@ int main(void)
                 //Côté droit
             else if (!strcmp("amdd", order))
             {
-                actuatorsMgr->moduleDeb(0); //position derrière
+                actuatorsMgr->moduleDebDroite(); //position derrière
             }
             else if (!strcmp("ammd", order))
             {
-                actuatorsMgr->moduleMid(0);
+                actuatorsMgr->moduleMidDroite();
             }
             else if (!strcmp("amfd", order))
             {
-                actuatorsMgr->moduleFin(0); //ramène le module
+                actuatorsMgr->moduleFinDroite(); //ramène le module
             }
 
 
                 //Côté gauche
             else if (!strcmp("amdg", order))
             {
-                actuatorsMgr->moduleDeb(1); //position derrière
+                actuatorsMgr->moduleDebGauche(); //position derrière
             }
             else if (!strcmp("ammg", order))
             {
-                actuatorsMgr->moduleMid(1);
+                actuatorsMgr->moduleMidGauche();
             }
             else if (!strcmp("amfg", order)) //ramène le module
             {
-                actuatorsMgr->moduleFin(1);
+                actuatorsMgr->moduleFinGauche();
             }
 
 
@@ -704,15 +704,15 @@ int main(void)
                 //droit
             else if (!strcmp("cmmd", order))
             {
-                actuatorsMgr->caleMidD(); //position de repos
+                actuatorsMgr->caleMidDroite(); //position de repos
             }
             else if (!strcmp("cmdd",order))
             {
-                actuatorsMgr->caleHautD(); //avant de pousser le module
+                actuatorsMgr->caleHautDroite(); //avant de pousser le module
             }
             else if(!strcmp("cmfd",order))
             {
-                actuatorsMgr->caleBasD();  //pour pousser le module
+                actuatorsMgr->caleBasDroite();  //pour pousser le module
             }
             else if (!strcmp("cmfdm", order))
             {
@@ -723,15 +723,15 @@ int main(void)
                 //gauche
             else if(!strcmp("cmmg", order))
             {
-                actuatorsMgr->caleMidG(); //position de repos
+                actuatorsMgr->caleMidGauche(); //position de repos
             }
             else if (!strcmp("cmdg",order))
             {
-                actuatorsMgr->caleHautG(); //avant de pousser le module
+                actuatorsMgr->caleHautGauche(); //avant de pousser le module
             }
             else if(!strcmp("cmfg",order))
             {
-                actuatorsMgr->caleBasG();  //pour pousser le module
+                actuatorsMgr->caleBasGauche();  //pour pousser le module
             }
 
 
