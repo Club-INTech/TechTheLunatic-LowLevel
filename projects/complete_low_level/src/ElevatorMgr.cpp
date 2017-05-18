@@ -19,9 +19,9 @@ ElevatorMgr::ElevatorMgr()
     sensorMgr = &SensorMgr::Instance();
     isUp = sensorMgr->isContactor1engaged();
     isDown = sensorMgr->isContactor2engaged();
-    delayToStop=510;
-    timeSinceMoveTo=Millis();
-    moveToPing=Millis();
+    timeout=1200;
+    moveToPing=Millis();    //Un timeout moveTo arrête l'ascenseur et le ramène a sa position précédente si il n'arrive pas à destination
+    timeoutCount=0;
 }
 
 void ElevatorMgr::enableAsserv(bool enable)
@@ -49,30 +49,39 @@ void ElevatorMgr::moveTo(Position positionToGo)
  * Methode de contrôle en interruption
  */
 
-//TODO: parfois pas de timeout alors que si (vers le bas)
 void ElevatorMgr::control()
 {
-    if(positionControlled) //Si l'ascenseur est asservi
+    if(positionControlled && timeoutCount<4) //Si l'ascenseur est asservi
     {
         //On met à jour l'état des contacteurs
-        isUp=false;
+        isUp=sensorMgr->isContactor1engaged();
         isDown=sensorMgr->isContactor2engaged();
 
         if(positionSetpoint==UP)
         {       //Si on a demandé à ce qu'on aille en haut
             elevator.setSens(Elevator::UP); //Le moteur va vers le haut
-            if(!isUp && position!=UP) {
-                if (Millis() - moveToPing < delayToStop) {
+
+            if(!isUp && position!=UP)
+            {
+                if (Millis() - moveToPing < timeout)
+                {
                     elevator.run(elevatorPWM);         //si il n'est pas arrivé , et si ça fait pas trop longtemps qu'on a envoyé l'ordre de bouger
-                } else{
+                }
+
+                else
+                {
                     stop();
+                    timeoutCount++;
+                    moveAbnormal=true;
                     //Si non, on considère qu'on s'est bloqué ouqu'on est en haut, donc qu'on doit redescendre
                     moveTo(DOWN);
                 }
             }
-            else if(isUp) {
+            else if(isUp)
+            {
                 position = UP;
-                if (moving) {
+                if (moving)
+                {
                     stop();        //Si il est en haut et qu'il n'est pas arrété, il s'arrête
                     moveTo(DOWN);
                 }
@@ -81,32 +90,36 @@ void ElevatorMgr::control()
         else if(positionSetpoint==DOWN)
         {
             elevator.setSens(Elevator::DOWN);
+
             if(!isDown && position!=DOWN)
             {
-                if (Millis() - moveToPing < delayToStop) {
+                if (Millis() - moveToPing < timeout)
+                {
                     elevator.run(elevatorPWM);
                 }
-                else{
-                    position=DOWN;
-                    //moveTo(UP); TODO:quand on aura un contacteur en haut
+                else
+                {
                     stop();
+                    timeoutCount++;
+                    moveAbnormal=true;
+                    moveTo(UP);
                 }
             }
             else if(isDown)
             {
                 position=DOWN;
-                    stop();
+                stop();
             }
         }
     }
-    else{
+    else
+    {
         stop();
-
     }
 }
 
 /**
- * Arrête l'ascenseur à sa dernière position demandée
+ * Arrête l'ascenseur
  */
 void ElevatorMgr::stop()
 {
@@ -116,12 +129,13 @@ void ElevatorMgr::stop()
     enableAsserv(false);
 }
 
-bool ElevatorMgr::isElevatorMoving() const
+void ElevatorMgr::getMovingState() const
 {
-    return moving;
+    serial.printflnDebug("%d", moving);
+    serial.printflnDebug("%d", moveAbnormal);
 }
 
-void ElevatorMgr::getData()
+void ElevatorMgr::getData() const
 {
     if(position==UP)
     {
@@ -136,4 +150,8 @@ void ElevatorMgr::getData()
 
 void ElevatorMgr::setPWM(uint8_t pwm){
     this->elevatorPWM=pwm;
+}
+
+void ElevatorMgr::resetTimeout(){
+    timeoutCount=0;
 }

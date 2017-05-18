@@ -771,14 +771,17 @@ int main(void)
 
             else if(!strcmp("ascdown", order))
             {
+                elevatorMgr->resetTimeout();
                 elevatorMgr->moveTo(ElevatorMgr::DOWN);
             }
             else if(!strcmp("ascup", order))
             {
+                elevatorMgr->resetTimeout();
                 elevatorMgr->moveTo(ElevatorMgr::UP);
             }
             else if(!strcmp("ascstop", order))
             {
+                elevatorMgr->resetTimeout();
                 elevatorMgr->stop();
             }
             else if(!strcmp("ascpwm", order))
@@ -799,28 +802,6 @@ int main(void)
  *		   *|COMMANDES/TESTS DE DEBUG|*
  *		   *|________________________|*
 */
-/*
-            else if(!strcmp("rawpwm", order)) {
-                motionControlSystem->enable(false);
-                int16_t pwm;
-                int sens;
-                serial.printflnDebug("Entrer le pwm:");
-                serial.read(pwm);
-                serial.printflnDebug("Entrer roue: 0=gauche, 1=droite");
-                serial.read(sens);
-                if (sens == 0) {
-                    motionControlSystem->orderRawPwm(Side::LEFT, pwm);
-                    serial.printflnDebug("pwm dans le moteur: %d", motionControlSystem->getMotorPWM(0));
-                    motionControlSystem->getSens(0);
-                } else if (sens == 1) {
-                    motionControlSystem->orderRawPwm(Side::RIGHT, pwm);
-                    serial.printflnDebug("pwm dans le moteur: %d", motionControlSystem->getMotorPWM(1));
-                    motionControlSystem->getSens(1);
-                }
-
-
-            }
-            */
             else if(!strcmp("pfdebug", order))
             {
                 serial.printfln("%d", (int) Counter::getLeftValue());
@@ -934,16 +915,19 @@ int main(void)
  *		   *|___________________|*
  */
 
-extern "C" { //indique au compilateur que les fonctions créées sont en C et non en C++
+extern "C"
+{ //indique au compilateur que les fonctions créées sont en C et non en C++
 //Interruptions sur le TIMER4
-void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
+void TIM4_IRQHandler(void)
+{ //2kHz = 0.0005s = 0.5ms
     volatile static uint32_t i = 0, j = 0, l = 0; //compteurs pour lancer des méthodes à différents moments
     static MotionControlSystem *motionControlSystem = &MotionControlSystem::Instance();
     static Voltage_controller *voltage = &Voltage_controller::Instance();
     static ElevatorMgr *elevatorMgr = &ElevatorMgr::Instance();
     //static ElevatorMgr &elevatorMgr = ElevatorMgr::Instance();
 
-    if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) { //arbalète
+    if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET)
+    { //arbalète
         //TIM_GetITStatus vérifie si l'interruption a eu lieu (SET) ou non (RESET)
         //SET donc remise à 0 manuelle du flag d'interruption nécessaire
         TIM_ClearITPendingBit(TIM4, TIM_IT_Update); //remet les bits de l'interruption à 0
@@ -952,37 +936,24 @@ void TIM4_IRQHandler(void) { //2kHz = 0.0005s = 0.5ms
         motionControlSystem->control();
         motionControlSystem->updatePosition();
 
-        if (i >= 5) { //0.5ms x 5 = 2.5ms
+        if (i >= 5)
+        { //0.5ms x 5 = 2.5ms
            // motionControlSystem->track(); //stocke les valeurs de débug
             motionControlSystem->manageStop(); //regarde si le robot bouge normalement
 
             i = 0;
         }
 
-        if (j >= 2000) {
-
+        if (j >= 2000)
+        {
             voltage->measure(); //regarde la batterie des Lipos
+
             j = 0;
         }
 
-        if (l >= 100) {
+        if (l >= 100)
+        {
             elevatorMgr->control();
-            if (autoUpdatePosition && !serial.available()) {
-                //si l'envoi automatique de position au HL est activé et que la série a de la place diponible
-                //on affiche la position et l'angle du robot
-                serial.printflnPosition("%d", (int) motionControlSystem->getX());
-                serial.printflnPosition("%d", (int) motionControlSystem->getY());
-                serial.printflnPosition("%f", motionControlSystem->getAngleRadian());
-                serial.printflnPosition("%d", (int) motionControlSystem->getLeftSpeed().value());
-                serial.printflnPosition("%d", (int) motionControlSystem->getRightSpeed().value());
-                serial.printflnPosition("%d", (int) motionControlSystem->getTranslationSetPoint());
-                serial.printflnPosition("%d", (int) motionControlSystem->getLeftSetPoint());
-                serial.printflnPosition("%d", (int) motionControlSystem->getRightSetPoint());
-            } else if (autoUpdatePosition) {
-                serial.printflnDebug("Serie occupee !!!");
-                serial.printflnDebug("available = %d", serial.available());
-            }
-
 
             l = 0;
         }

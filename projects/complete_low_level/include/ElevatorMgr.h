@@ -22,29 +22,32 @@ public:
 
     void enableAsserv(bool);
 
-    bool isElevatorMoving() const;
+    void getMovingState() const;
 
-    void getData();
+    void getData() const;
 
-    Position positionSetpoint;
-    bool moveAbnormal;
     void setPWM(uint8_t pwm);
+    void resetTimeout();
 
 private:
     Elevator elevator;
     SensorMgr* sensorMgr;
+
     volatile int8_t elevatorPWM;
+
     volatile bool positionControlled;
     volatile bool moving;
-    Position position;
+    volatile bool moveAbnormal;
+
     volatile bool isUp;
     volatile bool isDown;
 
+    volatile Position position;
+    volatile Position positionSetpoint;
 
-    volatile uint32_t moveToOrderPing;
-    volatile uint32_t delayToStop;
-    uint32_t timeSinceMoveTo;
-    uint32_t moveToPing;
+    volatile uint32_t timeout;
+    volatile uint32_t moveToPing;
+    volatile uint8_t timeoutCount;
 };
 
 #endif //ARM_ELEVATORMGR_H
