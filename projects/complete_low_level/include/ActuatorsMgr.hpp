@@ -41,6 +41,12 @@ extern Uart<1> serial;
 #define pospelinitG 300
 #define pospeldeplG 180
 #define pospelmoitG 155
+
+#define pospel1G 245
+#define pospel1D 55
+#define pospel2G 260
+#define pospel2D 40
+
 #define pospeltientG 121
 #define pospeldeliG 0
 #define pospelinitD 0
@@ -286,6 +292,22 @@ public:
         PD->changeSpeed(40);
         PG->goTo(pospeltientG);
         PD->goTo(pospeltientD);
+        serial.printflnDebug("done");
+    }
+    void pelleCrat1(){
+        serial.printflnDebug("pos 1 de re-recup cratere");
+        PG->changeSpeed(20);
+        PD->changeSpeed(20);
+        PG->goTo(pospel1G);
+        PD->goTo(pospel1D);
+        serial.printflnDebug("done");
+    }
+    void pelleCrat2(){
+        serial.printflnDebug("pos 2 de re-recup cratere");
+        PG->changeSpeed(20);
+        PD->changeSpeed(20);
+        PG->goTo(pospel2G);
+        PD->goTo(pospel2D);
         serial.printflnDebug("done");
     }
 

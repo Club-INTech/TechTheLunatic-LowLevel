@@ -644,6 +644,14 @@ int main(void)
             {
                 actuatorsMgr->pelleTient(); //position pour tenir les boules en haut
             }
+            else if (!strcmp("p1", order))
+            {
+                actuatorsMgr->pelleCrat1(); //position de stoppage quand on récup les boules
+            }
+            else if (!strcmp("p2", order))
+            {
+                actuatorsMgr->pelleCrat2(); //position pour reculer juste après p1
+            }
             else if (!strcmp("pf", order))
             {
                 actuatorsMgr->pelleLib();   //position de livraison de boules de la pelle
