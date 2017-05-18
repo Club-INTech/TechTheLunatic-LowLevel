@@ -351,11 +351,11 @@ public:
         AMG->changeSpeed(20);
         AMD->changeSpeed(20);
         serial.printflnDebug("Prise de modules");
-        if (cote==0)
+        if (cote==1)
         {
             AMG->goTo(AMfinG); //Si le coté est gauche (cote = 1)
         }
-        else if (cote==1)
+        else if (cote==0)
         {
             AMD->goTo(AMfinD);  //Si le côté est droit (cote = 0)
         }
