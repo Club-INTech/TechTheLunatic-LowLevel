@@ -832,7 +832,7 @@ void MotionControlSystem::setRotationSpeed(float raw_speed) // En Rad/s
  * Getters/Setters des variables de position haut niveau
  */
 float MotionControlSystem::getAngleRadian() const {
-    return (currentAngle * TICK_TO_RADIAN + originalAngle);
+    return (float)(currentAngle * TICK_TO_RADIAN + originalAngle);
 }
 
 void MotionControlSystem::setOriginalAngle(float angle) {
