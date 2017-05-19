@@ -19,7 +19,7 @@ ElevatorMgr::ElevatorMgr()
     sensorMgr = &SensorMgr::Instance();
     isUp = sensorMgr->isContactor1engaged();
     isDown = sensorMgr->isContactor2engaged();
-    timeout=1200;
+    timeout=1000;
     moveToPing=Millis();    //Un timeout moveTo arrête l'ascenseur et le ramène a sa position précédente si il n'arrive pas à destination
     timeoutCount=0;
 }
@@ -51,7 +51,7 @@ void ElevatorMgr::moveTo(Position positionToGo)
 
 void ElevatorMgr::control()
 {
-    if(positionControlled && timeoutCount<4) //Si l'ascenseur est asservi
+    if(positionControlled && timeoutCount<2) //Si l'ascenseur est asservi
     {
         //On met à jour l'état des contacteurs
         isUp=sensorMgr->isContactor1engaged();
@@ -59,12 +59,11 @@ void ElevatorMgr::control()
 
         if(positionSetpoint==UP)
         {       //Si on a demandé à ce qu'on aille en haut
-            elevator.setSens(Elevator::UP); //Le moteur va vers le haut
-
             if(!isUp && position!=UP)
             {
                 if (Millis() - moveToPing < timeout)
                 {
+                    elevator.setSens(Elevator::UP); //Le moteur va vers le haut
                     elevator.run(elevatorPWM);         //si il n'est pas arrivé , et si ça fait pas trop longtemps qu'on a envoyé l'ordre de bouger
                 }
 
@@ -89,12 +88,11 @@ void ElevatorMgr::control()
         }
         else if(positionSetpoint==DOWN)
         {
-            elevator.setSens(Elevator::DOWN);
-
             if(!isDown && position!=DOWN)
             {
                 if (Millis() - moveToPing < timeout)
                 {
+                    elevator.setSens(Elevator::DOWN);
                     elevator.run(elevatorPWM);
                 }
                 else
