@@ -35,9 +35,9 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     maxSpeedRotation = 1400;
 
 
-    maxAccelAv = 8;
+    maxAccelAv = 7;
     maxDecelAv = 7;
-    maxAccelAr = 12;
+    maxAccelAr = 10;
     maxDecelAr = 3;
 
     // maxjerk = 1; // Valeur de jerk maxi(secousse d'acc�l�ration)

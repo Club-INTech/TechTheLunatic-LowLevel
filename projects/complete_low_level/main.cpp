@@ -315,7 +315,7 @@ int main(void)
             {
                 translation = !translation;   //Bascule entre le réglage d'asserv en translation et en rotation
                 if(translation)
-                    serial.printflnDebug("reglage de la transation");
+                    serial.printflnDebug("reglage de la translation");
                 else
                     serial.printflnDebug("reglage de la rotation");
             }
@@ -463,6 +463,16 @@ int main(void)
                 motionControlSystem->setRightSpeedTunings(kp,ki,kd);
                 serial.printfln("kd_droite = %g", kd);
             }
+            else if(!strcmp("accelAv", order))
+            {
+                motionControlSystem->setAccelAv();
+            }
+             else if(!strcmp("accelAr", order))
+            {
+                motionControlSystem->setAccelAr();
+            }
+
+
 
 
 /*			 __________________

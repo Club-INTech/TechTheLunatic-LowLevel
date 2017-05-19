@@ -33,7 +33,7 @@ SensorMgr::SensorMgr():
         ultrasonARG()
 
 {
-    refreshDelay = 13;   // temps tout les combien les capteurs envoient leur signal de 10ms devant eux
+    refreshDelay = 25;   // temps tout les combien les capteurs envoient leur signal de 10ms devant eux
     lastRefreshTime = 0; // on initialise le moment de dernier envoi de ce signal
 
 
