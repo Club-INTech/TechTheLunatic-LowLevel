@@ -34,7 +34,7 @@ SensorMgr::SensorMgr():
 
 {
     refreshDelay = 25;   // temps tout les combien les capteurs envoient leur signal de 10ms devant eux
-    lastRefreshTime = 0; // on initialise le moment de dernier envoi de ce signal
+    lastRefreshTime = Millis(); // on initialise le moment de dernier envoi de ce signal
 
 
 /*       ___________________________
@@ -244,12 +244,14 @@ void SensorMgr::refresh(MOVING_DIRECTION direction) // les capteurs envoient un 
     {
         ultrasonAVD.refresh();
         ultrasonAVG.refresh();
+        lastRefreshTime=Millis();
     }
 
     else if(currentTime - lastRefreshTime >= refreshDelay && direction == BACKWARD)
     {
         ultrasonARD.refresh();
         ultrasonARG.refresh();
+        lastRefreshTime=Millis();
     }
     else if(currentTime - lastRefreshTime >= refreshDelay && direction == NONE)
     {
@@ -257,7 +259,9 @@ void SensorMgr::refresh(MOVING_DIRECTION direction) // les capteurs envoient un 
         ultrasonAVG.refresh();
         ultrasonARD.refresh();
         ultrasonARG.refresh();
+        lastRefreshTime=Millis();
     }
+
 }
 
 
