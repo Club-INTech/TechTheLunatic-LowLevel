@@ -35,8 +35,8 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     maxSpeedRotation = 1400;
 
 
-    maxAccelAv = 7;
-    maxDecelAv = 7;
+    maxAccelAv = 5;
+    maxDecelAv = 6;
     maxAccelAr = 10;
     maxDecelAr = 3;
 
@@ -53,8 +53,8 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     toleranceCurveRatio = 0.9;
     toleranceDifferentielle = 500; // Pour les trajectoires "normales", v�rifie que les roues ne font pas nawak chacunes de leur cot�.
 
-    translationPID.setTunings(12, 0, 400);
-    rotationPID.setTunings(35, 0, 600);
+    translationPID.setTunings(12, 0, 180);
+    rotationPID.setTunings(18, 0, 200);
     leftSpeedPID.setTunings(0.011, 0, 0.005); // ki 0.00001
     rightSpeedPID.setTunings(0.011, 0, 0.005);
 
