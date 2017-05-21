@@ -33,7 +33,7 @@ private:
     Elevator elevator;
     SensorMgr* sensorMgr;
 
-    volatile int8_t elevatorPWM;
+    volatile int8_t elevatorPWMUP;
 
     volatile bool positionControlled;
     volatile bool moving;
@@ -48,6 +48,7 @@ private:
     volatile uint32_t timeout;
     volatile uint32_t moveToPing;
     volatile uint8_t timeoutCount;
+    int8_t elevatorPWMDOWN;
 };
 
 #endif //ARM_ELEVATORMGR_H

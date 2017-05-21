@@ -42,10 +42,10 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
 
     // maxjerk = 1; // Valeur de jerk maxi(secousse d'acc�l�ration)
 
-    delayToStop = 150; // temps � l'arr�t avant de consid�rer un blocage
+    delayToStop = 100; // temps � l'arr�t avant de consid�rer un blocage
     delayToStopCurve = 500; // pareil en courbe
-    toleranceTranslation = 20;
-    toleranceRotation = 40;
+    toleranceTranslation = 30;
+    toleranceRotation = 50;
     toleranceSpeed = 40;
     toleranceSpeedEstablished = 50; // Doit �tre la plus petite possible, sans bloquer les trajectoires courbes 50
     delayToEstablish = 100;
@@ -565,6 +565,7 @@ void MotionControlSystem::orderRawPwm(Side side, int16_t pwm) {
 
 void MotionControlSystem::stop() {
 
+    moving = false;
     translationSetpoint = currentDistance;
     rotationSetpoint = currentAngle;
     leftSpeedSetpoint = 0;
@@ -575,7 +576,6 @@ void MotionControlSystem::stop() {
 
     leftMotor.run(0);
     rightMotor.run(0);
-    moving = false;
     curveMovement = false;
     leftCurveRatio = 1.0;
     rightCurveRatio = 1.0;

@@ -9,7 +9,8 @@
 ElevatorMgr::ElevatorMgr()
 {
     //Initialise tous les paramètres
-    elevatorPWM = 10; //€[|0,10|]
+    elevatorPWMUP = 10; //€[|0,10|]
+    elevatorPWMDOWN = 6;
     position = UP;
     positionSetpoint = DOWN;    //Pour toujours aller en bas au début
     positionControlled = true;
@@ -64,7 +65,7 @@ void ElevatorMgr::control()
                 if (Millis() - moveToPing < timeout)
                 {
                     elevator.setSens(Elevator::UP); //Le moteur va vers le haut
-                    elevator.run(elevatorPWM);         //si il n'est pas arrivé , et si ça fait pas trop longtemps qu'on a envoyé l'ordre de bouger
+                    elevator.run(elevatorPWMUP);         //si il n'est pas arrivé , et si ça fait pas trop longtemps qu'on a envoyé l'ordre de bouger
                 }
 
                 else
@@ -93,7 +94,7 @@ void ElevatorMgr::control()
                 if (Millis() - moveToPing < timeout)
                 {
                     elevator.setSens(Elevator::DOWN);
-                    elevator.run(elevatorPWM);
+                    elevator.run(elevatorPWMDOWN);
                 }
                 else
                 {
@@ -142,11 +143,11 @@ void ElevatorMgr::getData() const
     {
         serial.printflnDebug("pos: DOWN");
     }
-    serial.printflnDebug("PWM: %d", elevatorPWM);
+    serial.printflnDebug("PWM: %d", elevatorPWMUP);
 }
 
 void ElevatorMgr::setPWM(uint8_t pwm){
-    this->elevatorPWM=pwm;
+    this->elevatorPWMUP=pwm;
 }
 
 void ElevatorMgr::resetTimeout(){
