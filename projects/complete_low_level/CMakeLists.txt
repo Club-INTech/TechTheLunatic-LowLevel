@@ -16,8 +16,8 @@ set(CMAKE_SYSTEM_PROCESSOR arm)
 SET(CMAKE_CXX_COMPILER arm-none-eabi-g++)
 SET(CMAKE_C_COMPILER arm-none-eabi-gcc)
 
-SET(CMAKE_C_FLAGS "-g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -I." CACHE INTERNAL "c compiler flags")
-SET(CMAKE_CXX_FLAGS "-g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -I." CACHE INTERNAL "c compiler flags")
+SET(CMAKE_C_FLAGS "-g -O0 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -I." CACHE INTERNAL "c compiler flags")
+SET(CMAKE_CXX_FLAGS "-g -O0 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -I." CACHE INTERNAL "c compiler flags")
 
 
 

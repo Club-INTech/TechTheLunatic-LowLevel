@@ -78,52 +78,14 @@ Counter::Counter() {
 	TIM_Cmd(TIM3, ENABLE);
 
 	TIM_SetCounter(TIM3, 32767);
-
-    /**
-	 * Configuration encodeur MOTEUR sur TIMER 1 (16 bits)
-	 * Pins E9 et E11
-	 */
-/*
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
-
-    GPIO_StructInit(&GPIO_InitStruct);
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_11 ;
-    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
-    GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
-    GPIO_Init(GPIOE, &GPIO_InitStruct);
-
-    GPIO_PinAFConfig(GPIOE, GPIO_PinSource9, GPIO_AF_TIM1);
-    GPIO_PinAFConfig(GPIOE, GPIO_PinSource11, GPIO_AF_TIM1);
-
-    //Mode encoder du timer 9
-    TIM_EncoderInterfaceConfig(TIM1, TIM_EncoderMode_TI12,
-                               TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);
-
-    TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
-    TIM_TimeBaseStructure.TIM_Prescaler = 0;
-    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-    TIM_TimeBaseStructure.TIM_Period = -1;
-    TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
-    TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
-    TIM_Cmd(TIM1, ENABLE);
-
-    TIM_SetCounter(TIM1, 32767);
-*/
 }
 
 int32_t Counter::getLeftValue() {
 	//Translate to int32_t
-	return ((TIM_GetCounter(TIM5)-2147483647));  //Pins codeuses inversées sur la stm
+	return ((TIM_GetCounter(TIM5)-2147483647));
 }
 
 int32_t Counter::getRightValue() {
 	//Translate to int16_t
-	return ((TIM_GetCounter(TIM3)-32767));       //Pins codeuses inversées sur la stm
-}
-int32_t Counter::getMoteurValue() {
-    //Translate to int16_t
-    return ((TIM_GetCounter(TIM1)-32767));
+	return ((TIM_GetCounter(TIM3)-32767));
 }

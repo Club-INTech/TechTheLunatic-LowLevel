@@ -78,12 +78,14 @@ private:
 	volatile int32_t rightSpeedSetpoint;    // ticks/seconde
 	volatile int32_t currentRightSpeed;        // ticks/seconde
 	volatile int32_t rightPWM;
+	volatile int32_t lastRightPWM;
 
 	//	Asservissement en vitesse du moteur gauche
 	PID leftSpeedPID;
 	volatile int32_t leftSpeedSetpoint;        // ticks/seconde
 	volatile int32_t currentLeftSpeed;        // ticks/seconde
 	volatile int32_t leftPWM;
+	volatile int32_t lastLeftPWM;
 
 	//	Asservissement en position : translation
 	PID translationPID;
@@ -319,9 +321,9 @@ public:
 
 	void testRotation();
 
-	Average<int32_t, 25> getLeftSpeed();
+	int getLeftSpeed();
 
-	Average<int32_t, 25> getRightSpeed();
+	int getRightSpeed();
 
 	float getRightSetPoint();
 
@@ -344,6 +346,24 @@ public:
 
     int32_t leftTicks;
 	int32_t rightTicks;
+
+    int getRightMotorDir();
+
+    int getLeftMotorDir();
+
+    int getLeftMotorPWM();
+
+    int getRightMotorPWM();
+
+    bool testingSpeed;
+    volatile int previousRightSpeed;
+
+    volatile uint32_t maxTime;
+    volatile uint32_t previousTime;
+    int32_t seuilFiltrageVitesse;
+    volatile int32_t rightDeltaTick;
+    volatile int32_t leftDeltaTick;
+    volatile int32_t rightSpeedBackup;
 };
 
 #endif /* MOTION_CONTROL_H_ */
