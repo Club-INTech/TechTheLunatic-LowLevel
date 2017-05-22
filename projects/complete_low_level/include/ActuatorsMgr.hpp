@@ -149,7 +149,7 @@ public:
         delete(LM);
     }
 
-    void setAllID(){ //Permet de regler l'id d'un ax12
+    void setTestId(){ //Permet de regler l'id d'un ax12
         int i;
         serial.printfln("Reglage de l'ID d'un AX12");
         serial.printf("\n");
@@ -163,7 +163,7 @@ public:
     void setPelleID(){ //Pour regler l'id des ax12 de la pelle
         int i;
 
-        serial.printfln("Reglage de l'ID des AX12 de la pelle");
+        serial.printfln("Reglage de l'ID des AX12 de la pelle(débrancher tous les ax dont l'id a déjà été set)");
         serial.printfln("Brancher ax12 bras droit de la pelleteuse");
         serial.read(i);
         PBD->initIDB(1);
@@ -189,7 +189,7 @@ public:
     void setModuleID(){ //Pour regler l'id des ax12 de l'attrappe module
         int i;
 
-        serial.printfln("Reglage de l'ID des AX12 de l'attrappe module");
+        serial.printfln("Reglage de l'ID des AX12 de l'attrappe module(débrancher tous les ax dont l'id a déjà été set)");
         serial.printfln("Brancher l'AX12 droit de l'AM");
         serial.read(i);
         AMD->initIDB(4);

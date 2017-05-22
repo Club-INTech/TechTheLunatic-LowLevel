@@ -555,9 +555,9 @@ int main(void)
 
                 /* --- AX12 ---*/
                 //Gestion des ID des AX12
-            else if(!strcmp("setallid",order))         //permet de donner les ids définis aux ax12
+            else if(!strcmp("settestid",order))         //permet de donner l'id 1 aux ax branchés
             {
-                actuatorsMgr->setAllID();
+                actuatorsMgr->setTestId();
             }
             else if(!strcmp("setpelleid",order))       //permet de donner les ids aux ax12 de la pelle
             {
