@@ -31,12 +31,17 @@ extern Uart<1> serial;
 
 //Pour la Pelleteusatron 3000
 
-#define brapeldep 122
-#define brapeldepmibas 145
-#define brapelram 113
+#define brapeldepD 122
+#define brapeldepmibasD 145
+#define brapelramD 113
+#define brapelmoitD 160
+#define brapelrelD 200
 
-#define brapelmoit 160
-#define brapelrel 200
+#define brapeldepG 128
+#define brapeldepmibasG 151
+#define brapelramG 119
+#define brapelmoitG 166
+#define brapelrelG 206
 
 #define pospelinitG 300
 #define pospeldeplG 180
@@ -86,7 +91,8 @@ class ActuatorsMgr : public Singleton<ActuatorsMgr>
 private:
     typedef Uart<2> serial_ax;  // On utilise le port série 2 de la stm32
     AX<serial_ax>* ax12test;    // ax12 de test
-    AX<serial_ax>* PB;  //objet gérant les deux AX12 des bras de la pelle
+    AX<serial_ax>* PBD;  //objet gérant les deux AX12 des bras de la pelle
+    AX<serial_ax>* PBG;
     AX<serial_ax>* PG;     //ax12 pour la pelle de la pelleteuse
     AX<serial_ax>* PD;
 
@@ -106,8 +112,10 @@ public:
     {
         ax12test = new AX<serial_ax>(0,0,1023); // (ID, Angle_min, Angle_Max)
         ax12test->init();
-        PB = new AX<serial_ax>(1,0,1023); // (ID, Angle_min, Angle_Max)
-        PB->init();
+        PBD = new AX<serial_ax>(1,0,1023); // (ID, Angle_min, Angle_Max)
+        PBD->init();
+        PBG = new AX<serial_ax>(9,0,1023); // (ID, Angle_min, Angle_Max)
+        PBG->init();
         PG = new AX<serial_ax>(2,0,1023);
         PG->init();
         PD = new AX<serial_ax>(8,0,1023);
@@ -130,7 +138,8 @@ public:
     ~ActuatorsMgr()
     {
         delete(ax12test);
-        delete(PB);
+        delete(PBD);
+        delete(PBG);
         delete(PG);
         delete(PD);
         delete(AMD);
@@ -155,16 +164,21 @@ public:
         int i;
 
         serial.printfln("Reglage de l'ID des AX12 de la pelle");
-        serial.printfln("Brancher brancher les deux AX12 des bras de la pelleteuse");
+        serial.printfln("Brancher ax12 bras droit de la pelleteuse");
         serial.read(i);
-        PB->initIDB(1);
-        PB->init();
-        serial.printfln("done");
+        PBD->initIDB(1);
+        PBD->init();
+
+        serial.printfln("Brancher ax12 bras gauche de la pelleteuse");
+        serial.read(i);
+        PBG->initIDB(9);
+        PBG->init();
 
         serial.printfln("Brancher l'AX12 gauche de la pelle");
         serial.read(i);
         PG->initIDB(2);
         PG->init();
+
         serial.printfln("Brancher l'AX12 droit de la pelle");
         serial.read(i);
         PD->initIDB(8);
@@ -224,45 +238,58 @@ public:
     void braPelReleve() //relève les bras de la pelle
     {
         serial.printflnDebug("Leve les bras");
-        PB->changeSpeed(20);
-        PB->goTo(brapelrel);
+        PBD->changeSpeed(20);
+        PBG->changeSpeed(20);
+        PBD->goTo(brapelrelD);
+        PBG->goTo(brapelrelG);
         serial.printflnDebug("done");
     }
 
     void braPelDeplie() // déplie les bras de la pelle
     {
         serial.printflnDebug("Baisse les bras");
-        PB->changeSpeed(10);
-        PB->goTo(brapeldep);
+        PBD->changeSpeed(10);
+        PBG->changeSpeed(10);
+        PBD->goTo(brapeldepD);
+        PBG->goTo(brapeldepG);
         serial.printflnDebug("done");
     }
     void braPelDeplieMiBas() // déplie les bras de la pelle
     {
         serial.printflnDebug("Baisse les bras un peu moins que l'autre ordre");
-        PB->changeSpeed(10);
-        PB->goTo(brapeldepmibas);
+        PBD->changeSpeed(10);
+        PBG->changeSpeed(10);
+        PBD->goTo(brapeldepmibasD);
+        PBG->goTo(brapeldepmibasG);
         serial.printflnDebug("done");
     }
     void braPelRam() // déplie les bras de la pelle
     {
         serial.printflnDebug("Baisse les bras");
-        PB->changeSpeed(10);
-        PB->goTo(brapelram);
-        serial.printflnDebug("done");
-    }
-    void pellePosDeplacement()
-    {
-        serial.printflnDebug("Leve au max les bras");
-        PG->goTo(pospeldeplG);
-        PD->goTo(pospeldeplD);
+        PBD->changeSpeed(10);
+        PBG->changeSpeed(10);
+        PBD->goTo(brapelramD);
+        PBG->goTo(brapelramG);
         serial.printflnDebug("done");
     }
 
     void braPelMoit()
     {
         serial.printflnDebug("Leve les bras mais pas trop");
-        PB->changeSpeed(20);
-        PB->goTo(brapelmoit);
+        PBD->changeSpeed(20);
+        PBG->changeSpeed(20);
+        PBD->goTo(brapelmoitD);
+        PBG->goTo(brapelmoitG);
+        serial.printflnDebug("done");
+    }
+
+    //la pelle:
+
+    void pellePosDeplacement()
+    {
+        serial.printflnDebug("Leve au max les bras");
+        PG->goTo(pospeldeplG);
+        PD->goTo(pospeldeplD);
         serial.printflnDebug("done");
     }
 
@@ -489,7 +516,8 @@ public:
     {
         PD->init();
         PG->init();
-        PB->init();
+        PBD->init();
+        PBG->init();
     }
 
     void setPunch(){
@@ -513,7 +541,7 @@ public:
 
     void testSync1(){
         serial.printflnDebug("Test sync (");
-        PB->syncGoTo(2,8,180,120);
+        PBD->syncGoTo(2,8,180,120);
         serial.printflnDebug("done");
     }
 

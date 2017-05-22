@@ -149,20 +149,22 @@ void Motor::initPWM(){
 
 void Motor::run(int16_t pwminput){
     pwm=pwminput;
-    //serial.printflnDebug("pwm avant run! %d", pwm);
 	if (pwm >= 0) {
 		setDirection(Direction::FORWARD);
-        pwm=MIN(pwm,10);
+		if (side == Side::LEFT) {
+			TIM2->CCR3 = MIN(pwm,255);
+		} else {
+			TIM2->CCR4 = MIN(pwm,255);
+		}
+
 	} else {
 		setDirection(Direction::BACKWARD);
-        pwm=MIN(-pwm,10);
+		if (side == Side::LEFT) {
+			TIM2->CCR3 = MIN(-pwm,255);
+		} else {
+			TIM2->CCR4 = MIN(-pwm,255);
+		}
 	}
-    if (side == Side::LEFT) {
-        TIM2->CCR3 = pwm;
-    } else {
-        TIM2->CCR4 = pwm;
-    }
-    //serial.printflnDebug("pwm après run: %d", pwm);
 }
 
 void Motor::setDirection(Direction dir) {
@@ -186,11 +188,11 @@ int Motor::getPWM(){
     return pwm;
 }
 
-char Motor::getDir(){
+int Motor::getDir(){
     if(direction==Direction::FORWARD)
-        return 'f';
+        return -500;
     else
-        return 'b';
+        return 500;
 }
 
 char Motor::getSide(){

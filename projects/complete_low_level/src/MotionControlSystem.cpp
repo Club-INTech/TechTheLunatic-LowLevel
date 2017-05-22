@@ -16,6 +16,9 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     translationSetpoint = 0;
     leftSpeedSetpoint = 0;
     rightSpeedSetpoint = 0;
+
+    lastLeftPWM=0;
+    lastRightPWM=0;
     x = 0;
     y = 0;
     moving = false;
@@ -27,8 +30,8 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     leftCurveRatio = 1.0;
     rightCurveRatio = 1.0;
 
-    leftSpeedPID.setOutputLimits(-10, 10);
-    rightSpeedPID.setOutputLimits(-10, 10);
+    leftSpeedPID.setOutputLimits(-255, 255);
+    rightSpeedPID.setOutputLimits(-255, 255);
 
     maxSpeed = 3000; // Vitesse maximum, des moteurs (avec une marge au cas o� on s'amuse � faire forcer un peu la bestiole).
     maxSpeedTranslation = 2000; // Consigne max envoy�e au PID
@@ -58,10 +61,16 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     leftSpeedPID.setTunings(0.011, 0, 0.005); // ki 0.00001
     rightSpeedPID.setTunings(0.011, 0, 0.005);
 
-    distanceTest = 200;
+    distanceTest = 1000;
 
-    maxAcceleration=maxAccelAv;
-    maxDeceleration=maxDecelAv;
+    maxAcceleration=maxAccelAr;
+    maxDeceleration=maxDecelAr;
+
+    /*maxTime=0;
+    previousTime=0;
+    seuilFiltrageVitesse=5000;
+    leftDeltaTick=0;
+    rightDeltaTick=0;*/
 }
 
 void MotionControlSystem::init() {
@@ -144,7 +153,12 @@ void MotionControlSystem::setRawNullSpeed(){
 
 void MotionControlSystem::control()
 {
-
+/*    uint32_t time=Micros();
+    if(time-previousTime>maxTime){
+        maxTime=time-previousTime;
+    }
+    previousTime=time;
+*/
     // Pour le calcul de la vitesse instantan�e :
     static int32_t previousLeftTicks = 0;
     static int32_t previousRightTicks = 0;
@@ -187,20 +201,44 @@ void MotionControlSystem::control()
     leftTicks = Counter::getLeftValue();
 
 
+    //previousRightSpeed=currentRightSpeed;
     currentLeftSpeed = (leftTicks - previousLeftTicks)*2000; // (nb-de-tick-passés)*(freq_asserv) (ticks/sec)
     currentRightSpeed = (rightTicks - previousRightTicks)*2000;
 
+    rightSpeedBackup=currentRightSpeed;
+    //int previousRightTickTest=previousRightTicks;
+
+    //leftDeltaTick=leftTicks-previousLeftTicks;
+    //rightDeltaTick=rightTicks-previousRightTicks;
+
+   // if(ABS(ABS(averageRightSpeed.value())-ABS(currentRightSpeed))<seuilFiltrageVitesse){
+        averageRightSpeed.add(currentRightSpeed);
+    //    rightTicks=previousRightTicks+rightDeltaTick;
+    //}
+    //else{
+     //   averageRightSpeed.add(averageRightSpeed.value());
+    //}
+
+    //if(ABS(ABS(averageLeftSpeed.value())-ABS(currentLeftSpeed))<seuilFiltrageVitesse) {
+        averageLeftSpeed.add(currentLeftSpeed);
+    //    leftTicks=previousLeftTicks+leftDeltaTick;
+    //}
+    //else{
+     //   averageLeftSpeed.add(averageLeftSpeed.value());
+    //}
+
+    //leftDeltaTick=leftTicks-previousLeftTicks;
+    //rightDeltaTick=rightTicks-previousRightTicks;
+
     previousLeftTicks = leftTicks;
     previousRightTicks = rightTicks;
-
-    averageLeftSpeed.add(currentLeftSpeed);
-    averageRightSpeed.add(currentRightSpeed);
 
     averageLeftDerivativeError.add(ABS(leftSpeedPID.getDerivativeError()));		// Mise à jour des moyennes de dérivées de l'erreur (pour les blocages)
     averageRightDerivativeError.add(ABS(rightSpeedPID.getDerivativeError()));
 
     currentLeftSpeed = averageLeftSpeed.value(); // On utilise pour l'asserv la valeur moyenne des dernieres current Speed
     currentRightSpeed = averageRightSpeed.value(); // sinon le robot il fait nawak.
+
 
 
     currentDistance = (leftTicks + rightTicks) / 2;
@@ -265,14 +303,36 @@ void MotionControlSystem::control()
 
 
 
-    if(leftSpeedControlled)
-        leftSpeedPID.compute();		// Actualise la valeur de 'leftPWM'
-    else
+    if(leftSpeedControlled) {
+        //lastLeftPWM=leftPWM;
+        leftSpeedPID.compute();        // Actualise la valeur de 'leftPWM'4
+    }
+    else {
         leftPWM = 0;
-    if(rightSpeedControlled)
-        rightSpeedPID.compute();	// Actualise la valeur de 'rightPWM'
-    else
+    }
+    if(rightSpeedControlled) {
+        //lastRightPWM=rightPWM;
+        rightSpeedPID.compute();    // Actualise la valeur de 'rightPWM'
+    }
+    else {
         rightPWM = 0;
+    }
+
+    /*
+
+    if(lastRightPWM*rightPWM<0){
+        serial.printflnDebug("==============PWM droit change de signe===============");
+        serial.printflnDebug("previousRightSpeed: %d", previousRightSpeed);
+        serial.printflnDebug("vitesse instantannée: %d", rightSpeedBackup);
+        serial.printflnDebug("vitesse moyenne: %d", currentRightSpeed);
+        serial.printflnDebug("previoussetpoint: %d", previousRightSpeedSetpoint);
+        serial.printflnDebug("setpoint: %d", leftSpeedSetpoint);
+        serial.printflnDebug("rightTick: %d", rightTicks);
+        serial.printflnDebug("prevousRightTick: %d", previousRightTickTest);
+    }
+     */
+
+
 
     leftMotor.run(leftPWM);
     rightMotor.run(rightPWM);
@@ -686,32 +746,6 @@ void MotionControlSystem::resetTracking()
     trackerCursor = 0;
 }
 
-
-
-void MotionControlSystem::testSpeed()
-{
-    translationControlled = false;
-    rotationControlled = false;
-    leftSpeedControlled = true;
-    rightSpeedControlled = true;
-
-    resetTracking();
-    double testTime = (1000 * distanceTest / TICK_TO_MM / maxSpeedTranslation);
-    translationSpeed = maxSpeedTranslation;
-    Delay((uint32_t) testTime);
-    translationSpeed = 0;
-    printTracking();
-    serial.printf("endtest");
-    /*stop();
-    Delay(1000);
-    setTranslationSpeed(maxSpeedTranslation);
-    translationControlled = true;
-    rotationControlled = true;
-    orderTranslation(-distanceTest);
-    setTranslationSpeed(maxSpeedTranslation);*/
-
-}
-
 void MotionControlSystem::testPosition()
 {
     translationControlled = true;
@@ -880,13 +914,13 @@ MOVING_DIRECTION MotionControlSystem::getMovingDirection() const{
     return direction;
 }
 
-Average<int32_t, 25> MotionControlSystem::getLeftSpeed()
+int MotionControlSystem::getLeftSpeed()
 {
-    return this->averageLeftSpeed;
+    return this->currentLeftSpeed;
 }
-Average<int32_t, 25> MotionControlSystem::getRightSpeed()
+int MotionControlSystem::getRightSpeed()
 {
-    return this->averageRightSpeed;
+    return this->currentRightSpeed;
 }
 
 float MotionControlSystem::getRightSetPoint()
@@ -945,4 +979,35 @@ void MotionControlSystem::setAccelAr() {
     serial.read(this->maxAccelAr);
     serial.printflnDebug("entrer decel arrière(là : %d )", this->maxDecelAr);
     serial.read(this->maxDecelAr);
+}
+
+int MotionControlSystem::getRightMotorDir(){
+    return this->rightMotor.getDir();
+}
+
+int MotionControlSystem::getLeftMotorDir() {
+    return this->leftMotor.getDir();
+}
+
+int MotionControlSystem::getLeftMotorPWM(){
+    return this->leftPWM*100;
+}
+
+int MotionControlSystem::getRightMotorPWM(){
+    return this->leftPWM*100;
+}
+
+
+void MotionControlSystem::testSpeed()
+{
+    translationControlled = false;
+    rotationControlled = false;
+    leftSpeedControlled = true;
+    rightSpeedControlled = true;
+
+    double testTime = (1000 * distanceTest / TICK_TO_MM);
+    leftSpeedSetpoint=-1000;
+    rightSpeedSetpoint=1000;
+    Delay(testTime);
+    serial.printf("endtest");
 }

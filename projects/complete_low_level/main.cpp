@@ -812,16 +812,24 @@ int main(void)
  *		   *|COMMANDES/TESTS DE DEBUG|*
  *		   *|________________________|*
 */
+            else if(!strcmp("timetest", order)){
+                serial.printflnDebug("maxtime: %d", motionControlSystem->maxTime);
+            }
+            else if(!strcmp("orderpwm", order)){
+                serial.printflnDebug("entrer pwm");
+                int pwm;
+                serial.read(pwm);
+                motionControlSystem->orderRawPwm(Side::LEFT, pwm);
+                motionControlSystem->orderRawPwm(Side::RIGHT, pwm);
+            }
             else if(!strcmp("pfdebug", order))
             {
-                serial.printfln("%d", (int) Counter::getLeftValue());
-                serial.printfln("%d", (int) Counter::getRightValue());
-                serial.printfln("%f", motionControlSystem->getAngleRadian());
-                serial.printfln("%d",  (int) motionControlSystem->getLeftSpeed().value());
-                serial.printfln("%d",  (int) motionControlSystem->getRightSpeed().value());
-                serial.printfln("%d", (int) motionControlSystem->getTranslationSetPoint());
-                serial.printfln("%d", (int) motionControlSystem->getLeftSetPoint());
+                serial.printfln("%d",  (int) motionControlSystem->getRightSpeed());
+                serial.printfln("%d", (int) motionControlSystem->getRightMotorDir());
                 serial.printfln("%d", (int) motionControlSystem->getRightSetPoint());
+                serial.printfln("%d", (int) motionControlSystem->getRightMotorPWM());
+                serial.printfln("%d", (int) Counter::getRightValue());
+
             }
             else if(!strcmp("asserdata", order))
             {
@@ -829,9 +837,9 @@ int main(void)
                                      (int) motionControlSystem->getX(),
                                      (int) motionControlSystem->getY(), motionControlSystem->getAngleRadian());
                 serial.printflnDebug("Vitesse Gauche:%d",
-                                     (int) motionControlSystem->getLeftSpeed().value());
+                                     (int) motionControlSystem->getLeftSpeed());
                 serial.printflnDebug("Vitesse Droite:%d",
-                                     (int) motionControlSystem->getRightSpeed().value());
+                                     (int) motionControlSystem->getRightSpeed());
                 serial.printflnDebug("Consignes : Transl: %d --- Vit.G: %d --- Vit.D: %d",
                                      (int) motionControlSystem->getTranslationSetPoint(),
                                      (int) motionControlSystem->getLeftSetPoint(),
