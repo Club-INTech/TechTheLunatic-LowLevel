@@ -54,7 +54,7 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     toleranceDifferentielle = 500; // Pour les trajectoires "normales", v�rifie que les roues ne font pas nawak chacunes de leur cot�.
 
     translationPID.setTunings(12, 0, 180);
-    rotationPID.setTunings(18, 0, 200);
+    rotationPID.setTunings(26, 0, 250);
     leftSpeedPID.setTunings(0.011, 0, 0.005); // ki 0.00001
     rightSpeedPID.setTunings(0.011, 0, 0.005);
 

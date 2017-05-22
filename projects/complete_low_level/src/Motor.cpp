@@ -156,6 +156,7 @@ void Motor::run(int16_t pwminput){
 	} else {
 		setDirection(Direction::BACKWARD);
         pwm=MIN(-pwm,10);
+
 	}
     if (side == Side::LEFT) {
         TIM2->CCR3 = pwm;
