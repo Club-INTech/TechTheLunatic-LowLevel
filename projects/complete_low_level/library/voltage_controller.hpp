@@ -9,6 +9,18 @@
 
 /**
  * Permet de mesurer la tension de la LiPO et l'affiche sur un indicateur � 10 LEDs
+ *
+ * LEDS:
+ * 1: PC7
+ * 2: PC8
+ * 3: PC9
+ * 4: PE0
+ * 5: PA15
+ * 6: PC11
+ * 7: PD0
+ * 8: PD2
+ * 9: PD4
+ * 10: PD6
  * @author discord & sa maman
  */
 class Voltage_controller : public Singleton<Voltage_controller>
@@ -80,14 +92,14 @@ public:
 
 		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par d�faut
 
-		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8;
+		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9;
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 		GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 		GPIO_StructInit(&GPIO_InitStruct); //Remplit avec les valeurs par d�faut
 
-		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9;
+		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8;
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 		GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -151,11 +163,11 @@ public:
 		}
 		if(ADCValue >= voltage_echelon*2 + minimal_voltage )
 		{
-			GPIO_SetBits(GPIOC, GPIO_Pin_8);
+			GPIO_SetBits(GPIOC, GPIO_Pin_9);
 		}
 		if(ADCValue >= voltage_echelon + minimal_voltage )
 		{
-			GPIO_SetBits(GPIOC, GPIO_Pin_9);
+			GPIO_SetBits(GPIOC, GPIO_Pin_8);
 		}
 		if(ADCValue >= minimal_voltage )
 		{
