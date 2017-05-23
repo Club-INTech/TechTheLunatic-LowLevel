@@ -45,7 +45,7 @@ public:
 
 	int getPWM();
 
-	int getDir();
+	char getDir();
 
 	char getSide();
 };

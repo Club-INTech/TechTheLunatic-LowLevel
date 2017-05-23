@@ -39,9 +39,9 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
 
 
     maxAccelAv = 5;
-    maxDecelAv = 6;
-    maxAccelAr = 10;
-    maxDecelAr = 3;
+    maxDecelAv = 7;
+    maxAccelAr = 8;
+    maxDecelAr = 5;
 
     // maxjerk = 1; // Valeur de jerk maxi(secousse d'acc�l�ration)
 
@@ -56,8 +56,9 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     toleranceCurveRatio = 0.9;
     toleranceDifferentielle = 500; // Pour les trajectoires "normales", v�rifie que les roues ne font pas nawak chacunes de leur cot�.
 
-    translationPID.setTunings(12, 0, 180);
-    rotationPID.setTunings(26, 0, 250);
+
+    translationPID.setTunings(14, 0, 220);
+    rotationPID.setTunings(17, 0, 220);
     leftSpeedPID.setTunings(0.011, 0, 0.005); // ki 0.00001
     rightSpeedPID.setTunings(0.011, 0, 0.005);
 

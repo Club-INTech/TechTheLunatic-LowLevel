@@ -18,7 +18,7 @@ public:
 	{
 		counter = 0;
 		blink = false;
-		minimal_voltage = 2850;
+		minimal_voltage = 3850;//3950;
 		usb_voltage = 600;
 		voltage_echelon = 80;
 
