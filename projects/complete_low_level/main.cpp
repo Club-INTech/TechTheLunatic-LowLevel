@@ -890,6 +890,22 @@ int main(void)
             {
                 serial.printfln("%d", voltage->test());   // Pour tester la tension d'alimentation selon l'adc
             }
+            else if(!strcmp("minadc", order))
+            {
+                uint32_t newminvoltage;
+                serial.printflnDebug("entrer la nouvelle valeur pour le min.voltage(là: %d)", voltage->getMin());
+                serial.read(newminvoltage);
+                voltage->setMin(newminvoltage);
+                serial.printflnDebug("Nouvelle valeur: %d", newminvoltage);
+            }
+            else if(!strcmp("echelonadc", order))
+            {
+                uint32_t newechelon;
+                serial.printflnDebug("entrer la nouvelle valeur pour le voltage.echelon(là: %d)", voltage->getEchelon());
+                serial.read(newechelon);
+                voltage->setEchelon(newechelon);
+                serial.printflnDebug("Nouvelle valeur: %d", newechelon);
+            }
 
 
 /*			 __________________

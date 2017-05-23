@@ -18,7 +18,7 @@ public:
 	{
 		counter = 0;
 		blink = false;
-		minimal_voltage = 3850;//3950;
+		minimal_voltage = 4086;
 		usb_voltage = 600;
 		voltage_echelon = 80;
 
@@ -184,6 +184,22 @@ public:
 	int test(){
 		return(adc_convert());
 	}
+
+    void setMin(uint32_t newmin){
+        this->minimal_voltage=newmin;
+    }
+
+    void setEchelon(uint32_t newechelon){
+        this->voltage_echelon=newechelon;
+    }
+
+    uint32_t getEchelon(){
+        return this->voltage_echelon;
+    }
+    uint32_t getMin(){
+        return this->minimal_voltage;
+    }
+
 private:
 
 	uint32_t voltage_echelon; //Cherches pas, y'a pas d'unit� SI.
@@ -240,5 +256,7 @@ private:
 	 while(!ADC_GetFlagStatus(ADC3, ADC_FLAG_EOC));//Processing the conversion
 	 return ADC_GetConversionValue(ADC3); //Return the converted data
 	}
+
+
 
 };
