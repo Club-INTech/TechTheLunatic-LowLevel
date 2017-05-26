@@ -31,17 +31,17 @@ extern Uart<1> serial;
 
 //Pour la Pelleteusatron 3000
 
-#define brapeldepD 122
-#define brapeldepmibasD 145
-#define brapelramD 113
-#define brapelmoitD 160
-#define brapelrelD 200
+#define brapeldepD 105
+#define brapeldepmibasD 123
+#define brapelramD 91
+#define brapelmoitD 148
+#define brapelrelD 178
 
-#define brapeldepG 128
-#define brapeldepmibasG 151
-#define brapelramG 119
-#define brapelmoitG 166
-#define brapelrelG 206
+#define brapeldepG 121
+#define brapeldepmibasG 139
+#define brapelramG 107
+#define brapelmoitG 164
+#define brapelrelG 194
 
 #define pospelinitG 300
 #define pospeldeplG 180
@@ -80,7 +80,7 @@ extern Uart<1> serial;
 
 //Largue modules
 #define LargueRepos 132
-#define LarguePousse 170
+#define LarguePousse 175
 
 /**
  * Classe de gestionnaire d'AX12, comporte toutes les fonctions relatives aux actions effectuées par les ax12 ou groupes d'ax12
@@ -399,7 +399,7 @@ public:
 
     void moduleFinDroite()
     {
-        AMD->changeSpeed(20);
+        AMD->changeSpeed(15);
         serial.printflnDebug("Attrape module droit position fin");
         AMD->goTo(AMfinD);  //Si le côté est droit (cote = 0)
         serial.printflnDebug("done");
@@ -407,7 +407,7 @@ public:
 
     void moduleFinGauche()
     {
-        AMG->changeSpeed(20);
+        AMG->changeSpeed(15);
         serial.printflnDebug("Attrape module gauche position fin");
         AMG->goTo(AMfinG);
         serial.printflnDebug("done");

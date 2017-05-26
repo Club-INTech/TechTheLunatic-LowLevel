@@ -57,7 +57,7 @@ int main(void)
 
         if(autoUpdateUS && Millis()-usSendDelay > 100) {
             serial.printflnUS("%d", sensorMgr->getSensorDistanceAVG());
-            serial.printflnUS("%d", sensorMgr->getSensorDistanceAVD());
+            serial.printflnUS("%d", sensorMgr->getSensorDistanceAVG()); //HACK capteur manquant
             serial.printflnUS("%d", sensorMgr->getSensorDistanceARG());
             serial.printflnUS("%d", sensorMgr->getSensorDistanceARD());
             usSendDelay=Millis();
@@ -82,6 +82,17 @@ int main(void)
             if(!strcmp("?",order))				//Ping
             {
                 serial.printfln("0");
+            }
+            else if(!strcmp("direction", order)){
+                if(motionControlSystem->getMovingDirection()==FORWARD){
+                    serial.printflnDebug("Moving forward");
+                }
+                else if(motionControlSystem->getMovingDirection()==BACKWARD){
+                    serial.printflnDebug("Moving backward");
+                }
+                else{
+                    serial.printflnDebug("Moving nonewards");
+                }
             }
             else if(!strcmp("f",order))			//Indiquer l'�tat du mouvement du robot
             {

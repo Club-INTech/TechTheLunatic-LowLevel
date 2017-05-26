@@ -38,10 +38,10 @@ MotionControlSystem::MotionControlSystem(): leftMotor(Side::LEFT), rightMotor(Si
     maxSpeedRotation = 1400;
 
 
-    maxAccelAv = 5;
-    maxDecelAv = 7;
+    maxAccelAv = 4;
+    maxDecelAv = 8;
     maxAccelAr = 8;
-    maxDecelAr = 5;
+    maxDecelAr = 4;
 
     // maxjerk = 1; // Valeur de jerk maxi(secousse d'acc�l�ration)
 
@@ -523,12 +523,10 @@ void MotionControlSystem::orderTranslation(int32_t mmDistance) {
         direction = FORWARD;
         maxAcceleration = maxAccelAv;
         maxDeceleration = maxDecelAv;
-        //translationPID.setTunings(this->kptav,this->kitav , this->kdtav);
     } else {
         direction = BACKWARD;
         maxAcceleration = maxAccelAr;
         maxDeceleration = maxDecelAr;
-        //translationPID.setTunings(this->kptar,this->kitar , this->kdtar);
     }
     moveAbnormal = false;
 }
@@ -644,6 +642,7 @@ void MotionControlSystem::stop() {
     rotationPID.resetErrors();
     leftSpeedPID.resetErrors();
     rightSpeedPID.resetErrors();
+
 
     direction = NONE;
 }
