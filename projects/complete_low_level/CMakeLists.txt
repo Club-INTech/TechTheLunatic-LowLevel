@@ -51,4 +51,7 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(${PROJECT_NAME} ${SRC_LIST})
+include_directories(include lib)
+FILE(GLOB INCLUDED_FILES "include/*.h" "include/*.hpp" "lib/*.h" "lib/*.hpp" "lib/*.c" "lib/*.cpp")
+SET(ALL_SOURCES ${SRC_LIST} ${INCLUDED_FILES})
+add_executable(${PROJECT_NAME} ${ALL_SOURCES})

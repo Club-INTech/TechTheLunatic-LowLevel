@@ -1,12 +1,9 @@
 #include <Arduino.h>
+#include "../include/Motor.h"
+#include "../lib/Singleton.hpp"
 
 int main(){
-    pinMode(13,OUTPUT);
-
-    while(true){
-        digitalWrite(13,HIGH);
-        delay(500);
-        digitalWrite(13, LOW);
-        delay(500);
-    }
+    Motor & motor=Singleton::Instance();
+    Serial1.begin(115200);
+    Serial2.begin(9600);
 }
